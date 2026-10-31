@@ -1,0 +1,84 @@
+---
+/** Abschluss-CTA als persönliche Karte mit Porträt. */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t, titelOder } from '../../../lib/config';
+import { terminPfad } from '../../../lib/routes';
+import { telHref } from '../../../lib/format';
+import Button from '../../ui/Button.astro';
+import Foto from '../../ui/Foto.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'cta' }>;
+}
+const { s } = Astro.props;
+const person = config.berufstraeger[0];
+const bild = s.bild ?? person.foto;
+---
+
+<div class="wrap">
+  <div class="ck">
+    <div class="ck-bild" data-anim="bild">
+      <Foto bild={bild} ratio="1 / 1" sizes="(min-width: 64rem) 30vw, 60vw" class="ck-rahmen" />
+    </div>
+    <div class="ck-text">
+      <h2 class="h2" data-anim="zeilen">{titelOder(s.titel, 'cta.titel')}</h2>
+      <p class="lead" data-anim="reveal-up">{s.intro ?? t('cta.intro')}</p>
+      <div class="ck-knoepfe" data-anim="reveal-up">
+        <Button href={s.button?.href ?? terminPfad()} magnet icon="calendar-check">{s.button?.label ?? t('aktion.termin')}</Button>
+        <Button href={telHref(config.betrieb.telefon)} variante="sekundaer" iconLinks="phone" icon={false}>{config.betrieb.telefon}</Button>
+      </div>
+      <p class="ck-person">
+        <strong>{person.name}</strong>
+        {person.titel[0]}
+      </p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .ck {
+    display: grid;
+    gap: 2rem;
+    padding: clamp(1.5rem, 1rem + 3vw, 4rem);
+    border-radius: var(--r-xl);
+    background: var(--brand-soft);
+  }
+  .ck-bild {
+    width: min(100%, 16rem);
+  }
+  .ck-bild :global(.ck-rahmen) {
+    border-radius: 50%;
+  }
+  :global([data-preset='klassisch']) .ck-bild :global(.ck-rahmen),
+  :global([data-preset='klar']) .ck-bild :global(.ck-rahmen) {
+    border-radius: var(--r-lg);
+  }
+  .ck-text {
+    display: grid;
+    gap: 1.5rem;
+    align-content: center;
+  }
+  .ck-text .lead {
+    color: var(--ink);
+    opacity: 0.85;
+  }
+  .ck-knoepfe {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .ck-person {
+    display: grid;
+    font-size: 0.9rem;
+  }
+  @media (min-width: 64rem) {
+    .ck-bild {
+      width: 18rem;
+    }
+    .ck {
+      grid-template-columns: auto 1fr;
+      column-gap: clamp(2rem, 5vw, 5rem);
+      align-items: center;
+    }
+  }
+</style>

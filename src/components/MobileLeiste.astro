@@ -1,0 +1,107 @@
+---
+/** Sticky-Aktionsleiste auf Smartphones: Anrufen, Termin, Mandanten-Check. */
+import { config, t } from '../lib/config';
+import { aktiv, PFADE, terminPfad } from '../lib/routes';
+import { telHref } from '../lib/format';
+import Icon from './ui/Icon.astro';
+
+const aktionen = [
+  { href: telHref(config.betrieb.telefon), label: t('aktion.anrufen'), icon: 'phone' },
+  { href: terminPfad(), label: t('aktion.terminKurz'), icon: 'calendar-check', haupt: true },
+  aktiv('mandantenCheck')
+    ? { href: PFADE.mandantenCheck, label: t('aktion.check'), icon: 'list-checks' }
+    : { href: `mailto:${config.betrieb.email}`, label: t('aktion.email'), icon: 'mail' },
+];
+---
+
+<nav class="mobile-leiste" aria-label={t('nav.schnellaktionen')} data-mobile-leiste>
+  <ul role="list">
+    {
+      aktionen.map((a) => (
+        <li>
+          <a href={a.href} class:list={[a.haupt && 'haupt']}>
+            <Icon name={a.icon} size={20} strich={1.9} />
+            <span>{a.label}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .mobile-leiste {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    padding: 0.5rem max(0.6rem, env(safe-area-inset-left)) calc(0.5rem + env(safe-area-inset-bottom)) max(0.6rem, env(safe-area-inset-right));
+    background: color-mix(in oklab, var(--bg) 88%, transparent);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    border-top: 1px solid var(--line);
+    transition: transform 380ms var(--ease-out);
+  }
+  .mobile-leiste[data-versteckt] {
+    transform: translateY(110%);
+  }
+  ul {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr 1fr;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    min-height: 3.25rem;
+    border-radius: var(--r-md);
+    font-size: 0.74rem;
+    font-weight: 650;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--ink);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform var(--dur-1) var(--ease-out), background-color var(--dur-1);
+  }
+  a:active {
+    transform: scale(0.96);
+    background: var(--surface);
+  }
+  a.haupt {
+    flex-direction: row;
+    gap: 0.5rem;
+    font-size: 0.92rem;
+    background: var(--brand);
+    color: var(--on-brand);
+    border: 1px solid var(--brand-edge);
+    border-radius: var(--r-btn);
+  }
+  a.haupt:active {
+    background: var(--brand-hover);
+  }
+  @media (min-width: 64rem) {
+    .mobile-leiste {
+      display: none;
+    }
+  }
+  @media print {
+    .mobile-leiste {
+      display: none;
+    }
+  }
+</style>
+
+<style is:global>
+  @media (max-width: 63.99rem) {
+    body {
+      padding-bottom: calc(4.4rem + env(safe-area-inset-bottom));
+    }
+  }
+</style>

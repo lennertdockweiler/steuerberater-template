@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+screenshots/
+qr/
+lighthouse/
+.DS_Store
+*.log
+.veroeffentlichen/
+.lighthouse-build/

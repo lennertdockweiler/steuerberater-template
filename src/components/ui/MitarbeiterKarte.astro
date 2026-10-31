@@ -1,0 +1,71 @@
+---
+import type { SiteConfig } from '../../../variants/_schema';
+import Foto from './Foto.astro';
+import { t } from '../../lib/config';
+
+interface Props {
+  m: SiteConfig['team'][number];
+  rund?: boolean;
+}
+const { m, rund = false } = Astro.props;
+const initialen = m.name
+  .split(/\s+/)
+  .map((w) => w[0])
+  .slice(0, 2)
+  .join('');
+---
+
+<article class:list={['mk', rund && 'mk-rund']}>
+  {
+    m.foto ? (
+      <Foto bild={m.foto} ratio="1 / 1" sizes="(min-width: 64rem) 16vw, 45vw" class="mk-bild" />
+    ) : (
+      <div class="mk-initialen rahmen" aria-hidden="true">
+        {initialen}
+      </div>
+    )
+  }
+  <h3 class="mk-name">{m.name}</h3>
+  <p class="mk-rolle">{m.rolle}</p>
+  {m.seit && <p class="mk-seit datum">{t('team.seit', { jahr: m.seit })}</p>}
+</article>
+
+<style>
+  .mk {
+    display: grid;
+    gap: 0.3rem;
+    align-content: start;
+  }
+  .mk :global(.mk-bild),
+  .mk-initialen {
+    margin-bottom: 0.6rem;
+    border-radius: var(--r-lg);
+  }
+  .mk-rund :global(.mk-bild),
+  .mk-rund .mk-initialen {
+    border-radius: 50%;
+  }
+  .mk-initialen {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    background: var(--brand-soft);
+    color: var(--brand-ink);
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-3);
+  }
+  .mk-name {
+    font-size: var(--step-1);
+    letter-spacing: -0.015em;
+  }
+  .mk-rolle {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: var(--ink-muted);
+  }
+  .mk-seit {
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+  }
+</style>

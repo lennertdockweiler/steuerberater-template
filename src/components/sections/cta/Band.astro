@@ -1,0 +1,67 @@
+---
+/** Abschluss-CTA als dunkles Band mit großem Satz und magnetischem Button. */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t, titelOder } from '../../../lib/config';
+import { terminPfad } from '../../../lib/routes';
+import { telHref } from '../../../lib/format';
+import Button from '../../ui/Button.astro';
+import Summenstrich from '../../ui/Summenstrich.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'cta' }>;
+}
+const { s } = Astro.props;
+---
+
+<div class="cb invers">
+  <div class="wrap">
+    <Summenstrich class="cb-strich" />
+    <div class="cb-raster">
+      <h2 class="display cb-titel" data-anim="zeilen">{titelOder(s.titel, 'cta.titel')}</h2>
+      <div class="cb-text">
+        <p class="lead" data-anim="reveal-up">{s.intro ?? t('cta.intro')}</p>
+        <div class="cb-knoepfe" data-anim="reveal-up">
+          <Button href={s.button?.href ?? terminPfad()} variante="hell" magnet icon="calendar-check">{s.button?.label ?? t('aktion.termin')}</Button>
+          <Button href={telHref(config.betrieb.telefon)} variante="sekundaer" iconLinks="phone" icon={false}>{config.betrieb.telefon}</Button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .cb {
+    padding-block: clamp(4.5rem, 3rem + 7vw, 10rem);
+  }
+  :global(.cb-strich) {
+    margin-bottom: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+    color: var(--brand-on-inverse);
+  }
+  .cb-raster {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .cb-titel {
+    max-width: 12ch;
+    font-size: calc(var(--step-5) * 0.92);
+  }
+  .cb-text {
+    display: grid;
+    gap: 2rem;
+    align-content: end;
+  }
+  .cb-text .lead {
+    color: var(--on-inverse-muted);
+  }
+  .cb-knoepfe {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  @media (min-width: 64rem) {
+    .cb-raster {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      column-gap: calc(var(--gutter) * 2);
+    }
+  }
+</style>

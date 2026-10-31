@@ -1,0 +1,210 @@
+---
+import Base from '../../layouts/Base.astro';
+import SeitenKopf from '../../components/ui/SeitenKopf.astro';
+import LeistungsKarten from '../../components/ui/LeistungsKarten.astro';
+import AbschlussCta from '../../components/ui/AbschlussCta.astro';
+import Akkordeon from '../../components/ui/Akkordeon.astro';
+import Prosa from '../../components/ui/Prosa.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Foto from '../../components/ui/Foto.astro';
+import Button from '../../components/ui/Button.astro';
+import Summenstrich from '../../components/ui/Summenstrich.astro';
+import { config, t, zielgruppeBySlug } from '../../lib/config';
+import { aktiv, terminPfad } from '../../lib/routes';
+import { telHref } from '../../lib/format';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema, faqSchema } from '../../lib/seo';
+import type { Leistung } from '../../../variants/_schema';
+
+export function getStaticPaths() {
+  return config.leistungen.map((l) => ({ params: { zielgruppe: l.zielgruppe[0], leistung: l.slug }, props: { l } }));
+}
+const { l } = Astro.props as { l: Leistung };
+const z = zielgruppeBySlug(l.zielgruppe[0])!;
+const pfad = [
+  { label: t('seite.leistungen.titel'), href: '/leistungen/' },
+  { label: z.titel, href: `/leistungen/${z.slug}/` },
+  { label: l.titel, href: `/leistungen/${z.slug}/${l.slug}/` },
+];
+// Ansprechpartner: Berufsträger mit passendem Schwerpunkt, sonst der erste
+const woerter = `${l.titel} ${l.kurztext}`.toLowerCase();
+const person =
+  config.berufstraeger.find((p) => p.schwerpunkte.some((s) => woerter.includes(s.toLowerCase().split(' ')[0]))) ?? config.berufstraeger[0];
+const weitere = config.leistungen.filter((x) => x.slug !== l.slug && x.zielgruppe.some((zg) => l.zielgruppe.includes(zg))).slice(0, 3);
+const ort = config.betrieb.adresse.ort;
+const fuer = l.zielgruppe.map((s) => zielgruppeBySlug(s)?.titel).join(', ');
+---
+
+<Base
+  titel={l.seo?.titel ?? seitenTitel(null, `${l.titel} in ${ort}`)}
+  beschreibung={l.seo?.beschreibung ?? seitenBeschreibung(null, `${l.kurztext} ${config.betrieb.kurzname} in ${ort}.`)}
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site), ...(l.faq.length ? [faqSchema(l.faq)] : [])]}
+>
+  <SeitenKopf titel={l.titel} intro={l.kurztext} pfad={pfad} kicker={t('leistungen.fuer', { zielgruppe: fuer })} />
+
+  <section class="sektion">
+    <div class="wrap ld">
+      <div class="ld-haupt">
+        <Prosa>
+          {l.text.map((p) => <p>{p}</p>)}
+        </Prosa>
+        {
+          l.punkte.length > 0 && (
+            <div class="ld-punkte" data-anim="reveal-up">
+              <h2 class="h3">{t('seite.leistung.enthalten')}</h2>
+              <Summenstrich fein />
+              <ul role="list">
+                {l.punkte.map((p) => (
+                  <li>
+                    <Icon name="check" size={20} strich={2.2} />
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </div>
+      <aside class="ld-person" aria-label={t('seite.leistung.ansprechpartner')}>
+        <p class="ld-label">{t('seite.leistung.ansprechpartner')}</p>
+        <Foto bild={person.foto} ratio="4 / 5" sizes="(min-width: 64rem) 22vw, 60vw" class="ld-foto" />
+        <p class="ld-name">{person.name}</p>
+        <p class="gedaempft ld-titel">{person.titel.join(', ')}</p>
+        <div class="ld-kontakt">
+          <a href={telHref(person.telefon ?? config.betrieb.telefon)}>
+            <Icon name="phone" size={18} />
+            {person.telefon ?? config.betrieb.telefon}
+          </a>
+          <a href={`mailto:${person.email}`}>
+            <Icon name="mail" size={18} />
+            {person.email}
+          </a>
+        </div>
+        <Button href={terminPfad()} klein>{t('aktion.termin')}</Button>
+        {aktiv('team') && <a href={`/team/${person.slug}/`} class="link">{t('aktion.zumProfil')}</a>}
+      </aside>
+    </div>
+  </section>
+
+  {
+    l.faq.length > 0 && (
+      <section class="sektion flaeche" aria-labelledby="ld-faq">
+        <div class="wrap-schmal">
+          <h2 class="h2 ld-h2" id="ld-faq" data-anim="zeilen">
+            {t('faq.titel')}
+          </h2>
+          <Akkordeon eintraege={l.faq} name="ld-faq" ersteOffen />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    weitere.length > 0 && (
+      <section class="sektion" aria-labelledby="ld-weitere">
+        <div class="wrap">
+          <h2 class="h2 ld-h2" id="ld-weitere" data-anim="zeilen">
+            {t('seite.leistung.weitere')}
+          </h2>
+          <LeistungsKarten liste={weitere} spalten={3} />
+        </div>
+      </section>
+    )
+  }
+  <AbschlussCta />
+</Base>
+
+<style>
+  .ld {
+    display: grid;
+    gap: 3rem;
+  }
+  .ld-haupt {
+    display: grid;
+    gap: 3rem;
+  }
+  .ld-punkte {
+    display: grid;
+    gap: 1rem;
+    max-width: var(--measure);
+    color: var(--brand-ink);
+  }
+  .ld-punkte h2 {
+    color: var(--ink);
+  }
+  .ld-punkte ul {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--ink);
+  }
+  .ld-punkte li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
+  }
+  .ld-punkte li :global(svg) {
+    color: var(--brand-ink);
+    margin-top: 0.15rem;
+  }
+  .ld-person {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    justify-items: start;
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    max-width: 24rem;
+  }
+  .ld-person :global(.ld-foto) {
+    width: 100%;
+    border-radius: var(--r-md);
+    margin-bottom: 0.5rem;
+  }
+  .ld-label {
+    font-size: var(--step--1);
+    font-weight: 650;
+    color: var(--brand-ink);
+  }
+  .ld-name {
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-2);
+    line-height: 1.1;
+  }
+  .ld-titel {
+    font-size: 0.9rem;
+  }
+  .ld-kontakt {
+    display: grid;
+    gap: 0.25rem;
+    margin-block: 0.5rem;
+    font-size: 0.92rem;
+  }
+  .ld-kontakt a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.5rem;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .ld-kontakt a:hover {
+    text-decoration: underline;
+  }
+  .ld-h2 {
+    margin-bottom: 2rem;
+  }
+  @media (min-width: 64rem) {
+    .ld {
+      grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+      column-gap: calc(var(--gutter) * 3);
+    }
+    .ld-person {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+</style>

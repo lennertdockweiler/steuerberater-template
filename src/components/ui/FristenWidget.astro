@@ -1,0 +1,222 @@
+---
+/**
+ * Steuertermine-Widget. Server rendert die Termine ab Build-Datum; im Browser
+ * werden sie mit dem heutigen Datum neu berechnet (Countdown bleibt aktuell).
+ */
+import { config, t } from '../../lib/config';
+import { erzeugeFristen, filtereFristen, heuteIso, plusMonateIso } from '../../lib/fristen';
+import { fristenHtml, type FristTexte } from '../../lib/fristen-html';
+
+interface Props {
+  anzahl?: number;
+  layout?: 'kalender' | 'kompakt' | 'tabelle';
+  monate?: number;
+  filter?: boolean;
+}
+const { anzahl = 3, layout = 'kalender', monate = 4, filter = true } = Astro.props;
+const eingabe = {
+  land: config.betrieb.adresse.bundesland,
+  regeln: config.fristenRegeln,
+  extra: config.fristen,
+};
+const texte: FristTexte = {
+  heute: t('fristen.heute'),
+  morgen: t('fristen.morgen'),
+  inTagen: t('fristen.inTagen'),
+  verschoben: t('fristen.verschoben'),
+  keine: t('fristen.keine'),
+};
+const heute = heuteIso();
+const alle = erzeugeFristen(eingabe, heute, plusMonateIso(heute, monate));
+const html = fristenHtml(filtereFristen(alle, 'alle').slice(0, anzahl), heute, layout, texte);
+const daten = JSON.stringify({ eingabe, texte, anzahl, layout, monate });
+---
+
+<div class="fr" data-fristen={daten}>
+  {
+    filter && (
+      <div class="fr-filter" role="group" aria-label={t('fristen.filterLabel')}>
+        <button type="button" class="chip" aria-pressed="true" data-filter="alle">{t('fristen.filterAlle')}</button>
+        <button type="button" class="chip" aria-pressed="false" data-filter="unternehmen">{t('fristen.filterUnternehmen')}</button>
+        <button type="button" class="chip" aria-pressed="false" data-filter="privat">{t('fristen.filterPrivat')}</button>
+      </div>
+    )
+  }
+  <ol class:list={['fr-liste', `fr-${layout}`]} role="list" aria-live="polite" set:html={html} />
+</div>
+
+<style is:global>
+  .fr-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .no-js .fr-filter {
+    display: none;
+  }
+  .fr-liste {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .fr-posten {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.35rem;
+  }
+  .fr-posten li {
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .fr-ph {
+    display: block;
+    font-weight: 400;
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+  }
+  .fr-hinweis {
+    margin-top: 0.5rem;
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+  }
+  .fr-badge {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    background: var(--brand-soft);
+    color: var(--brand-ink);
+    font-size: 0.82rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .fr-badge.fr-dringend {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  /* Kalenderblätter */
+  .fr-kalender {
+    display: grid;
+    gap: var(--gutter);
+  }
+  .fr-blatt {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+    overflow: hidden;
+    animation: blatt-ein 500ms var(--ease-out) both;
+  }
+  .fr-blatt:nth-child(2) {
+    animation-delay: 80ms;
+  }
+  .fr-blatt:nth-child(3) {
+    animation-delay: 160ms;
+  }
+  @keyframes blatt-ein {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+  .fr-datum {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 0.1rem;
+    padding: 1rem 0.5rem;
+    background: var(--inverse);
+    color: var(--on-inverse);
+    text-align: center;
+    border-right: 1px dashed var(--inverse-line);
+  }
+  .fr-blatt-dringend .fr-datum {
+    background: var(--brand);
+    color: var(--on-brand);
+  }
+  .fr-monat,
+  .fr-wtag {
+    font-size: 0.78rem;
+    font-weight: 600;
+    opacity: 0.85;
+  }
+  .fr-tag {
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: 2.6rem;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .fr-inhalt {
+    display: grid;
+    gap: 0.75rem;
+    align-content: center;
+    padding: 1.1rem 1.25rem;
+  }
+  /* Kompakt / Tabelle */
+  .fr-kompakt,
+  .fr-tabelle {
+    border-top: 1px solid var(--line-strong);
+  }
+  .fr-zeile {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.5rem 1.5rem;
+    align-items: start;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .fr-d {
+    grid-column: 1 / -1;
+    font-size: 0.9rem;
+    font-weight: 650;
+    color: var(--brand-ink);
+  }
+  .fr-zeile .fr-badge {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .fr-leer {
+    padding: 1.5rem 0;
+    color: var(--ink-muted);
+  }
+  @media (min-width: 48rem) {
+    .fr-zeile {
+      grid-template-columns: 11rem 1fr auto;
+    }
+    .fr-d {
+      grid-column: 1;
+    }
+    .fr-zeile .fr-badge {
+      grid-column: 3;
+      grid-row: 1;
+    }
+  }
+  @media (min-width: 64rem) {
+    .fr-kalender {
+      grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    }
+    .fr-kalender .fr-blatt {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+    }
+    .fr-kalender .fr-datum {
+      border-right: 0;
+      border-bottom: 1px dashed var(--inverse-line);
+      padding: 1.25rem;
+    }
+    .fr-kalender .fr-tag {
+      font-size: 4rem;
+    }
+    .fr-kalender .fr-inhalt {
+      align-content: start;
+      padding: 1.25rem;
+    }
+  }
+</style>

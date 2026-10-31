@@ -1,0 +1,118 @@
+---
+/** Zielgruppen als Bildkarten, versetzt angeordnet; mobil als Swipe-Leiste. */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t, titelOder } from '../../../lib/config';
+import { aktiv } from '../../../lib/routes';
+import SektionKopf from '../../ui/SektionKopf.astro';
+import Foto from '../../ui/Foto.astro';
+import Icon from '../../ui/Icon.astro';
+
+interface Props {
+  s: AktiveSektion;
+}
+const { s } = Astro.props;
+const ziel = (slug: string) => (aktiv('leistungen') ? `/leistungen/${slug}/` : '/kontakt/');
+---
+
+<div class="wrap">
+  <SektionKopf kicker={s.kicker} titel={titelOder(s.titel, 'zielgruppen.titel')} intro={s.intro ?? t('zielgruppen.intro')} />
+</div>
+<div class="zg-spur-huelle">
+  <ul class="zg-spur wrap" role="list" data-anim-kinder>
+    {
+      config.zielgruppen.map((z) => (
+        <li class="zg-item">
+          <a href={ziel(z.slug)} class="zg-karte">
+            <Foto bild={z.bild} ratio="4 / 5" sizes="(min-width: 64rem) 22vw, (min-width: 40rem) 45vw, 78vw" class="zg-bild" />
+            <span class="zg-inhalt">
+              <span class="zg-titel">
+                <Icon name={z.icon} size={20} />
+                {z.titel}
+              </span>
+              <span class="zg-text">{z.kurztext}</span>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .zg-spur-huelle {
+    overflow: clip;
+  }
+  .zg-spur {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(78vw, 20rem);
+    gap: var(--gutter);
+    margin: 0 auto;
+    padding-bottom: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--pad-x);
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    list-style: none;
+  }
+  .zg-spur::-webkit-scrollbar {
+    display: none;
+  }
+  .zg-item {
+    scroll-snap-align: start;
+  }
+  .zg-karte {
+    display: grid;
+    gap: 1rem;
+    text-decoration: none;
+  }
+  .zg-karte :global(.zg-bild) {
+    border-radius: var(--r-lg);
+  }
+  .zg-karte :global(.zg-bild img) {
+    transition: transform 900ms var(--ease-out);
+  }
+  .zg-karte:hover :global(.zg-bild img) {
+    transform: scale(1.045);
+  }
+  .zg-inhalt {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .zg-titel {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-2);
+    letter-spacing: var(--hl-tracking);
+    line-height: 1.1;
+  }
+  .zg-titel :global(svg) {
+    color: var(--brand-ink);
+    flex: none;
+  }
+  .zg-text {
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+    max-width: 32ch;
+  }
+  .zg-karte:hover .zg-titel {
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.2em;
+  }
+  @media (min-width: 64rem) {
+    .zg-spur {
+      grid-auto-flow: row;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      overflow: visible;
+    }
+    /* Gezielter Rasterbruch: jede zweite Karte versetzt */
+    .zg-item:nth-child(even) {
+      margin-top: clamp(2rem, 4vw, 4.5rem);
+    }
+  }
+</style>

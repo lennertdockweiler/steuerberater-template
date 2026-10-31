@@ -1,0 +1,58 @@
+---
+/** FAQ ohne Akkordeon: alle Antworten sichtbar, zweispaltig gesetzt. */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, titelOder } from '../../../lib/config';
+import SektionKopf from '../../ui/SektionKopf.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'faq' }>;
+}
+const { s } = Astro.props;
+const fragen = s.fragen ?? config.faq;
+if (!fragen.length) return;
+---
+
+<div class="wrap">
+  <SektionKopf kicker={s.kicker} titel={titelOder(s.titel, 'faq.titel')} intro={s.intro} />
+  <dl class="fz" data-anim-kinder>
+    {
+      fragen.map((f) => (
+        <div class="fz-item">
+          <dt>{f.frage}</dt>
+          <dd>{f.antwort}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</div>
+
+<style>
+  .fz {
+    display: grid;
+    gap: 2rem calc(var(--gutter) * 2);
+    margin: 0;
+  }
+  .fz-item {
+    display: grid;
+    gap: 0.6rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line-strong);
+    align-content: start;
+  }
+  dt {
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-1);
+    letter-spacing: calc(var(--hl-tracking) * 0.5);
+    line-height: 1.25;
+  }
+  dd {
+    margin: 0;
+    color: var(--ink-muted);
+  }
+  @media (min-width: 48rem) {
+    .fz {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

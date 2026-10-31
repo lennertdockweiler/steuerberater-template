@@ -1,0 +1,28 @@
+---
+/** Hinweis nach § 5b Abs. 3 UWG und Kennzeichnung von Beispielstimmen. */
+import { config, sichtbareStimmen, t } from '../../lib/config';
+const bew = config.betrieb.bewertungen;
+const hatBeispiele = sichtbareStimmen.some((s) => s.beispiel);
+---
+
+{
+  bew && (
+    <p class="st-hinweis">
+      {hatBeispiele && <strong>{t('stimmen.beispielHinweis')} </strong>}
+      {bew.echtheitsHinweis}
+    </p>
+  )
+}
+
+<style>
+  .st-hinweis {
+    max-width: 70ch;
+    margin-top: 2rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--ink-muted);
+  }
+  .st-hinweis strong {
+    font-weight: 650;
+  }
+</style>

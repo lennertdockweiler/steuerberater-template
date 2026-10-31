@@ -1,0 +1,38 @@
+---
+import { config } from '../lib/config';
+import { absolut, kanzleiSchema, OG_PFAD, ohneBase } from '../lib/seo';
+
+interface Props {
+  titel: string;
+  beschreibung: string;
+  noindex?: boolean;
+  ogBild?: string;
+  ogTyp?: 'website' | 'article' | 'profile';
+  jsonLd?: object[];
+}
+const { titel, beschreibung, noindex = false, ogBild, ogTyp = 'website', jsonLd = [] } = Astro.props;
+const site = Astro.site;
+const canonical = absolut(Astro.url.pathname, site);
+const og = absolut(ogBild ?? OG_PFAD(ohneBase(Astro.url.pathname)), site);
+const sperren = config.meta.noindex || noindex;
+const schemas = [kanzleiSchema(site, absolut(OG_PFAD('/'), site)), ...jsonLd];
+---
+
+<title>{titel}</title>
+<meta name="description" content={beschreibung} />
+<link rel="canonical" href={canonical} />
+{sperren && <meta name="robots" content="noindex, nofollow" />}
+<meta property="og:type" content={ogTyp} />
+<meta property="og:locale" content="de_DE" />
+<meta property="og:site_name" content={config.betrieb.name} />
+<meta property="og:title" content={titel} />
+<meta property="og:description" content={beschreibung} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={og} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={titel} />
+<meta name="twitter:description" content={beschreibung} />
+<meta name="twitter:image" content={og} />
+{schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}

@@ -1,0 +1,159 @@
+---
+/**
+ * Leistungen als Liste; auf dem Desktop folgt eine Bildvorschau dem Cursor
+ * (data-cursor-liste). Ohne Leistungsbild wird das Bild der Zielgruppe gezeigt.
+ */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t, titelOder, leistungPfad, zielgruppeBySlug } from '../../../lib/config';
+import { aktiv } from '../../../lib/routes';
+import SektionKopf from '../../ui/SektionKopf.astro';
+import Foto from '../../ui/Foto.astro';
+import Icon from '../../ui/Icon.astro';
+import Button from '../../ui/Button.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'leistungen' }>;
+}
+const { s } = Astro.props;
+const liste = (s.auswahl ? config.leistungen.filter((l) => s.auswahl!.includes(l.slug)) : config.leistungen).slice(0, 10);
+const bildVon = (l: (typeof liste)[number]) => l.bild ?? zielgruppeBySlug(l.zielgruppe[0])?.bild;
+---
+
+<div class="wrap">
+  <SektionKopf kicker={s.kicker} titel={titelOder(s.titel, 'leistungen.titel')} intro={s.intro ?? t('leistungen.intro')}>
+    {aktiv('leistungen') && <Button href="/leistungen/" variante="sekundaer">{t('aktion.alleLeistungen')}</Button>}
+  </SektionKopf>
+
+  <div class="ll" data-cursor-liste>
+    <ol class="ll-liste" role="list" data-anim-kinder>
+      {
+        liste.map((l, i) => (
+          <li>
+            <a href={aktiv('leistungen') ? leistungPfad(l) : '/kontakt/'} class="ll-zeile" data-vorschau-index={i}>
+              <span class="ll-titel">{l.titel}</span>
+              <span class="ll-text">{l.kurztext}</span>
+              <span class="ll-gruppe">{zielgruppeBySlug(l.zielgruppe[0])?.titel}</span>
+              <span class="ll-pfeil" aria-hidden="true">
+                <Icon name="arrow-up-right" size={22} />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+    <div class="ll-vorschau" data-cursor-vorschau aria-hidden="true">
+      {
+        liste.map((l, i) => (
+          <div class="ll-vbild" data-vorschau-bild style={`opacity:${i === 0 ? 1 : 0}`}>
+            <Foto bild={bildVon(l) ? { ...bildVon(l)!, dekorativ: true, alt: '' } : undefined} ratio="4 / 5" sizes="18rem" />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .ll {
+    position: relative;
+  }
+  .ll-liste {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line-strong);
+  }
+  .ll-zeile {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.35rem 1.5rem;
+    padding: 1.35rem 0;
+    border-bottom: 1px solid var(--line-strong);
+    text-decoration: none;
+  }
+  .ll-titel {
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-2);
+    letter-spacing: var(--hl-tracking);
+    line-height: 1.1;
+    transition:
+      transform 500ms var(--ease-out),
+      color 300ms;
+  }
+  .ll-text {
+    grid-column: 1;
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+    max-width: 50ch;
+  }
+  .ll-gruppe {
+    display: none;
+  }
+  .ll-pfeil {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    align-self: center;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    transition:
+      transform 400ms var(--ease-out),
+      background-color 300ms,
+      color 300ms;
+  }
+  .ll-zeile:hover .ll-titel {
+    transform: translateX(0.5rem);
+    color: var(--brand-ink);
+  }
+  .ll-zeile:hover .ll-pfeil {
+    background: var(--brand);
+    color: var(--on-brand);
+    border-color: var(--brand-edge);
+  }
+  .ll-vorschau {
+    display: none;
+  }
+  @media (min-width: 64rem) and (pointer: fine) {
+    .ll-zeile {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) 10rem auto;
+      align-items: center;
+    }
+    .ll-text {
+      grid-column: 2;
+    }
+    .ll-gruppe {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink-muted);
+    }
+    .ll-pfeil {
+      grid-row: auto;
+      grid-column: 4;
+    }
+    .ll-vorschau {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 16rem;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0;
+    }
+    .ll-vbild {
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+    }
+    .ll-vbild :global(.rahmen) {
+      border-radius: var(--r-lg);
+      box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.45);
+    }
+  }
+</style>

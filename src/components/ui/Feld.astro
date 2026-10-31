@@ -1,0 +1,62 @@
+---
+/** Formularfeld mit sichtbarem Label, Fehlertext (aria-describedby) und passenden Attributen. */
+
+interface Props {
+  id: string;
+  name: string;
+  label: string;
+  typ?: 'text' | 'email' | 'tel' | 'textarea' | 'select' | 'number' | 'date';
+  pflicht?: boolean;
+  autocomplete?: string;
+  optionen?: { wert: string; label: string }[];
+  wert?: string;
+  hilfe?: string;
+  placeholder?: string;
+  class?: string;
+}
+const { id, name, label, typ = 'text', pflicht = false, autocomplete, optionen = [], wert, hilfe, placeholder, class: klasse } = Astro.props;
+const beschrieben = [hilfe && `${id}-hilfe`, `${id}-fehler`].filter(Boolean).join(' ');
+const inputmode = typ === 'tel' ? 'tel' : typ === 'email' ? 'email' : undefined;
+---
+
+<div class:list={['feld', klasse]}>
+  <label for={id}>
+    {label}
+    {pflicht ? <span class="pflicht" aria-hidden="true"> *</span> : null}
+  </label>
+  {hilfe && <p class="feld-hilfe" id={`${id}-hilfe`}>{hilfe}</p>}
+  {
+    typ === 'textarea' ? (
+      <textarea class="eingabe" id={id} name={name} required={pflicht} aria-describedby={beschrieben} placeholder={placeholder}>{wert}</textarea>
+    ) : typ === 'select' ? (
+      <select class="eingabe" id={id} name={name} required={pflicht} aria-describedby={beschrieben}>
+        {optionen.map((o) => (
+          <option value={o.wert} selected={o.wert === wert}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+    ) : (
+      <input class="eingabe" id={id} name={name} type={typ} required={pflicht} autocomplete={autocomplete} inputmode={inputmode} value={wert} aria-describedby={beschrieben} placeholder={placeholder} />
+    )
+  }
+  <p class="feld-fehler" id={`${id}-fehler`} aria-live="polite"></p>
+</div>
+
+<style>
+  .pflicht {
+    color: var(--danger);
+  }
+  .feld-hilfe {
+    margin-top: -0.2rem;
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+  }
+  select.eingabe {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    padding-right: 2.75rem;
+  }
+</style>

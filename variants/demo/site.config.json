@@ -1,0 +1,814 @@
+{
+  "$schema": "../site.config.schema.json",
+  "meta": {
+    "slug": "demo",
+    "sprache": "de",
+    "anrede": "sie",
+    "domain": "https://www.hartmann-vogel.example",
+    "noindex": true,
+    "titelVorlage": "Hartmann & Vogel, Steuerberater Münster"
+  },
+  "betrieb": {
+    "name": "Hartmann & Vogel Steuerberater PartG mbB",
+    "kurzname": "Hartmann & Vogel",
+    "rechtsform": "Partnerschaftsgesellschaft mit beschränkter Berufshaftung",
+    "inhaber": ["Katrin Hartmann", "Markus Vogel"],
+    "slogan": "Steuerberatung für Unternehmen, Heilberufe und Gründer in Münster. Digital, persönlich, verlässlich.",
+    "gruendungsjahr": 2009,
+    "adresse": {
+      "strasse": "Hafenweg 21",
+      "plz": "48155",
+      "ort": "Münster",
+      "bundesland": "NW"
+    },
+    "geo": { "lat": 51.9509, "lng": 7.6431 },
+    "einzugsgebiet": ["Münster", "Greven", "Telgte", "Senden", "Nottuln", "Münsterland"],
+    "telefon": "0251 874396-0",
+    "email": "kanzlei@hartmann-vogel.de",
+    "oeffnungszeiten": {
+      "regulaer": [
+        { "tage": ["mo", "di", "mi", "do"], "von": "08:00", "bis": "17:30" },
+        { "tage": ["fr"], "von": "08:00", "bis": "14:00" }
+      ],
+      "sonder": [
+        { "datum": "2026-12-24", "geschlossen": true, "hinweis": "Heiligabend" },
+        { "datum": "2026-12-31", "geschlossen": true, "hinweis": "Silvester" }
+      ],
+      "hinweis": "Video- und Telefontermine auch vor 8 oder nach 18 Uhr nach Absprache."
+    },
+    "socialLinks": [
+      { "netzwerk": "linkedin", "url": "https://www.linkedin.com/company/hartmann-vogel-example" }
+    ],
+    "bewertungen": {
+      "quelle": "Google",
+      "schnitt": 4.9,
+      "anzahl": 87,
+      "echt": false,
+      "echtheitsHinweis": "Die gezeigten Stimmen sind Beispiele für diese Demo. In der Live-Version zeigen wir nur Stimmen von Mandantinnen und Mandanten, die der Veröffentlichung schriftlich zugestimmt haben; wir kürzen sie nicht sinnentstellend. Bewertungen auf externen Plattformen prüfen wir nicht auf Echtheit.",
+      "eintraege": [
+        {
+          "name": "Dr. Miriam S.",
+          "kontext": "Zahnarztpraxis, Münster",
+          "text": "Ich schicke Belege per App und sehe meine Zahlen im Portal. Für die Praxisübernahme hatten wir einen klaren Fahrplan, ohne dass ich mich um Details kümmern musste.",
+          "einwilligungLiegtVor": true,
+          "beispiel": true
+        },
+        {
+          "name": "Jens K.",
+          "kontext": "Metallbau, 24 Mitarbeitende",
+          "text": "Die Lohnabrechnung läuft seit drei Jahren ohne Nachfragen. Wenn sich etwas ändert, ruft Frau Köhler an, bevor es ein Problem wird.",
+          "einwilligungLiegtVor": true,
+          "beispiel": true
+        },
+        {
+          "name": "Lea & Tim B.",
+          "kontext": "Gründerteam, Online-Shop",
+          "text": "Rechtsform, Umsatzsteuer im EU-Versand, Businessplan für die Bank: Wir haben im ersten Gespräch mehr verstanden als in Wochen eigener Recherche.",
+          "einwilligungLiegtVor": true,
+          "beispiel": true
+        },
+        {
+          "name": "Familie R.",
+          "kontext": "zwei vermietete Wohnungen",
+          "text": "Unterlagen hochladen, kurze Rückfrage per Video, fertig. Die Erklärung war früher ein Wochenende Arbeit, heute eine Stunde.",
+          "einwilligungLiegtVor": true,
+          "beispiel": true
+        },
+        {
+          "name": "Pieter V.",
+          "kontext": "Ingenieurbüro mit Niederlassung in Enschede",
+          "text": "Grenzüberschreitende Fragen werden hier nicht vertagt, sondern gelöst. Und wenn es sein muss, auch auf Niederländisch.",
+          "einwilligungLiegtVor": true,
+          "beispiel": true
+        }
+      ]
+    }
+  },
+  "branding": {
+    "farben": {
+      "primaer": "#0B6A72",
+      "akzent": "#E8A33D",
+      "neutralTon": "#5E7471"
+    },
+    "stilPreset": "klar",
+    "wortmarke": { "zeile1": "Hartmann & Vogel", "zeile2": "Steuerberater PartG mbB" },
+    "animationsIntensitaet": "standard"
+  },
+  "sektionen": [
+    {
+      "typ": "hero",
+      "layout": "statement",
+      "titel": "Ordnung in Ihren Zahlen. Freiraum für Ihr Unternehmen.",
+      "unterzeile": "Digitale Steuerkanzlei in Münster für Mittelstand, Heilberufe, Immobilien und Gründungen. Mit festen Ansprechpartnern und Belegen per App statt Ordnern.",
+      "ctaPrimaer": { "label": "Erstgespräch vereinbaren", "href": "/termin/" },
+      "ctaSekundaer": { "label": "Mandanten-Check starten", "href": "/mandanten-check/" },
+      "fakten": [
+        { "wert": "2", "label": "Partner, beide Steuerberater" },
+        { "wert": "18", "label": "Mitarbeitende in Münster" },
+        { "wert": "1 Tag", "label": "Rückmeldung an Werktagen" }
+      ],
+      "grafikWerte": [34, 42, 39, 51, 48, 60, 55, 67, 63, 74, 71, 86]
+    },
+    { "typ": "zielgruppen", "layout": "karten", "id": "zielgruppen" },
+    { "typ": "leistungen", "layout": "tabs", "id": "leistungen" },
+    { "typ": "ablauf", "layout": "gepinnt" },
+    { "typ": "kennzahlen", "layout": "reihe" },
+    { "typ": "spezialisierungen", "layout": "horizontal" },
+    { "typ": "team", "layout": "karten" },
+    { "typ": "fristen", "layout": "kalender", "hintergrund": "flaeche" },
+    { "typ": "check", "layout": "banner" },
+    { "typ": "stimmen", "layout": "marquee" },
+    { "typ": "karriere", "layout": "split", "bild": { "datei": "kanzlei/karriere.jpg", "alt": "Kolleginnen und Kollegen besprechen sich an einem langen Arbeitstisch im Büro" } },
+    { "typ": "wissen", "layout": "liste" },
+    { "typ": "faq", "layout": "akkordeon", "id": "faq" },
+    { "typ": "cta", "layout": "band", "titel": "Sprechen wir über Ihre Zahlen." }
+  ],
+  "seiten": {
+    "leistungen": true,
+    "spezialisierungen": true,
+    "digitaleKanzlei": true,
+    "team": true,
+    "karriere": true,
+    "wissen": true,
+    "steuertermine": true,
+    "mandantenCheck": true,
+    "termin": true,
+    "kontakt": true,
+    "rechner": true,
+    "unterlagen": true
+  },
+  "seo": {
+    "seiten": {
+      "start": {
+        "titel": "Steuerberater in Münster | Hartmann & Vogel",
+        "beschreibung": "Digitale Steuerkanzlei in Münster: Buchhaltung, Lohn, Jahresabschluss und Beratung für Mittelstand, Heilberufe, Immobilien und Gründer."
+      }
+    }
+  },
+  "rechtliches": {
+    "bildnachweise": ["Fotos: Unsplash (unsplash.com), Unsplash-Lizenz. Abgebildete Personen sind Modelle."],
+    "vertretungsberechtigt": ["Katrin Hartmann, Steuerberaterin", "Markus Vogel, Steuerberater"],
+    "register": { "art": "Partnerschaftsregister", "gericht": "Amtsgericht Essen", "nummer": "PR 4718" },
+    "ustId": "DE 318 274 905",
+    "inhaltlichVerantwortlich": { "name": "Katrin Hartmann", "adresse": "Hafenweg 21, 48155 Münster" },
+    "verbraucherstreitbeilegung": "Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
+    "hosting": { "anbieter": "Cloudflare, Inc.", "adresse": "101 Townsend St, San Francisco, CA 94107, USA", "datenschutzUrl": "https://www.cloudflare.com/de-de/privacypolicy/" }
+  },
+  "integrationen": {
+    "formularEndpoint": "",
+    "karte": { "aktiv": true, "anbieter": "osm" },
+    "analytics": { "aktiv": false }
+  },
+  "demo": {
+    "banner": { "aktiv": true },
+    "agentur": {
+      "name": "Studio Nordlicht Webdesign",
+      "telefon": "0251 000000",
+      "email": "hallo@studio-nordlicht.example",
+      "website": "https://studio-nordlicht.example"
+    },
+    "pitchSeite": true
+  },
+
+  "kanzleiForm": "PartG mbB",
+  "berufstraeger": [
+    {
+      "slug": "katrin-hartmann",
+      "name": "Katrin Hartmann",
+      "titel": ["Steuerberaterin", "Diplom-Kauffrau", "Fachberaterin für Internationales Steuerrecht"],
+      "rolle": "Partnerin",
+      "bestelltSeit": 2006,
+      "schwerpunkte": ["Internationales Steuerrecht", "Heilberufe", "Unternehmensnachfolge", "Jahresabschlüsse"],
+      "sprachen": ["Deutsch", "Englisch", "Niederländisch"],
+      "foto": { "datei": "team/katrin-hartmann.jpg", "alt": "Katrin Hartmann, Steuerberaterin, lächelnd im Büro", "fokus": "50% 25%" },
+      "vita": [
+        { "jahr": "1998", "text": "Studium der Betriebswirtschaftslehre in Münster und Maastricht" },
+        { "jahr": "2003", "text": "Prüfungsassistentin bei einer Wirtschaftsprüfungsgesellschaft in Düsseldorf" },
+        { "jahr": "2006", "text": "Bestellung zur Steuerberaterin" },
+        { "jahr": "2009", "text": "Gründung der Kanzlei in Münster" },
+        { "jahr": "2014", "text": "Fachberaterin für Internationales Steuerrecht" }
+      ],
+      "email": "k.hartmann@hartmann-vogel.de",
+      "telefon": "0251 874396-11",
+      "zitat": "Gute Beratung beginnt mit einer klaren Frage: Was soll in fünf Jahren anders sein als heute?",
+      "kurzbio": "Katrin Hartmann betreut mittelständische Unternehmen, Praxen und Mandanten mit Bezug zu den Niederlanden. Ihre Schwerpunkte sind Jahresabschlüsse, Nachfolgeplanung und grenzüberschreitende Sachverhalte. Sie hat die Kanzlei 2009 gegründet."
+    },
+    {
+      "slug": "markus-vogel",
+      "name": "Markus Vogel",
+      "titel": ["Steuerberater", "Master of Science Taxation"],
+      "rolle": "Partner",
+      "bestelltSeit": 2012,
+      "schwerpunkte": ["Digitale Buchhaltung", "Existenzgründung", "Immobilien", "E-Commerce"],
+      "sprachen": ["Deutsch", "Englisch"],
+      "foto": { "datei": "team/markus-vogel.jpg", "alt": "Markus Vogel, Steuerberater, mit Brille vor einem hellen Fenster", "fokus": "50% 20%" },
+      "vita": [
+        { "jahr": "2005", "text": "Ausbildung zum Steuerfachangestellten in Osnabrück" },
+        { "jahr": "2010", "text": "Berufsbegleitendes Masterstudium Taxation" },
+        { "jahr": "2012", "text": "Bestellung zum Steuerberater" },
+        { "jahr": "2015", "text": "Partner bei Hartmann & Vogel" },
+        { "jahr": "2019", "text": "Umstellung der Kanzlei auf vollständig digitale Mandatsführung" }
+      ],
+      "email": "m.vogel@hartmann-vogel.de",
+      "telefon": "0251 874396-12",
+      "zitat": "Ein Beleg, den Sie nicht abtippen müssen, ist eine Minute für Ihr eigentliches Geschäft.",
+      "kurzbio": "Markus Vogel begleitet Gründerinnen und Gründer, Online-Händler und Immobilieninvestoren. Er verantwortet die Digitalisierung der Kanzlei und richtet für neue Mandate die digitalen Abläufe ein."
+    }
+  ],
+  "team": [
+    { "name": "Jana Köhler", "rolle": "Steuerfachwirtin, Leitung Finanzbuchhaltung", "seit": 2014, "foto": { "datei": "team/jana-koehler.jpg", "alt": "Jana Köhler", "fokus": "50% 30%" }, "schwerpunkte": ["Finanzbuchhaltung", "Umsatzsteuer"] },
+    { "name": "Tobias Brandt", "rolle": "Bilanzbuchhalter (IHK)", "seit": 2016, "foto": { "datei": "team/tobias-brandt.jpg", "alt": "Tobias Brandt", "fokus": "50% 30%" }, "schwerpunkte": ["Jahresabschlüsse", "Heilberufe"] },
+    { "name": "Selin Arslan", "rolle": "Steuerfachangestellte, Lohn und Gehalt", "seit": 2019, "foto": { "datei": "team/selin-arslan.jpg", "alt": "Selin Arslan", "fokus": "50% 30%" }, "schwerpunkte": ["Lohnabrechnung", "Baulohn"] },
+    { "name": "David Lorenz", "rolle": "Steuerfachangestellter, Privatmandate", "seit": 2021, "foto": { "datei": "team/david-lorenz.jpg", "alt": "David Lorenz", "fokus": "50% 30%" }, "schwerpunkte": ["Einkommensteuer", "Vermietung"] },
+    { "name": "Felix Wagner", "rolle": "Digitalisierung und Kanzlei-IT", "seit": 2020, "foto": { "datei": "team/felix-wagner.jpg", "alt": "Felix Wagner", "fokus": "50% 30%" }, "schwerpunkte": ["DATEV Unternehmen online", "Schnittstellen"] }
+  ],
+  "zielgruppen": [
+    {
+      "slug": "unternehmen",
+      "titel": "Unternehmen",
+      "ichBin": "Ich führe ein Unternehmen",
+      "kurztext": "Buchhaltung, Lohn, Jahresabschluss und betriebswirtschaftliche Beratung für GmbH, KG und Mittelstand.",
+      "text": [
+        "Mittelständische Unternehmen brauchen eine Kanzlei, die den Betrieb versteht und nicht nur die Steuererklärung. Wir übernehmen die laufende Finanz- und Lohnbuchhaltung, erstellen Jahresabschlüsse und Steuererklärungen und besprechen die Zahlen mit Ihnen, bevor Entscheidungen fallen.",
+        "Durch digitale Belege und Bankanbindung sind Ihre Auswertungen früh im Monat fertig. So sehen Sie Liquidität, Kostenentwicklung und Steuerbelastung, solange Sie noch gegensteuern können."
+      ],
+      "icon": "building-2",
+      "bild": { "datei": "zielgruppen/unternehmen.jpg", "alt": "Ingenieurin arbeitet in einer Fertigungshalle am Laptop", "fokus": "60% 40%" }
+    },
+    {
+      "slug": "selbststaendige",
+      "titel": "Selbstständige",
+      "ichBin": "Ich bin selbstständig",
+      "kurztext": "Einnahmen-Überschuss-Rechnung, Umsatzsteuer und Einkommensteuer für Freiberufler, Kreative und IT.",
+      "text": [
+        "Als Selbstständige oder Freiberufler tragen Sie Verantwortung für alles gleichzeitig. Wir nehmen Ihnen die steuerliche Seite ab: von der Einnahmen-Überschuss-Rechnung über die Umsatzsteuer-Voranmeldungen bis zur Einkommensteuererklärung.",
+        "Belege fotografieren Sie mit dem Smartphone, Kontoumsätze kommen direkt von der Bank. Vorauszahlungen planen wir so, dass keine unangenehmen Nachzahlungen entstehen."
+      ],
+      "icon": "laptop",
+      "bild": { "datei": "zielgruppen/selbststaendige.jpg", "alt": "Selbstständige Programmiererin arbeitet konzentriert am Laptop", "fokus": "40% 40%" }
+    },
+    {
+      "slug": "existenzgruender",
+      "titel": "Existenzgründer",
+      "ichBin": "Ich gründe gerade",
+      "kurztext": "Rechtsform, Businessplan, Finanzierung und ein sauberer Start mit dem Finanzamt.",
+      "text": [
+        "Die ersten Entscheidungen einer Gründung wirken lange nach: Rechtsform, Umsatzsteuer, Gehalt der Gesellschafter. Wir rechnen die Varianten mit Ihnen durch, bevor Sie unterschreiben.",
+        "Wir unterstützen beim Fragebogen zur steuerlichen Erfassung, beim Businessplan für Bank oder Förderprogramm und richten die Buchhaltung von Anfang an digital ein."
+      ],
+      "icon": "rocket",
+      "bild": { "datei": "zielgruppen/gruender.jpg", "alt": "Gründerin erklärt ihrem Team einen Plan an einer Wand mit Haftnotizen", "fokus": "50% 40%" }
+    },
+    {
+      "slug": "privatpersonen",
+      "titel": "Privatpersonen",
+      "ichBin": "Ich bin Privatperson",
+      "kurztext": "Einkommensteuer, Vermietung, Kapitalerträge, Erbschaft und Schenkung.",
+      "text": [
+        "Sobald zum Gehalt Mieteinnahmen, eine Erbschaft oder Einkünfte aus dem Ausland kommen, lohnt sich ein genauer Blick. Wir erstellen Ihre Einkommensteuererklärung, prüfen Bescheide und beraten bei Schenkungen innerhalb der Familie.",
+        "Unterlagen laden Sie bequem im Portal hoch. Rückfragen klären wir telefonisch oder per Video."
+      ],
+      "icon": "house",
+      "bild": { "datei": "zielgruppen/privat.jpg", "alt": "Helles Wohnzimmer mit gelbem Sessel und Stehlampe", "fokus": "50% 60%" }
+    }
+  ],
+  "leistungen": [
+    {
+      "slug": "finanzbuchhaltung",
+      "zielgruppe": ["unternehmen", "selbststaendige"],
+      "titel": "Digitale Finanzbuchhaltung",
+      "kurztext": "Belege per App, Kontoumsätze per Bankanbindung, Auswertungen früh im Monat.",
+      "text": [
+        "Wir übernehmen Ihre laufende Finanzbuchhaltung vollständig digital. Rechnungen und Quittungen fotografieren Sie mit der App oder leiten sie per E-Mail an Ihr Belegpostfach weiter. Kontoumsätze werden automatisch aus Ihrem Online-Banking übernommen.",
+        "Unser Team bucht, ordnet zu und klärt offene Posten über kurze Rückfragen im Portal. Die betriebswirtschaftliche Auswertung steht Ihnen in der Regel bis zum 15. des Folgemonats zur Verfügung."
+      ],
+      "punkte": [
+        "Einrichtung von DATEV Unternehmen online und Bankanbindung",
+        "Laufende Buchführung und Umsatzsteuer-Voranmeldungen",
+        "Offene-Posten-Liste und Zahlungsvorschläge",
+        "Monatliche betriebswirtschaftliche Auswertung (BWA)",
+        "Vorbereitung auf die E-Rechnungspflicht"
+      ],
+      "icon": "receipt-text",
+      "faq": [
+        { "frage": "Muss ich Papierbelege weiterhin aufbewahren?", "antwort": "Das hängt vom Beleg und vom Verfahren ab. Wir richten mit Ihnen eine Verfahrensdokumentation ein und sagen Ihnen genau, welche Originale Sie aufbewahren müssen." },
+        { "frage": "Was passiert mit meinen bisherigen Buchhaltungsdaten?", "antwort": "Wir übernehmen die Daten Ihrer bisherigen Kanzlei in der Regel elektronisch. Den Wechsel stimmen wir direkt mit der Vorkanzlei ab." }
+      ]
+    },
+    {
+      "slug": "lohnabrechnung",
+      "zielgruppe": ["unternehmen"],
+      "titel": "Lohn- und Gehaltsabrechnung",
+      "kurztext": "Pünktliche Abrechnungen, Meldungen an Krankenkassen und Finanzamt, digitale Lohnzettel.",
+      "text": [
+        "Wir rechnen Löhne und Gehälter für Unternehmen jeder Größe ab, vom Minijob bis zur Geschäftsführung. Meldungen an Sozialversicherung, Finanzamt und Berufsgenossenschaft übernehmen wir fristgerecht.",
+        "Ihre Mitarbeitenden erhalten ihre Abrechnungen digital. Änderungen wie Neueinstellungen, Gehaltsanpassungen oder Sachbezüge melden Sie über ein einfaches Formular im Portal."
+      ],
+      "punkte": [
+        "Monatliche Lohn- und Gehaltsabrechnung",
+        "Meldungen an Krankenkassen, Finanzamt und Berufsgenossenschaft",
+        "Steuerfreie und pauschal versteuerte Zusatzleistungen",
+        "Digitale Lohnabrechnungen für Mitarbeitende",
+        "Begleitung bei Lohnsteuer-Außenprüfungen"
+      ],
+      "icon": "wallet-cards"
+    },
+    {
+      "slug": "jahresabschluss",
+      "zielgruppe": ["unternehmen", "selbststaendige"],
+      "titel": "Jahresabschluss und Bilanz",
+      "kurztext": "Handels- und Steuerbilanz, Offenlegung und eine Besprechung, die Ihre Zahlen erklärt.",
+      "text": [
+        "Wir erstellen Ihren Jahresabschluss nach Handels- und Steuerrecht, übernehmen die Offenlegung im Unternehmensregister und die betrieblichen Steuererklärungen.",
+        "Zu jedem Abschluss gehört ein Gespräch: Was hat sich verändert, welche Spielräume gibt es, worauf sollten Sie im laufenden Jahr achten?"
+      ],
+      "punkte": [
+        "Handels- und Steuerbilanz",
+        "Gewinn- und Verlustrechnung, Anhang",
+        "Offenlegung im Unternehmensregister",
+        "Betriebliche Steuererklärungen",
+        "Abschlussbesprechung mit Kennzahlen"
+      ],
+      "icon": "file-check-2"
+    },
+    {
+      "slug": "controlling",
+      "zielgruppe": ["unternehmen"],
+      "titel": "Controlling und Planung",
+      "kurztext": "Liquiditätsplanung, Kennzahlen und Gespräche, bevor Entscheidungen fallen.",
+      "text": [
+        "Zahlen helfen erst, wenn sie Entscheidungen leichter machen. Wir erstellen mit Ihnen Liquiditäts- und Ertragsplanungen, werten Kennzahlen aus und vergleichen sie mit Ihrer Branche.",
+        "Viermal im Jahr besprechen wir die Entwicklung mit Ihnen, auf Wunsch gemeinsam mit Ihrer Bank."
+      ],
+      "punkte": ["Liquiditäts- und Ertragsplanung", "Quartalsgespräche zur Entwicklung", "Branchenvergleich", "Unterlagen für Bankgespräche"],
+      "icon": "chart-column"
+    },
+    {
+      "slug": "unternehmensnachfolge",
+      "zielgruppe": ["unternehmen", "privatpersonen"],
+      "titel": "Unternehmensnachfolge",
+      "kurztext": "Übergabe an Familie, Mitarbeitende oder Käufer: steuerlich geplant, Jahre im Voraus.",
+      "text": [
+        "Eine Nachfolge braucht Zeit. Wir begleiten Sie ab der ersten Überlegung: Bewertung des Unternehmens, Wahl zwischen Verkauf und Schenkung, Nutzung von Freibeträgen und die Gestaltung der Übergangsphase.",
+        "Bei Bedarf arbeiten wir mit Notaren und Rechtsanwälten zusammen, die Sie selbst auswählen oder die wir Ihnen empfehlen."
+      ],
+      "punkte": ["Unternehmensbewertung", "Vergleich von Verkauf, Schenkung und Erbfolge", "Erbschaft- und Schenkungsteuer", "Zeitplan für die Übergabe"],
+      "icon": "key-round"
+    },
+    {
+      "slug": "internationales-steuerrecht",
+      "zielgruppe": ["unternehmen", "privatpersonen"],
+      "titel": "Internationales Steuerrecht",
+      "kurztext": "Grenzpendler, Niederlassungen in den Niederlanden, Entsendungen und Doppelbesteuerung.",
+      "text": [
+        "Münster liegt eine Stunde von der niederländischen Grenze entfernt. Viele unserer Mandanten arbeiten, investieren oder verkaufen grenzüberschreitend. Wir klären, wo welche Einkünfte versteuert werden, und vermeiden doppelte Besteuerung.",
+        "Katrin Hartmann ist Fachberaterin für Internationales Steuerrecht und berät auf Deutsch, Englisch und Niederländisch."
+      ],
+      "punkte": ["Doppelbesteuerungsabkommen", "Grenzpendler und Entsendungen", "Betriebsstätten und Tochtergesellschaften", "Verrechnungspreise im Mittelstand"],
+      "icon": "globe"
+    },
+    {
+      "slug": "einnahmen-ueberschuss-rechnung",
+      "zielgruppe": ["selbststaendige"],
+      "titel": "Einnahmen-Überschuss-Rechnung",
+      "kurztext": "Gewinnermittlung für Freiberufler und kleine Gewerbetreibende, ohne Schuhkarton.",
+      "text": [
+        "Wenn Sie keine Bilanz aufstellen müssen, ermitteln wir Ihren Gewinn per Einnahmen-Überschuss-Rechnung. Dafür brauchen wir Ihre Belege und Kontoauszüge, die wir digital übernehmen.",
+        "Abschreibungen, Fahrzeugkosten, Arbeitszimmer und Investitionsabzugsbeträge berücksichtigen wir vollständig und erklären Ihnen, was Sie für das nächste Jahr vorbereiten können."
+      ],
+      "punkte": ["Anlage EÜR", "Abschreibungen und Anlagenverzeichnis", "Investitionsabzugsbetrag", "Planung der Vorauszahlungen"],
+      "icon": "file-spreadsheet"
+    },
+    {
+      "slug": "umsatzsteuer",
+      "zielgruppe": ["selbststaendige", "unternehmen"],
+      "titel": "Umsatzsteuer",
+      "kurztext": "Voranmeldungen, Kleinunternehmerregelung, EU-Geschäfte und Online-Handel.",
+      "text": [
+        "Die Umsatzsteuer ist die Steuer mit den meisten Stolperfallen: Kleinunternehmergrenzen, Reverse Charge, Versandhandel in der EU. Wir übernehmen die Voranmeldungen und prüfen, ob Ihre Rechnungen alle Pflichtangaben enthalten.",
+        "Bei Online-Händlern richten wir das One-Stop-Shop-Verfahren ein und behalten die Lieferschwellen im Blick."
+      ],
+      "punkte": ["Umsatzsteuer-Voranmeldungen", "Zusammenfassende Meldungen", "One-Stop-Shop (OSS)", "Prüfung von Rechnungen auf Pflichtangaben"],
+      "icon": "percent"
+    },
+    {
+      "slug": "gruendungsberatung",
+      "zielgruppe": ["existenzgruender"],
+      "titel": "Gründungsberatung und Rechtsform",
+      "kurztext": "Einzelunternehmen, GbR oder GmbH? Wir rechnen die Varianten mit Ihren Zahlen durch.",
+      "text": [
+        "Die passende Rechtsform hängt von Haftung, Gewinnerwartung, Mitgründern und Ihren privaten Plänen ab. Wir vergleichen die Varianten mit Ihren konkreten Zahlen und erklären die Folgen für Steuern und Sozialversicherung.",
+        "Anschließend unterstützen wir beim Fragebogen zur steuerlichen Erfassung, bei der Kleinunternehmerfrage und bei der Einrichtung der Buchhaltung."
+      ],
+      "punkte": ["Vergleich der Rechtsformen", "Fragebogen zur steuerlichen Erfassung", "Kleinunternehmerregelung ja oder nein", "Einrichtung der digitalen Buchhaltung"],
+      "icon": "rocket"
+    },
+    {
+      "slug": "businessplan",
+      "zielgruppe": ["existenzgruender"],
+      "titel": "Businessplan und Finanzierung",
+      "kurztext": "Planzahlen, die einer Bank standhalten, und Unterstützung bei Förderprogrammen.",
+      "text": [
+        "Banken und Förderinstitute wollen nachvollziehbare Zahlen sehen. Wir erstellen mit Ihnen Umsatz-, Kosten- und Liquiditätsplanung für die ersten drei Jahre und prüfen sie auf Plausibilität.",
+        "Auf Wunsch bereiten wir Sie auf das Bankgespräch vor oder begleiten Sie dorthin."
+      ],
+      "punkte": ["Umsatz- und Kostenplanung", "Liquiditätsplanung für drei Jahre", "Kapitalbedarfsplan", "Vorbereitung des Bankgesprächs"],
+      "icon": "presentation"
+    },
+    {
+      "slug": "einkommensteuererklaerung",
+      "zielgruppe": ["privatpersonen", "selbststaendige"],
+      "titel": "Einkommensteuererklärung",
+      "kurztext": "Vollständig, fristgerecht und mit Prüfung des Bescheids.",
+      "text": [
+        "Wir erstellen Ihre Einkommensteuererklärung auf Basis der Unterlagen, die Sie im Portal hochladen. Unsere Checkliste zeigt Ihnen vorher, was wir brauchen.",
+        "Wenn der Bescheid kommt, prüfen wir ihn und legen bei Abweichungen Einspruch ein. Mit steuerlicher Beratung gelten zudem längere Abgabefristen."
+      ],
+      "punkte": ["Einkommensteuererklärung inklusive aller Anlagen", "Prüfung des Steuerbescheids", "Einspruch bei Abweichungen", "Anpassung der Vorauszahlungen"],
+      "icon": "file-text",
+      "faq": [
+        { "frage": "Bis wann muss die Erklärung abgegeben werden?", "antwort": "Mit steuerlicher Beratung gilt eine verlängerte Frist. Für das Jahr 2025 endet sie am 1. März 2027. Ohne Beratung ist die Erklärung 2025 bis zum 31. Juli 2026 fällig." }
+      ]
+    },
+    {
+      "slug": "vermietung-verpachtung",
+      "zielgruppe": ["privatpersonen"],
+      "titel": "Vermietung und Verpachtung",
+      "kurztext": "Werbungskosten, Abschreibung und Modernisierung richtig zuordnen.",
+      "text": [
+        "Bei vermieteten Immobilien entscheidet die richtige Zuordnung über die Steuerlast: Sofort abziehbarer Erhaltungsaufwand oder Herstellungskosten mit Abschreibung? Wir prüfen jede größere Ausgabe.",
+        "Vor einem Kauf oder einer Sanierung rechnen wir die steuerlichen Folgen durch, auch für den Fall, dass die Immobilie später verkauft wird."
+      ],
+      "punkte": ["Anlage V für jedes Objekt", "Abschreibung und Aufteilung des Kaufpreises", "Erhaltungsaufwand und anschaffungsnahe Kosten", "Beratung vor Kauf und Verkauf"],
+      "icon": "house-plus"
+    },
+    {
+      "slug": "erbschaft-schenkung",
+      "zielgruppe": ["privatpersonen"],
+      "titel": "Erbschaft und Schenkung",
+      "kurztext": "Freibeträge nutzen, Erklärungen erstellen und Vermögen geordnet übertragen.",
+      "text": [
+        "Freibeträge für Schenkungen gelten alle zehn Jahre neu. Wer früh plant, kann Vermögen innerhalb der Familie steuerlich günstig übertragen. Wir entwickeln mit Ihnen einen Plan und erstellen die nötigen Erklärungen.",
+        "Im Erbfall übernehmen wir die Erbschaftsteuererklärung und die Bewertung von Immobilien und Unternehmensanteilen."
+      ],
+      "punkte": ["Schenkung- und Erbschaftsteuererklärung", "Nutzung der Freibeträge", "Bewertung von Immobilien", "Abstimmung mit Notar und Rechtsanwalt"],
+      "icon": "scroll-text"
+    }
+  ],
+  "spezialisierungen": [
+    {
+      "slug": "heilberufe",
+      "titel": "Heilberufe",
+      "kurztext": "Arzt-, Zahnarzt- und Therapiepraxen: von der Niederlassung bis zur Praxisabgabe.",
+      "text": [
+        "Praxen haben eigene Regeln: KV-Abrechnungen, umsatzsteuerfreie und steuerpflichtige Leistungen nebeneinander, Investitionen in Medizintechnik, Gemeinschaftspraxen und MVZ. Wir betreuen Ärztinnen, Zahnärzte und Therapeuten im Münsterland seit vielen Jahren.",
+        "Bei Niederlassung und Abgabe begleiten wir den gesamten Prozess, inklusive Finanzierungsplanung und Kaufpreisaufteilung."
+      ],
+      "punkte": ["Niederlassung und Praxiskauf", "Abgrenzung umsatzsteuerfreier Leistungen", "Berufsausübungsgemeinschaften und MVZ", "Praxisabgabe und Nachfolge"],
+      "icon": "stethoscope",
+      "bild": { "datei": "branchen/heilberufe.jpg", "alt": "Heller Behandlungsraum einer Zahnarztpraxis", "fokus": "40% 50%" }
+    },
+    {
+      "slug": "immobilien",
+      "titel": "Immobilien",
+      "kurztext": "Private Vermieter, Bestandshalter und Projektentwickler.",
+      "text": [
+        "Ob eine vermietete Eigentumswohnung oder ein Bestand mit mehreren Mehrfamilienhäusern: Wir kümmern uns um laufende Steuererklärungen, Abschreibungen und die Abgrenzung von Sanierungskosten.",
+        "Für größere Bestände prüfen wir, ob sich eine vermögensverwaltende GmbH lohnt, und planen den Übergang an die nächste Generation."
+      ],
+      "punkte": ["Vermietungseinkünfte und Abschreibung", "Kaufpreisaufteilung Grund und Gebäude", "Immobilien-GmbH und erweiterte Kürzung", "Grunderwerbsteuer bei Übertragungen"],
+      "icon": "building",
+      "bild": { "datei": "branchen/immobilien.jpg", "alt": "Fassade eines Mehrfamilienhauses mit Balkonen", "fokus": "50% 50%" }
+    },
+    {
+      "slug": "mittelstand",
+      "titel": "Handwerk und Produktion",
+      "kurztext": "Betriebe mit Werkstatt, Montage und Baustelle: Lohn, Abschlüsse, Investitionen.",
+      "text": [
+        "Handwerks- und Produktionsbetriebe haben eigene Abläufe: Baulohn, unfertige Leistungen, Maschinenfinanzierung, Fahrzeugflotten. Wir kennen sie aus vielen Mandaten im Münsterland.",
+        "Wir unterstützen bei Investitionsentscheidungen, beim Einsatz von Fördermitteln und bei der Übergabe an die nächste Generation."
+      ],
+      "punkte": ["Baulohn und SOKA-BAU", "Bewertung unfertiger Leistungen", "Investitionsplanung und Förderung", "Firmenwagen und Fuhrpark"],
+      "icon": "hammer",
+      "bild": { "datei": "branchen/mittelstand.jpg", "alt": "Schweißer bei der Arbeit, Funken sprühen", "fokus": "50% 50%" }
+    },
+    {
+      "slug": "e-commerce",
+      "titel": "E-Commerce",
+      "kurztext": "Online-Shops und Marktplätze: Umsatzsteuer in der EU, Schnittstellen, Warenbestand.",
+      "text": [
+        "Online-Händler verkaufen oft in mehrere EU-Länder, über eigene Shops und Marktplätze gleichzeitig. Wir binden Shopsysteme und Zahlungsanbieter an die Buchhaltung an und richten das One-Stop-Shop-Verfahren ein.",
+        "So sind Umsätze, Gebühren und Rückerstattungen automatisch gebucht, und Sie sehen jederzeit, was nach Steuern bleibt."
+      ],
+      "punkte": ["One-Stop-Shop und Lieferschwellen", "Anbindung von Shop, Marktplatz und Zahlungsdienst", "Warenbestand und Inventur", "Plattformgebühren und Retouren"],
+      "icon": "package",
+      "bild": { "datei": "branchen/ecommerce.jpg", "alt": "Hände übergeben ein Versandpaket", "fokus": "50% 50%" }
+    }
+  ],
+  "mitgliedschaften": [
+    { "name": "Steuerberaterverband Westfalen-Lippe e. V." },
+    { "name": "Deutscher Steuerberaterverband e. V." },
+    { "name": "DATEV eG" }
+  ],
+  "software": [
+    { "name": "DATEV", "beschreibung": "Kanzleisoftware und Rechenzentrum in Deutschland" },
+    { "name": "DATEV Unternehmen online", "beschreibung": "Ihr Portal für Belege, Auswertungen und Zahlungen" },
+    { "name": "DATEV Upload mobil", "beschreibung": "Belege mit dem Smartphone fotografieren" },
+    { "name": "Microsoft Teams", "beschreibung": "Videotermine ohne Installation im Browser" }
+  ],
+  "portalLink": {
+    "url": "https://duo.datev.de",
+    "label": "Mandantenportal",
+    "anbieter": "DATEV Unternehmen online"
+  },
+  "mandantenCheck": {
+    "titel": "Welche Beratung passt zu Ihnen?",
+    "intro": "Fünf Fragen, rund zwei Minuten. Am Ende sehen Sie, welche Leistungen zu Ihrer Situation passen und wer bei uns Ihr Ansprechpartner wäre.",
+    "fragen": [
+      {
+        "id": "situation",
+        "frage": "Was beschreibt Ihre Situation am besten?",
+        "optionen": [
+          { "id": "unternehmen", "label": "Ich führe ein Unternehmen", "beschreibung": "GmbH, KG oder Betrieb mit Mitarbeitenden", "icon": "building-2", "gewichte": { "unternehmen": 4 }, "anliegen": "Unternehmen" },
+          { "id": "selbststaendig", "label": "Ich bin selbstständig", "beschreibung": "Freiberuflich oder Einzelunternehmen", "icon": "laptop", "gewichte": { "selbststaendig": 4 }, "anliegen": "Selbstständig" },
+          { "id": "gruendung", "label": "Ich gründe gerade", "beschreibung": "In Planung oder im ersten Jahr", "icon": "rocket", "gewichte": { "gruendung": 5 }, "anliegen": "Gründung" },
+          { "id": "privat", "label": "Ich bin Privatperson", "beschreibung": "Angestellt, im Ruhestand oder Vermieter", "icon": "house", "gewichte": { "privat": 2, "privat-einfach": 2 }, "anliegen": "Privatperson" }
+        ]
+      },
+      {
+        "id": "umsatz",
+        "frage": "Wie hoch ist Ihr Jahresumsatz ungefähr?",
+        "hilfe": "Eine grobe Schätzung genügt. Bei einer Gründung: der erwartete Umsatz.",
+        "optionen": [
+          { "id": "bis-25", "label": "unter 25.000 €", "gewichte": { "gruendung": 1, "selbststaendig": 1 }, "anliegen": "Umsatz unter 25.000 €" },
+          { "id": "bis-250", "label": "25.000 bis 250.000 €", "gewichte": { "selbststaendig": 2, "unternehmen": 1 }, "anliegen": "Umsatz 25.000–250.000 €" },
+          { "id": "bis-2-mio", "label": "250.000 € bis 2 Mio. €", "gewichte": { "unternehmen": 2 }, "anliegen": "Umsatz 250.000 €–2 Mio. €" },
+          { "id": "ueber-2-mio", "label": "über 2 Mio. €", "gewichte": { "unternehmen": 3 }, "anliegen": "Umsatz über 2 Mio. €" },
+          { "id": "kein-umsatz", "label": "Trifft nicht zu", "beschreibung": "Ich habe keine betrieblichen Umsätze", "gewichte": { "privat": 1, "privat-einfach": 1 } }
+        ]
+      },
+      {
+        "id": "mitarbeitende",
+        "frage": "Beschäftigen Sie Mitarbeitende?",
+        "optionen": [
+          { "id": "keine", "label": "Nein", "gewichte": { "selbststaendig": 1, "privat": 1, "privat-einfach": 1 } },
+          { "id": "bis-9", "label": "1 bis 9", "gewichte": { "unternehmen": 1, "selbststaendig": 1 }, "anliegen": "1–9 Mitarbeitende" },
+          { "id": "bis-49", "label": "10 bis 49", "gewichte": { "unternehmen": 2 }, "anliegen": "10–49 Mitarbeitende" },
+          { "id": "ab-50", "label": "50 oder mehr", "gewichte": { "unternehmen": 3 }, "anliegen": "50+ Mitarbeitende" }
+        ]
+      },
+      {
+        "id": "anliegen",
+        "frage": "Worum geht es Ihnen vor allem?",
+        "optionen": [
+          { "id": "laufend", "label": "Laufende Buchhaltung und Lohn", "icon": "receipt-text", "gewichte": { "unternehmen": 2, "selbststaendig": 1 }, "anliegen": "laufende Buchhaltung und Lohn" },
+          { "id": "abschluss", "label": "Jahresabschluss und Steuererklärungen", "icon": "file-check-2", "gewichte": { "selbststaendig": 1, "unternehmen": 1, "privat": 1 }, "anliegen": "Jahresabschluss und Steuererklärungen" },
+          { "id": "beratung", "label": "Beratung zu einer Entscheidung", "beschreibung": "Rechtsform, Nachfolge, Ausland, Investition", "icon": "messages-square", "gewichte": { "gruendung": 2, "unternehmen": 1, "privat": 1 }, "anliegen": "Beratung zu einer anstehenden Entscheidung" },
+          { "id": "vermoegen", "label": "Vermietung, Erbschaft oder Schenkung", "icon": "house-plus", "gewichte": { "privat": 3 }, "anliegen": "Vermietung, Erbschaft oder Schenkung" },
+          { "id": "arbeitnehmer", "label": "Steuererklärung mit Arbeitslohn", "beschreibung": "ohne weitere Einkünfte", "icon": "file-text", "gewichte": { "privat-einfach": 3 }, "anliegen": "Steuererklärung als Arbeitnehmer" }
+        ]
+      },
+      {
+        "id": "zusammenarbeit",
+        "frage": "Wie möchten Sie mit uns zusammenarbeiten?",
+        "hilfe": "Wir arbeiten vollständig digital. Persönliche Gespräche sind trotzdem jederzeit möglich.",
+        "optionen": [
+          { "id": "digital", "label": "Digital", "beschreibung": "Belege per App, Gespräche per Video", "icon": "smartphone", "gewichte": { "unternehmen": 1, "selbststaendig": 1, "gruendung": 1, "privat": 1 }, "anliegen": "Zusammenarbeit digital" },
+          { "id": "gemischt", "label": "Gemischt", "beschreibung": "Digital, aber mit Terminen vor Ort", "icon": "repeat", "gewichte": { "unternehmen": 1, "privat": 1 }, "anliegen": "Zusammenarbeit gemischt" },
+          { "id": "papier", "label": "Lieber auf Papier", "beschreibung": "Ordner vorbeibringen, persönliche Übergabe", "icon": "folder-open", "gewichte": { "privat-einfach": 1 }, "anliegen": "Zusammenarbeit mit Papierunterlagen" }
+        ]
+      }
+    ],
+    "ergebnisse": [
+      {
+        "id": "unternehmen",
+        "typ": "passend",
+        "titel": "Laufende Betreuung für Ihr Unternehmen",
+        "text": "Für Unternehmen Ihrer Größe übernehmen wir in der Regel Buchhaltung, Lohn und Jahresabschluss aus einer Hand und besprechen die Zahlen quartalsweise mit Ihnen. Im Erstgespräch klären wir, wie der Wechsel abläuft und was er kostet.",
+        "leistungen": ["finanzbuchhaltung", "lohnabrechnung", "jahresabschluss", "controlling"],
+        "ansprechpartner": "katrin-hartmann"
+      },
+      {
+        "id": "selbststaendig",
+        "typ": "passend",
+        "titel": "Steuern für Selbstständige, digital erledigt",
+        "text": "Sie konzentrieren sich auf Ihre Aufträge, wir auf Belege, Umsatzsteuer und Gewinnermittlung. Vorauszahlungen planen wir so, dass Sie nicht von Nachzahlungen überrascht werden.",
+        "leistungen": ["einnahmen-ueberschuss-rechnung", "umsatzsteuer", "einkommensteuererklaerung", "finanzbuchhaltung"],
+        "ansprechpartner": "markus-vogel"
+      },
+      {
+        "id": "gruendung",
+        "typ": "passend",
+        "titel": "Gut vorbereitet gründen",
+        "text": "Am Anfang stehen Rechtsform, Umsatzsteuer und ein belastbarer Plan. Wir rechnen die Varianten mit Ihren Zahlen durch und richten die Buchhaltung so ein, dass sie mit Ihnen wächst.",
+        "leistungen": ["gruendungsberatung", "businessplan", "finanzbuchhaltung"],
+        "ansprechpartner": "markus-vogel"
+      },
+      {
+        "id": "privat",
+        "typ": "passend",
+        "titel": "Private Steuern mit Vermögen oder Auslandsbezug",
+        "text": "Mieteinnahmen, Erbschaften oder Einkünfte aus dem Ausland machen die Erklärung anspruchsvoll. Wir übernehmen sie vollständig und beraten bei größeren Entscheidungen vorab.",
+        "leistungen": ["einkommensteuererklaerung", "vermietung-verpachtung", "erbschaft-schenkung", "internationales-steuerrecht"],
+        "ansprechpartner": "katrin-hartmann"
+      },
+      {
+        "id": "privat-einfach",
+        "typ": "hinweis",
+        "titel": "Eine einfache Erklärung braucht vielleicht keine Kanzlei",
+        "text": "Wenn Sie ausschließlich Arbeitslohn beziehen, ist eine Steuerberatung oft nicht wirtschaftlich. Ein Lohnsteuerhilfeverein oder die Erklärung über ELSTER kann dann die passendere Lösung sein. Sind Sie unsicher oder gibt es Besonderheiten, sprechen Sie uns gern an.",
+        "leistungen": ["einkommensteuererklaerung"]
+      }
+    ]
+  },
+  "buchung": {
+    "modus": "demo",
+    "beratungsarten": [
+      { "id": "vor-ort", "label": "Vor Ort", "beschreibung": "In der Kanzlei am Münsteraner Hafen, Parkplätze im Hof", "icon": "building-2", "dauer": 60 },
+      { "id": "video", "label": "Video", "beschreibung": "Im Browser über Microsoft Teams, ohne Installation", "icon": "video", "dauer": 45 },
+      { "id": "telefon", "label": "Telefon", "beschreibung": "Wir rufen Sie zum vereinbarten Zeitpunkt an", "icon": "phone", "dauer": 30 }
+    ],
+    "arbeitszeiten": [
+      { "tage": ["mo", "di", "mi", "do"], "von": "08:30", "bis": "17:00" },
+      { "tage": ["fr"], "von": "08:30", "bis": "13:00" }
+    ],
+    "slotDauer": 30,
+    "vorlaufTage": 1,
+    "horizontTage": 28
+  },
+  "fristen": [
+    { "datum": "2026-12-31", "titel": "Letzter Zahlungstag für Spenden und Handwerkerrechnungen mit Wirkung für 2026", "zielgruppe": "privat", "verschieben": false },
+    { "datum": "2027-02-28", "titel": "Steuererklärungen 2025 mit steuerlicher Beratung", "zielgruppe": "alle", "hinweis": "verlängerte Abgabefrist für beratene Steuerpflichtige" },
+    { "datum": "2027-07-31", "titel": "Steuererklärungen 2026 ohne steuerliche Beratung", "zielgruppe": "privat" }
+  ],
+  "stellen": [
+    {
+      "slug": "steuerfachangestellte",
+      "titel": "Steuerfachangestellte oder Steuerfachwirt (m/w/d)",
+      "art": "Vollzeit oder Teilzeit",
+      "arbeitsort": "hybrid",
+      "beginn": "ab sofort",
+      "stunden": "30 bis 40 Stunden",
+      "kurztext": "Sie betreuen einen festen Kreis von Unternehmen und Selbstständigen, von der laufenden Buchhaltung bis zur Steuererklärung, und arbeiten dabei vollständig digital.",
+      "aufgaben": [
+        "Finanzbuchhaltung für Unternehmen und Freiberufler in DATEV",
+        "Umsatzsteuer-Voranmeldungen und Lohnsteuer-Anmeldungen",
+        "Vorbereitung von Jahresabschlüssen und Steuererklärungen",
+        "Direkter Kontakt mit Ihren Mandanten per Telefon, Video und Portal"
+      ],
+      "profil": [
+        "Abgeschlossene Ausbildung als Steuerfachangestellte oder vergleichbare Qualifikation",
+        "Erfahrung mit DATEV, idealerweise mit DATEV Unternehmen online",
+        "Freude an digitalen Abläufen und klarer Kommunikation"
+      ],
+      "wirBieten": [
+        "Bis zu drei Tage Homeoffice pro Woche",
+        "Gleitzeit ohne Kernarbeitszeit an Freitagen",
+        "Weiterbildungsbudget von 2.000 € pro Jahr plus Freistellung",
+        "Dienstrad-Leasing und Deutschlandticket-Zuschuss"
+      ],
+      "gehalt": { "min": 44000, "max": 56000, "einheit": "YEAR" },
+      "veroeffentlicht": "2026-09-01",
+      "gueltigBis": "2026-12-31",
+      "ansprechpartner": "markus-vogel"
+    },
+    {
+      "slug": "bilanzbuchhaltung",
+      "titel": "Bilanzbuchhalter (m/w/d) für Jahresabschlüsse",
+      "art": "Vollzeit",
+      "arbeitsort": "hybrid",
+      "beginn": "nach Vereinbarung",
+      "stunden": "40 Stunden",
+      "kurztext": "Sie erstellen Jahresabschlüsse für mittelständische Unternehmen und Praxen und besprechen die Ergebnisse gemeinsam mit den Partnern.",
+      "aufgaben": [
+        "Erstellung von Jahresabschlüssen für Kapital- und Personengesellschaften",
+        "Betriebliche Steuererklärungen",
+        "Vorbereitung und Teilnahme an Abschlussbesprechungen",
+        "Fachliche Begleitung von Kolleginnen und Kollegen in der Buchhaltung"
+      ],
+      "profil": [
+        "Bilanzbuchhalter (IHK) oder Steuerfachwirt mit Abschlusserfahrung",
+        "Sicherer Umgang mit Handels- und Steuerrecht",
+        "Selbstständige, strukturierte Arbeitsweise"
+      ],
+      "wirBieten": [
+        "Unterstützung beim Weg zum Steuerberaterexamen",
+        "Feste Mandantengruppe statt wechselnder Zuständigkeiten",
+        "Hybrides Arbeiten mit moderner Ausstattung",
+        "Betriebliche Altersvorsorge mit Arbeitgeberzuschuss"
+      ],
+      "gehalt": { "min": 54000, "max": 68000, "einheit": "YEAR" },
+      "veroeffentlicht": "2026-08-15",
+      "gueltigBis": "2026-12-31",
+      "ansprechpartner": "katrin-hartmann"
+    },
+    {
+      "slug": "ausbildung-2027",
+      "titel": "Ausbildung zur/zum Steuerfachangestellten 2027",
+      "art": "Ausbildung",
+      "arbeitsort": "vor Ort",
+      "beginn": "1. August 2027",
+      "kurztext": "Drei Jahre Ausbildung in einer digitalen Kanzlei: mit fester Ansprechperson, eigenem Laptop vom ersten Tag an und guten Chancen auf Übernahme.",
+      "aufgaben": [
+        "Mitarbeit in Buchhaltung, Lohn und Steuererklärungen",
+        "Berufsschule in Münster und kanzleiinterner Unterricht",
+        "Eigene kleine Mandate im dritten Ausbildungsjahr"
+      ],
+      "profil": [
+        "Abitur, Fachabitur oder sehr guter Realschulabschluss",
+        "Interesse an Zahlen und an digitalen Werkzeugen",
+        "Freude am Umgang mit Menschen"
+      ],
+      "wirBieten": [
+        "Ausbildungsvergütung über Empfehlung der Steuerberaterkammer",
+        "Prüfungsvorbereitungskurse werden übernommen",
+        "Übernahmegarantie bei gutem Abschluss"
+      ],
+      "gehalt": { "min": 1100, "max": 1300, "einheit": "MONTH" },
+      "veroeffentlicht": "2026-10-01",
+      "gueltigBis": "2027-05-31",
+      "ansprechpartner": "katrin-hartmann"
+    }
+  ],
+  "benefits": [
+    { "titel": "Hybrid arbeiten", "text": "Bis zu drei Tage pro Woche im Homeoffice, mit Laptop, zwei Monitoren und Headset.", "icon": "house-wifi" },
+    { "titel": "Weiterbildung", "text": "2.000 € Budget pro Jahr und Freistellung für Fachwirt, Bilanzbuchhalter oder Steuerberaterexamen.", "icon": "graduation-cap" },
+    { "titel": "Gleitzeit", "text": "Arbeitszeit, die zum Leben passt. Freitags endet die Kernzeit um 12 Uhr.", "icon": "clock-3" },
+    { "titel": "Dienstrad", "text": "In Münster selbstverständlich: Dienstrad-Leasing mit Arbeitgeberzuschuss.", "icon": "bike" },
+    { "titel": "Feste Mandate", "text": "Sie betreuen Ihre Mandanten dauerhaft und lernen deren Betriebe wirklich kennen.", "icon": "users" },
+    { "titel": "Am Hafen", "text": "Helles Büro am Münsteraner Hafen, Mittagspause am Wasser inklusive.", "icon": "sailboat" }
+  ],
+  "karriere": {
+    "titel": "Arbeiten in einer Kanzlei, die digital denkt",
+    "intro": "Bei uns gibt es keine Papierberge und keine Nachtschichten zum Fristende. Dafür feste Mandate, moderne Werkzeuge und Kolleginnen und Kollegen, die sich gegenseitig unterstützen.",
+    "kultur": [
+      "Wir haben die Kanzlei 2019 vollständig auf digitale Abläufe umgestellt. Das macht die Arbeit planbarer: Belege kommen laufend statt im Schuhkarton, Rückfragen klären wir per Portal statt per Telefonkette.",
+      "Jede Kollegin und jeder Kollege betreut eine feste Gruppe von Mandanten. Fachliche Fragen besprechen wir in einer kurzen Runde jeden Morgen um 9 Uhr."
+    ],
+    "bewerbungsSchritte": [
+      { "titel": "Kurzbewerbung", "text": "Formular ausfüllen oder Lebenslauf schicken, ein Anschreiben brauchen wir nicht." },
+      { "titel": "Kennenlernen", "text": "Ein Gespräch per Video oder bei uns am Hafen, etwa 45 Minuten." },
+      { "titel": "Probetag", "text": "Wenn Sie möchten, lernen Sie das Team einen halben Tag lang kennen." },
+      { "titel": "Zusage", "text": "Innerhalb einer Woche nach dem Gespräch erhalten Sie eine Rückmeldung." }
+    ],
+    "bild": { "datei": "kanzlei/karriere.jpg", "alt": "Kolleginnen und Kollegen besprechen sich an einem langen Arbeitstisch" },
+    "zitat": { "text": "Ich wollte nach der Ausbildung nicht mehr Belege abtippen. Hier betreue ich zwölf Mandate selbst und lerne jeden Tag dazu.", "name": "Selin Arslan", "rolle": "Steuerfachangestellte seit 2019" }
+  },
+  "digitaleKanzlei": {
+    "titel": "So arbeiten wir zusammen: digital, sicher, nachvollziehbar",
+    "intro": "Seit 2019 führen wir alle Mandate digital. Für Sie heißt das: keine Ordner, keine Fahrten, keine verlorenen Belege. Und trotzdem jederzeit ein persönlicher Ansprechpartner, wenn Sie einen brauchen.",
+    "bausteine": [
+      { "titel": "Belege per App", "text": "Rechnungen und Quittungen fotografieren Sie mit DATEV Upload mobil. Digitale Rechnungen leiten Sie an Ihr persönliches Belegpostfach weiter.", "icon": "scan-line" },
+      { "titel": "Bankdaten automatisch", "text": "Ihre Kontoumsätze werden täglich übernommen. Wir ordnen Zahlungen und Belege zu, Sie müssen nichts abtippen.", "icon": "landmark" },
+      { "titel": "Portal statt E-Mail", "text": "Auswertungen, Bescheide und Rückfragen finden Sie im Mandantenportal. Vertrauliche Unterlagen verschicken wir nicht per E-Mail.", "icon": "lock-keyhole" },
+      { "titel": "Video-Beratung", "text": "Besprechungen per Video sparen Ihnen den Weg. Den Link erhalten Sie mit der Terminbestätigung.", "icon": "video" },
+      { "titel": "Digitale Lohnzettel", "text": "Ihre Mitarbeitenden erhalten Abrechnungen sicher im Postfach statt auf Papier.", "icon": "wallet-cards" },
+      { "titel": "E-Rechnung vorbereitet", "text": "Wir prüfen mit Ihnen, ob Ihre Rechnungsprogramme die E-Rechnungspflicht erfüllen, und stellen den Empfang schon heute digital um.", "icon": "file-code-2" }
+    ],
+    "sicherheit": [
+      { "titel": "Rechenzentrum in Deutschland", "text": "Ihre Daten liegen im DATEV-Rechenzentrum in Nürnberg, nicht in einer Cloud im Ausland." },
+      { "titel": "Verschwiegenheitspflicht", "text": "Als Steuerberater sind wir gesetzlich zur Verschwiegenheit verpflichtet. Das gilt für alle Mitarbeitenden der Kanzlei." },
+      { "titel": "Zwei-Faktor-Anmeldung", "text": "Der Zugang zum Portal ist mit einem zweiten Faktor geschützt, zum Beispiel per Smartphone-App." },
+      { "titel": "Geregelte Zugriffe", "text": "Nur das Team, das Ihr Mandat betreut, hat Zugriff auf Ihre Unterlagen. Jeder Zugriff wird protokolliert." }
+    ],
+    "bild": { "datei": "kanzlei/digital.jpg", "alt": "Heller Arbeitsplatz mit Laptop an einem Fenster mit Blick in die Stadt" }
+  },
+  "unterlagen": {
+    "intro": "Der sichere Weg zu uns führt über das Mandantenportal. Dort laden Sie Unterlagen verschlüsselt hoch, wir sehen sie sofort, und Sie behalten den Überblick. Bitte senden Sie Steuerunterlagen nicht als E-Mail-Anhang."
+  },
+  "kennzahlen": [
+    { "wert": 420, "label": "Mandantinnen und Mandanten" },
+    { "wert": 17, "label": "Jahre in Münster" },
+    { "wert": 18, "label": "Menschen im Team" },
+    { "wert": 92, "suffix": "%", "label": "der Belege erreichen uns digital" }
+  ],
+  "ablauf": {
+    "titel": "So einfach arbeiten wir zusammen",
+    "intro": "Vier Schritte, und der größte Teil läuft automatisch. Sie behalten den Überblick, wir übernehmen die Arbeit.",
+    "schritte": [
+      { "titel": "Beleg fotografieren", "text": "Rechnung oder Quittung mit der App fotografieren. Das dauert wenige Sekunden, digitale Rechnungen leiten Sie einfach weiter.", "motiv": "foto" },
+      { "titel": "Automatisch hochladen", "text": "Der Beleg landet verschlüsselt im DATEV-Rechenzentrum. Ihre Kontoumsätze kommen direkt von der Bank dazu.", "motiv": "upload" },
+      { "titel": "Wir buchen", "text": "Unser Team ordnet Belege und Zahlungen zu, bucht und klärt offene Fragen kurz über das Portal.", "motiv": "buchen" },
+      { "titel": "Sie sehen Ihre Zahlen", "text": "Bis zum 15. des Folgemonats liegt Ihre Auswertung im Portal. Auf Wunsch besprechen wir sie mit Ihnen.", "motiv": "auswertung" }
+    ]
+  },
+  "faq": [
+    { "frage": "Was kostet die Zusammenarbeit?", "antwort": "Unsere Vergütung richtet sich nach der Steuerberatervergütungsverordnung (StBVV). Für laufende Leistungen wie Buchhaltung und Lohn vereinbaren wir meist eine monatliche Pauschale. Nach dem Erstgespräch erhalten Sie ein schriftliches Angebot, das die Leistungen genau beschreibt." },
+    { "frage": "Nehmen Sie aktuell neue Mandate an?", "antwort": "Ja, in unseren Schwerpunkten Mittelstand, Heilberufe, Immobilien und Gründungen. Damit wir jedem Mandat gerecht werden, klären wir im Erstgespräch offen, ob wir die passende Kanzlei für Ihr Anliegen sind." },
+    { "frage": "Muss ich für Termine nach Münster kommen?", "antwort": "Nein. Die meisten Gespräche führen wir per Video oder Telefon. Wer lieber persönlich kommt, ist bei uns am Hafen willkommen; Parkplätze gibt es im Hof." },
+    { "frage": "Wie läuft ein Wechsel von meiner bisherigen Kanzlei?", "antwort": "Sie unterschreiben eine Vollmacht, den Rest organisieren wir. Wir fordern die Daten bei der Vorkanzlei an und übernehmen sie in der Regel elektronisch. Ein Wechsel ist jederzeit möglich, am einfachsten zum Monats- oder Jahresanfang." },
+    { "frage": "Welche Software brauche ich?", "antwort": "Nur ein Smartphone und einen Browser. Wir richten DATEV Unternehmen online und die Upload-App für Sie ein und zeigen Ihnen in einem 30-minütigen Termin, wie alles funktioniert." },
+    { "frage": "Wie sicher sind meine Daten?", "antwort": "Ihre Daten liegen im DATEV-Rechenzentrum in Deutschland. Der Zugang ist mit Zwei-Faktor-Anmeldung geschützt, und alle Mitarbeitenden unterliegen der gesetzlichen Verschwiegenheitspflicht." }
+  ],
+  "kammer": {
+    "name": "Steuerberaterkammer Westfalen-Lippe",
+    "adresse": "Erphostraße 43, 48145 Münster",
+    "website": "https://www.steuerberaterkammer-westfalen-lippe.de"
+  },
+  "berufshaftpflicht": {
+    "versicherer": "HDI Versicherung AG",
+    "adresse": "HDI-Platz 1, 30659 Hannover",
+    "geltungsbereich": "Tätigkeit in den Mitgliedstaaten der Europäischen Union und im Europäischen Wirtschaftsraum"
+  },
+  "texte": {}
+}

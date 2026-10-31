@@ -1,0 +1,268 @@
+---
+/**
+ * Mini-Rechner. Alle Steuerwerte kommen aus src/data/steuerwerte.ts (Stand + Quelle),
+ * die Ergebnistexte aus src/data/rechner-texte.ts.
+ */
+import Base from '../layouts/Base.astro';
+import SeitenKopf from '../components/ui/SeitenKopf.astro';
+import Regler from '../components/ui/Regler.astro';
+import Icon from '../components/ui/Icon.astro';
+import AbschlussCta from '../components/ui/AbschlussCta.astro';
+import { t } from '../lib/config';
+import { STEUERWERTE as W } from '../data/steuerwerte';
+import { datum, euro } from '../lib/format';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema } from '../lib/seo';
+
+const pfad = [{ label: t('seite.rechner.titel'), href: '/rechner/' }];
+const jahre = Object.keys(W.entfernungspauschale.jahre).map(Number).sort((a, b) => b - a);
+const stand = t('rechner.stand', { datum: datum(W.stand) });
+---
+
+<Base
+  titel={seitenTitel('rechner', t('seite.rechner.seo'))}
+  beschreibung={seitenBeschreibung('rechner', t('seite.rechner.intro'))}
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site)]}
+>
+  <SeitenKopf titel={t('seite.rechner.titel')} intro={t('seite.rechner.intro')} pfad={pfad}>
+    <nav class="re-sprung" aria-label={t('seite.rechner.titel')}>
+      <a href="#kleinunternehmer" class="chip">{t('rechner.ku.titel')}</a>
+      <a href="#pendler" class="chip">{t('rechner.pendler.titel')}</a>
+      <a href="#homeoffice" class="chip">{t('rechner.ho.titel')}</a>
+    </nav>
+  </SeitenKopf>
+
+  <div class="wrap re">
+    <!-- Kleinunternehmer -->
+    <section class="re-karte" id="kleinunternehmer" data-rechner="kleinunternehmer" aria-labelledby="re-ku">
+      <div class="re-eingaben">
+        <span class="re-icon"><Icon name="store" size={26} strich={1.5} /></span>
+        <h2 class="h3" id="re-ku">{t('rechner.ku.titel')}</h2>
+        <p class="gedaempft">{t('rechner.ku.intro')}</p>
+        <form class="re-form">
+          <label class="re-schalter">
+            <input type="checkbox" name="gruendung" />
+            <span>{t('rechner.ku.gruendung')}</span>
+          </label>
+          <div data-nur-bestand>
+            <Regler id="ku-vorjahr" name="vorjahr" label={t('rechner.ku.vorjahr')} min={0} max={60000} schritt={500} wert={18000} einheit="€" />
+          </div>
+          <Regler id="ku-laufend" name="laufend" label={t('rechner.ku.laufend')} min={0} max={150000} schritt={500} wert={22000} einheit="€" />
+        </form>
+      </div>
+      <div class="re-ergebnis" aria-live="polite">
+        <p class="re-status" data-ergebnis-status data-ok="true">{t('rechner.ku.moeglich')}</p>
+        <div class="re-grenze" data-grenze-balken style="--anteil:0.2"><span></span></div>
+        <p class="re-text" data-ergebnis-text></p>
+        <p class="re-quelle"><Icon name="scale" size={16} />{`${W.kleinunternehmer.quelle}. ${stand}`}</p>
+      </div>
+    </section>
+
+    <!-- Entfernungspauschale -->
+    <section class="re-karte" id="pendler" data-rechner="pendler" aria-labelledby="re-pe">
+      <div class="re-eingaben">
+        <span class="re-icon"><Icon name="route" size={26} strich={1.5} /></span>
+        <h2 class="h3" id="re-pe">{t('rechner.pendler.titel')}</h2>
+        <p class="gedaempft">{t('rechner.pendler.intro')}</p>
+        <form class="re-form">
+          <div class="feld">
+            <label for="pe-jahr">{t('rechner.pendler.jahr')}</label>
+            <select id="pe-jahr" name="jahr" class="eingabe">
+              {jahre.map((j) => <option value={j}>{j}</option>)}
+            </select>
+          </div>
+          <Regler id="pe-km" name="km" label={t('rechner.pendler.km')} min={1} max={100} wert={24} einheit="km" />
+          <Regler id="pe-tage" name="tage" label={t('rechner.pendler.tage')} min={1} max={260} wert={W.entfernungspauschale.standardArbeitstage} />
+          <label class="re-schalter">
+            <input type="checkbox" name="pkw" checked />
+            <span>{t('rechner.pendler.pkw')}</span>
+          </label>
+        </form>
+      </div>
+      <div class="re-ergebnis" aria-live="polite">
+        <p class="re-label">{t('rechner.pendler.ergebnis')}</p>
+        <p class="re-betrag ziffern" data-ergebnis-betrag>{euro(0, true)}</p>
+        <p class="re-klein" data-pro-tag></p>
+        <p class="re-text" data-ergebnis-text></p>
+        <p class="re-quelle"><Icon name="scale" size={16} />{`${W.entfernungspauschale.quelle}. ${stand}`}</p>
+      </div>
+    </section>
+
+    <!-- Homeoffice -->
+    <section class="re-karte" id="homeoffice" data-rechner="homeoffice" aria-labelledby="re-ho">
+      <div class="re-eingaben">
+        <span class="re-icon"><Icon name="house" size={26} strich={1.5} /></span>
+        <h2 class="h3" id="re-ho">{t('rechner.ho.titel')}</h2>
+        <p class="gedaempft">{t('rechner.ho.intro')}</p>
+        <form class="re-form">
+          <Regler id="ho-tage" name="tage" label={t('rechner.ho.tage')} min={0} max={260} wert={120} />
+        </form>
+      </div>
+      <div class="re-ergebnis" aria-live="polite">
+        <p class="re-label">{t('rechner.ho.ergebnis')}</p>
+        <p class="re-betrag ziffern" data-ergebnis-betrag>{euro(0, true)}</p>
+        <div class="re-grenze" data-grenze-balken style="--anteil:0.5"><span></span></div>
+        <p class="re-klein">{t('rechner.ho.max', { betrag: euro(W.homeoffice.maxBetrag, true) })}</p>
+        <p class="re-text" data-ergebnis-text></p>
+        <p class="re-quelle"><Icon name="scale" size={16} />{`${W.homeoffice.quelle}. ${stand}`}</p>
+      </div>
+    </section>
+
+    <p class="re-hinweis"><Icon name="info" size={20} /><span><strong>{t('seite.rechner.hinweis')}</strong> {t('rechner.hinweisLang')}</span></p>
+  </div>
+  <AbschlussCta />
+</Base>
+
+<style>
+  .re-sprung {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .re-sprung .chip {
+    text-decoration: none;
+  }
+  .re {
+    display: grid;
+    gap: var(--gutter);
+    padding-bottom: var(--space-section);
+  }
+  .re-karte {
+    display: grid;
+    border: 1px solid var(--line);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    scroll-margin-top: calc(var(--header-h) + 1.5rem);
+  }
+  .re-eingaben {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    padding: clamp(1.25rem, 1rem + 2vw, 2.5rem);
+  }
+  .re-icon {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: var(--r-md);
+    background: var(--brand-soft);
+    color: var(--brand-ink);
+  }
+  .re-form {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 0.75rem;
+  }
+  .re-schalter {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2.75rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .re-schalter input {
+    width: 1.35rem;
+    height: 1.35rem;
+    accent-color: var(--brand);
+  }
+  .re-ergebnis {
+    display: grid;
+    gap: 0.9rem;
+    align-content: center;
+    padding: clamp(1.25rem, 1rem + 2vw, 2.5rem);
+    background: var(--inverse);
+    color: var(--on-inverse);
+    --ink-muted: var(--on-inverse-muted);
+  }
+  .re-label {
+    font-size: var(--step--1);
+    font-weight: 650;
+    color: var(--on-inverse-muted);
+  }
+  .re-betrag {
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: clamp(2.6rem, 1.8rem + 3.5vw, 4.6rem);
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+  .re-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-2);
+    line-height: 1.15;
+  }
+  .re-status::before {
+    content: '';
+    flex: none;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    background: var(--brand-on-inverse);
+  }
+  .re-status[data-ok='false']::before {
+    background: var(--accent);
+  }
+  .re-grenze {
+    position: relative;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--inverse-line);
+    overflow: hidden;
+  }
+  .re-grenze span {
+    position: absolute;
+    inset: 0;
+    background: var(--brand-on-inverse);
+    transform-origin: left;
+    transform: scaleX(var(--anteil));
+    transition: transform 500ms var(--ease-out), background-color 300ms;
+  }
+  .re-grenze[data-ueber] span {
+    background: var(--accent);
+  }
+  .re-klein,
+  .re-text {
+    font-size: 0.95rem;
+    color: var(--on-inverse-muted);
+  }
+  .re-text {
+    color: var(--on-inverse);
+  }
+  .re-quelle {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--inverse-line);
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--on-inverse-muted);
+  }
+  .re-quelle :global(svg) {
+    flex: none;
+    margin-top: 0.1rem;
+  }
+  .re-hinweis {
+    display: flex;
+    gap: 0.75rem;
+    max-width: 70ch;
+    margin-top: 1rem;
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+  }
+  .re-hinweis :global(svg) {
+    flex: none;
+    color: var(--accent-ink);
+  }
+  @media (min-width: 64rem) {
+    .re-karte {
+      grid-template-columns: 7fr 5fr;
+    }
+  }
+</style>

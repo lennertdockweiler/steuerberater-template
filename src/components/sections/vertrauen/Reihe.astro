@@ -1,0 +1,80 @@
+---
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t, titelOder } from '../../../lib/config';
+
+interface Props {
+  s: AktiveSektion;
+}
+const { s } = Astro.props;
+if (!config.mitgliedschaften.length && !config.software.length) return;
+---
+
+<div class="wrap vr">
+  <h2 class="h4 vr-titel">{titelOder(s.titel, 'vertrauen.titel')}</h2>
+  {
+    config.mitgliedschaften.length > 0 && (
+      <div>
+        <p class="vr-label">{t('vertrauen.mitglied')}</p>
+        <ul role="list">
+          {config.mitgliedschaften.map((m) => (
+            <li>{m.url ? <a href={m.url} target="_blank" rel="noopener">{m.name}</a> : m.name}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+  {
+    config.software.length > 0 && (
+      <div>
+        <p class="vr-label">{t('vertrauen.software')}</p>
+        <ul role="list">
+          {config.software.map((x) => (
+            <li>
+              <strong>{x.name}</strong>
+              {x.beschreibung && <span>{x.beschreibung}</span>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .vr {
+    display: grid;
+    gap: 2rem;
+    padding-block: 2.5rem;
+    border-block: 1px solid var(--line);
+  }
+  .vr-titel {
+    font-weight: 650;
+  }
+  .vr-label {
+    margin-bottom: 0.75rem;
+    font-size: var(--step--1);
+    font-weight: 650;
+    color: var(--brand-ink);
+  }
+  ul {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    display: grid;
+    font-size: 0.95rem;
+  }
+  li span {
+    color: var(--ink-muted);
+    font-size: 0.88rem;
+  }
+  @media (min-width: 64rem) {
+    .vr {
+      grid-template-columns: 3fr 4fr 5fr;
+      column-gap: calc(var(--gutter) * 2);
+    }
+  }
+</style>

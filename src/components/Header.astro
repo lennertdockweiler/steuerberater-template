@@ -1,0 +1,513 @@
+---
+/**
+ * Header: transparent über dem Hero, beim Scrollen kompakt mit Blur,
+ * blendet beim Runterscrollen aus und beim Hochscrollen ein (src/scripts/header.ts).
+ * Darunter das animierte Vollbild-Mobilmenü (src/scripts/menu.ts).
+ */
+import { config, t } from '../lib/config';
+import { hauptNavigation, serviceNavigation, terminPfad, istAktuell } from '../lib/routes';
+import { telHref } from '../lib/format';
+import { ohneBase } from '../lib/seo';
+import Logo from './ui/Logo.astro';
+import Icon from './ui/Icon.astro';
+import Button from './ui/Button.astro';
+
+interface Props {
+  ueberHero?: boolean;
+}
+const { ueberHero = false } = Astro.props;
+const nav = hauptNavigation();
+const service = serviceNavigation();
+const pfad = ohneBase(Astro.url.pathname);
+const portal = config.portalLink;
+---
+
+<header class="kopf" data-header data-ueber-hero={ueberHero ? 'true' : 'false'}>
+  <div class="wrap kopf-innen">
+    <a href="/" class="kopf-logo">
+      <Logo />
+      <span class="sr-only">{t('nav.zurStartseite')}</span>
+    </a>
+
+    <nav class="kopf-nav" aria-label={t('nav.hauptnavigation')}>
+      <ul role="list">
+        {
+          nav.map((p) => (
+            <li class:list={[p.kinder && 'hat-kinder']} data-dropdown={p.kinder ? '' : undefined}>
+              <a href={p.href} class="kopf-link" aria-current={istAktuell(pfad, p.href) ? 'page' : undefined}>
+                {p.label}
+              </a>
+              {p.kinder && (
+                <>
+                  <button class="kopf-toggle" type="button" aria-expanded="false" aria-controls={`dd-${p.id}`}>
+                    <span class="sr-only">{t('nav.untermenue', { label: p.label })}</span>
+                    <Icon name="chevron-down" size={16} strich={2} />
+                  </button>
+                  <div class="kopf-dropdown" id={`dd-${p.id}`} hidden>
+                    <ul role="list">
+                      {p.kinder.map((k) => (
+                        <li>
+                          <a href={k.href}>
+                            <span class="dd-titel">{k.label}</span>
+                            {k.text && <span class="dd-text">{k.text}</span>}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="kopf-aktionen">
+      {
+        portal && (
+          <a href={portal.url} class="kopf-portal" target="_blank" rel="noopener">
+            <Icon name="lock-keyhole" size={18} />
+            <span>{portal.label}</span>
+            <span class="sr-only">{t('aktion.neuerTab')}</span>
+          </a>
+        )
+      }
+      <Button href={terminPfad()} klein icon="calendar-check" class="kopf-cta" magnet>{t('aktion.terminKurz')}</Button>
+      <button class="kopf-burger" type="button" aria-expanded="false" aria-controls="mobilmenue" data-menu-oeffnen>
+        <span class="burger-linien" aria-hidden="true"><span></span><span></span></span>
+        <span class="burger-label">{t('nav.menue')}</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="menue" id="mobilmenue" data-menu role="dialog" aria-modal="true" aria-label={t('nav.menue')} hidden>
+  <div class="menue-innen wrap">
+    <div class="menue-kopf">
+      <a href="/" class="kopf-logo"><Logo /><span class="sr-only">{t('nav.zurStartseite')}</span></a>
+      <button class="menue-zu" type="button" data-menu-schliessen>
+        <span>{t('nav.menueSchliessen')}</span>
+        <Icon name="x" size={22} strich={2} />
+      </button>
+    </div>
+    <nav class="menue-nav" aria-label={t('nav.hauptnavigation')}>
+      <ul role="list">
+        <li style="--i:0"><a href="/" aria-current={pfad === '/' ? 'page' : undefined}>{t('nav.start')}</a></li>
+        {
+          nav.map((p, i) => (
+            <li style={`--i:${i + 1}`}>
+              <a href={p.href} aria-current={istAktuell(pfad, p.href) ? 'page' : undefined}>
+                {p.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    {
+      service.length > 0 && (
+        <div class="menue-service" style={`--i:${nav.length + 1}`}>
+          <p class="menue-label">{t('nav.service')}</p>
+          <ul role="list">
+            {service.map((s) => (
+              <li>
+                <a href={s.href}>
+                  <Icon name={s.icon} size={20} />
+                  {s.label}
+                </a>
+              </li>
+            ))}
+            {portal && (
+              <li>
+                <a href={portal.url} target="_blank" rel="noopener">
+                  <Icon name="lock-keyhole" size={20} />
+                  {portal.label}
+                </a>
+              </li>
+            )}
+          </ul>
+        </div>
+      )
+    }
+    <div class="menue-kontakt" style={`--i:${nav.length + 2}`}>
+      <a href={telHref(config.betrieb.telefon)} class="ziffern">{config.betrieb.telefon}</a>
+      <a href={`mailto:${config.betrieb.email}`}>{config.betrieb.email}</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .kopf {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    height: var(--header-h);
+    color: var(--ink);
+    transition:
+      transform 420ms var(--ease-out),
+      background-color var(--dur-2),
+      box-shadow var(--dur-2);
+    will-change: transform;
+  }
+  .kopf::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: color-mix(in oklab, var(--bg) 82%, transparent);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border-bottom: 1px solid var(--line);
+    opacity: 1;
+    transition: opacity var(--dur-2);
+  }
+  .kopf[data-ueber-hero='true']:not([data-kompakt])::before {
+    opacity: 0;
+  }
+  .kopf[data-versteckt] {
+    transform: translateY(-105%);
+  }
+  .kopf-logo {
+    transform-origin: left center;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .kopf[data-kompakt] .kopf-logo {
+    transform: scale(0.92);
+  }
+  .kopf-innen {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    height: 100%;
+  }
+  .kopf-logo {
+    display: inline-flex;
+    flex: none;
+    text-decoration: none;
+    border-radius: var(--r-sm);
+  }
+  .kopf-nav {
+    display: none;
+    margin-left: auto;
+  }
+  .kopf-nav > ul {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    margin: 0;
+    padding: 0;
+  }
+  .kopf-nav li {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .kopf-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0 0.7rem;
+    font-size: 0.95rem;
+    font-weight: 560;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .kopf-link::after {
+    content: '';
+    position: absolute;
+    left: 0.7rem;
+    right: 0.7rem;
+    bottom: 0.55rem;
+    height: 4px;
+    border-block: 1px solid var(--brand-ink);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .kopf-link:hover::after,
+  .kopf-link[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+  .hat-kinder .kopf-link {
+    padding-right: 0.15rem;
+  }
+  .hat-kinder .kopf-link::after {
+    right: 0.15rem;
+  }
+  .kopf-toggle {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink-muted);
+  }
+  .kopf-toggle :global(svg) {
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .kopf-toggle[aria-expanded='true'] :global(svg) {
+    transform: rotate(180deg);
+  }
+  .kopf-dropdown {
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    left: -1rem;
+    width: min(36rem, 80vw);
+    padding: 0.75rem;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: 0 24px 60px -24px color-mix(in oklab, var(--ink) 30%, transparent);
+    animation: dd-ein 260ms var(--ease-out);
+  }
+  @keyframes dd-ein {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+  .kopf-dropdown ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+  }
+  .kopf-dropdown a {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.85rem 1rem;
+    border-radius: var(--r-md);
+    text-decoration: none;
+    transition: background-color var(--dur-1);
+  }
+  .kopf-dropdown a:hover,
+  .kopf-dropdown a:focus-visible {
+    background: var(--surface);
+  }
+  .dd-titel {
+    font-weight: 650;
+  }
+  .dd-text {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--ink-muted);
+  }
+  .kopf-aktionen {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+  }
+  .kopf-portal {
+    display: none;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.75rem;
+    padding: 0 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 560;
+    text-decoration: none;
+    color: var(--ink-muted);
+    transition: color var(--dur-1);
+  }
+  .kopf-portal:hover {
+    color: var(--ink);
+  }
+  .kopf-burger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    padding: 0 0.6rem;
+    border: 0;
+    background: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .burger-linien {
+    display: grid;
+    gap: 5px;
+    width: 22px;
+  }
+  .burger-linien span {
+    display: block;
+    height: 2px;
+    background: currentColor;
+    border-radius: 2px;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .burger-linien span:last-child {
+    width: 70%;
+    justify-self: end;
+  }
+  .kopf-burger:hover .burger-linien span:last-child {
+    transform: scaleX(1.43);
+    transform-origin: right;
+  }
+  @media (max-width: 26rem) {
+    /* nur optisch ausblenden: der Knopf behält seinen Namen für Screenreader */
+    .burger-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+    .kopf :global(.kopf-cta) {
+      display: none;
+    }
+  }
+  @media (min-width: 40rem) {
+    .kopf-portal {
+      display: inline-flex;
+    }
+  }
+  @media (min-width: 75rem) {
+    .kopf-nav {
+      display: block;
+    }
+    .kopf-aktionen {
+      margin-left: 0.5rem;
+    }
+    .kopf-burger {
+      display: none;
+    }
+    .kopf-portal span:not(.sr-only) {
+      display: none;
+    }
+  }
+  @media (min-width: 90rem) {
+    .kopf-portal span:not(.sr-only) {
+      display: inline;
+    }
+  }
+
+  /* ── Mobilmenü ─────────────────────────────────────────────────────────── */
+  .menue {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--bg);
+    color: var(--ink);
+    padding-bottom: env(safe-area-inset-bottom);
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 560ms var(--ease-in-out);
+  }
+  .menue[data-offen] {
+    clip-path: inset(0 0 0 0);
+  }
+  .menue-innen {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding-bottom: 2rem;
+  }
+  .menue-kopf {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-h);
+    flex: none;
+  }
+  .menue-zu {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 0.6rem;
+    border: 0;
+    background: none;
+    font-weight: 600;
+  }
+  .menue-nav ul {
+    margin: 1.5rem 0 0;
+    padding: 0;
+  }
+  .menue-nav li,
+  .menue-service,
+  .menue-kontakt {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 420ms var(--ease-out),
+      transform 520ms var(--ease-out);
+    transition-delay: calc(140ms + var(--i, 0) * 45ms);
+  }
+  .menue[data-offen] .menue-nav li,
+  .menue[data-offen] .menue-service,
+  .menue[data-offen] .menue-kontakt {
+    opacity: 1;
+    transform: none;
+  }
+  .menue-nav a {
+    display: block;
+    padding: 0.3rem 0;
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: clamp(2rem, 1.4rem + 3.4vw, 3.2rem);
+    letter-spacing: var(--hl-tracking);
+    line-height: 1.12;
+    text-decoration: none;
+  }
+  .menue-nav a[aria-current='page'] {
+    color: var(--brand-ink);
+  }
+  .menue-label {
+    margin: 2.25rem 0 0.75rem;
+    font-size: var(--step--1);
+    font-weight: 650;
+    color: var(--ink-muted);
+  }
+  .menue-service ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: 0.25rem 1.5rem;
+    margin: 0;
+    padding: 0;
+  }
+  .menue-service a {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-height: 2.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+  }
+  .menue-service :global(svg) {
+    color: var(--brand-ink);
+  }
+  .menue-kontakt {
+    display: grid;
+    gap: 0.4rem;
+    margin-top: auto;
+    padding-top: 2.5rem;
+    font-size: var(--step-1);
+    font-weight: 600;
+  }
+  .menue-kontakt a {
+    text-decoration: none;
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .menue {
+      transition: opacity 200ms;
+      clip-path: none;
+      opacity: 0;
+    }
+    .menue[data-offen] {
+      opacity: 1;
+    }
+  }
+</style>

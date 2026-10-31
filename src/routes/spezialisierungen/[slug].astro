@@ -1,0 +1,178 @@
+---
+import Base from '../../layouts/Base.astro';
+import SeitenKopf from '../../components/ui/SeitenKopf.astro';
+import AbschlussCta from '../../components/ui/AbschlussCta.astro';
+import Akkordeon from '../../components/ui/Akkordeon.astro';
+import Prosa from '../../components/ui/Prosa.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Summenstrich from '../../components/ui/Summenstrich.astro';
+import Button from '../../components/ui/Button.astro';
+import { config, t } from '../../lib/config';
+import { terminPfad } from '../../lib/routes';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema, faqSchema } from '../../lib/seo';
+import type { Spezialisierung } from '../../../variants/_schema';
+
+export function getStaticPaths() {
+  return config.spezialisierungen.map((sp) => ({ params: { slug: sp.slug }, props: { sp } }));
+}
+const { sp } = Astro.props as { sp: Spezialisierung };
+const pfad = [
+  { label: t('seite.spezialisierungen.titel'), href: '/spezialisierungen/' },
+  { label: sp.titel, href: `/spezialisierungen/${sp.slug}/` },
+];
+const andere = config.spezialisierungen.filter((x) => x.slug !== sp.slug);
+const ort = config.betrieb.adresse.ort;
+---
+
+<Base
+  titel={sp.seo?.titel ?? seitenTitel(null, `${t('spezialisierungen.fuer', { branche: sp.titel })} in ${ort}`)}
+  beschreibung={sp.seo?.beschreibung ?? seitenBeschreibung(null, `${sp.kurztext} ${config.betrieb.kurzname} in ${ort}.`)}
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site), ...(sp.faq.length ? [faqSchema(sp.faq)] : [])]}
+>
+  <SeitenKopf titel={t('spezialisierungen.fuer', { branche: sp.titel })} intro={sp.kurztext} pfad={pfad} bild={sp.bild} bildRatio="4 / 5">
+    <Button href={terminPfad()}>{t('aktion.termin')}</Button>
+  </SeitenKopf>
+  <section class="sektion">
+    <div class="wrap sd">
+      <Prosa>{sp.text.map((p) => <p>{p}</p>)}</Prosa>
+      {
+        sp.punkte.length > 0 && (
+          <div class="sd-punkte" data-anim="reveal-up">
+            <span class="sd-icon">
+              <Icon name={sp.icon} size={28} strich={1.5} />
+            </span>
+            <h2 class="h3">{t('seite.leistung.enthalten')}</h2>
+            <Summenstrich fein />
+            <ul role="list">
+              {sp.punkte.map((p) => (
+                <li>
+                  <Icon name="check" size={20} strich={2.2} />
+                  {p}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </div>
+  </section>
+  {
+    sp.faq.length > 0 && (
+      <section class="sektion flaeche">
+        <div class="wrap-schmal">
+          <h2 class="h2 sd-h2">{t('faq.titel')}</h2>
+          <Akkordeon eintraege={sp.faq} name="sp-faq" />
+        </div>
+      </section>
+    )
+  }
+  {
+    andere.length > 0 && (
+      <section class="sektion">
+        <div class="wrap">
+          <p class="sd-weitere-label">{t('spezialisierungen.titel')}</p>
+          <ul class="sd-weitere" role="list">
+            {andere.map((x) => (
+              <li>
+                <a href={`/spezialisierungen/${x.slug}/`}>
+                  <Icon name={x.icon} size={22} />
+                  <span>{x.titel}</span>
+                  <Icon name="arrow-right" size={20} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+  <AbschlussCta />
+</Base>
+
+<style>
+  .sd {
+    display: grid;
+    gap: 3rem;
+  }
+  .sd-punkte {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    color: var(--brand-ink);
+  }
+  .sd-punkte h2 {
+    color: var(--ink);
+  }
+  .sd-icon {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: var(--r-lg);
+    background: var(--brand);
+    color: var(--on-brand);
+  }
+  .sd-punkte ul {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--ink);
+  }
+  .sd-punkte li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
+  }
+  .sd-punkte li :global(svg) {
+    color: var(--brand-ink);
+    margin-top: 0.15rem;
+  }
+  .sd-h2 {
+    margin-bottom: 2rem;
+  }
+  .sd-weitere-label {
+    margin-bottom: 1rem;
+    font-weight: 650;
+    color: var(--ink-muted);
+  }
+  .sd-weitere {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line-strong);
+  }
+  .sd-weitere a {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--line-strong);
+    text-decoration: none;
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-2);
+    letter-spacing: var(--hl-tracking);
+  }
+  .sd-weitere a:hover span {
+    color: var(--brand-ink);
+  }
+  @media (min-width: 64rem) {
+    .sd {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      column-gap: calc(var(--gutter) * 3);
+      align-items: start;
+    }
+    .sd-punkte {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+</style>

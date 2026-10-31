@@ -1,0 +1,19 @@
+---
+import { config, t } from '../../lib/config';
+import Formular from './Formular.astro';
+import Feld from '../ui/Feld.astro';
+
+interface Props {
+  anliegen?: string;
+}
+const { anliegen } = Astro.props;
+const optionen = [{ wert: '', label: t('form.bitteWaehlen') }, ...config.zielgruppen.map((z) => ({ wert: z.titel, label: z.titel })), { wert: t('form.anderes'), label: t('form.anderes') }];
+---
+
+<Formular name="kontakt" knopf={t('aktion.absenden')}>
+  <Feld id="k-name" name="name" label={t('form.name')} pflicht autocomplete="name" />
+  <Feld id="k-email" name="email" label={t('form.email')} typ="email" pflicht autocomplete="email" />
+  <Feld id="k-tel" name="telefon" label={t('form.telefonOptional')} typ="tel" autocomplete="tel" />
+  <Feld id="k-bereich" name="bereich" label={t('form.anliegen')} typ="select" optionen={optionen} />
+  <Feld id="k-nachricht" name="nachricht" label={t('form.nachricht')} typ="textarea" pflicht wert={anliegen} class="voll" />
+</Formular>

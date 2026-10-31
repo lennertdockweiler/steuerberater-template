@@ -1,0 +1,123 @@
+---
+/**
+ * Mandantenstimmen als Laufband (CSS). Pausiert bei Hover/Fokus, steht bei
+ * prefers-reduced-motion still. Es erscheinen nur Stimmen mit Einwilligung.
+ */
+import type { AktiveSektion } from '../../../lib/config';
+import { sichtbareStimmen, t, titelOder } from '../../../lib/config';
+import SektionKopf from '../../ui/SektionKopf.astro';
+import StimmenHinweis from '../../ui/StimmenHinweis.astro';
+
+interface Props {
+  s: AktiveSektion;
+}
+const { s } = Astro.props;
+if (!sichtbareStimmen.length) return;
+const reihen = [sichtbareStimmen, [...sichtbareStimmen].reverse()];
+---
+
+<div class="wrap">
+  <SektionKopf kicker={s.kicker} titel={titelOder(s.titel, 'stimmen.titel')} intro={s.intro} />
+</div>
+<div class="mq" tabindex="0" role="region" aria-label={titelOder(s.titel, 'stimmen.titel')}>
+  {
+    reihen.map((reihe, r) => (
+      <div class:list={['mq-reihe', r === 1 && 'mq-rueck']} aria-hidden={r === 1 ? 'true' : undefined}>
+        {[0, 1].map((kopie) => (
+          <ul class="mq-spur" role="list" aria-hidden={kopie === 1 ? 'true' : undefined}>
+            {reihe.map((st) => (
+              <li class="mq-karte">
+                <blockquote>
+                  <p>{`„${st.text}“`}</p>
+                </blockquote>
+                <p class="mq-wer">
+                  <strong>{st.name}</strong>
+                  {st.kontext && <span>{st.kontext}</span>}
+                  {st.beispiel && <span class="badge">{t('stimmen.beispiel')}</span>}
+                </p>
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    ))
+  }
+</div>
+<div class="wrap">
+  <StimmenHinweis />
+</div>
+
+<style>
+  .mq {
+    display: grid;
+    gap: var(--gutter);
+    overflow: clip;
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+  .mq:focus-visible {
+    outline-offset: -4px;
+  }
+  .mq-reihe {
+    display: flex;
+    width: max-content;
+  }
+  .mq-spur {
+    display: flex;
+    gap: var(--gutter);
+    margin: 0;
+    padding: 0 var(--gutter) 0 0;
+    list-style: none;
+    animation: laufen 70s linear infinite;
+  }
+  .mq-rueck .mq-spur {
+    animation-direction: reverse;
+    animation-duration: 85s;
+  }
+  .mq:hover .mq-spur,
+  .mq:focus-within .mq-spur {
+    animation-play-state: paused;
+  }
+  @keyframes laufen {
+    to {
+      transform: translateX(-100%);
+    }
+  }
+  .mq-karte {
+    display: grid;
+    gap: 1.25rem;
+    align-content: space-between;
+    width: min(80vw, 26rem);
+    padding: 1.5rem 1.6rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+  }
+  blockquote {
+    margin: 0;
+    font-size: 1.02rem;
+    line-height: 1.55;
+  }
+  .mq-wer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.75rem;
+    font-size: 0.88rem;
+  }
+  .mq-wer span:not(.badge) {
+    color: var(--ink-muted);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mq {
+      overflow-x: auto;
+      mask-image: none;
+    }
+    .mq-spur {
+      animation: none;
+    }
+    .mq-reihe:nth-child(2),
+    .mq-spur[aria-hidden='true'] {
+      display: none;
+    }
+  }
+</style>

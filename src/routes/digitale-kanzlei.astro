@@ -1,0 +1,200 @@
+---
+import Base from '../layouts/Base.astro';
+import SeitenKopf from '../components/ui/SeitenKopf.astro';
+import AbschlussCta from '../components/ui/AbschlussCta.astro';
+import AblaufGepinnt from '../components/sections/ablauf/Gepinnt.astro';
+import Icon from '../components/ui/Icon.astro';
+import Button from '../components/ui/Button.astro';
+import { config, t } from '../lib/config';
+import { aktiv } from '../lib/routes';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema } from '../lib/seo';
+
+const dk = config.digitaleKanzlei;
+const titel = dk.titel ?? t('seite.digital.titel');
+const pfad = [{ label: t('seite.digital.titel'), href: '/digitale-kanzlei/' }];
+---
+
+<Base
+  titel={seitenTitel('digitaleKanzlei', t('seite.digital.titel'))}
+  beschreibung={seitenBeschreibung('digitaleKanzlei', dk.intro ?? t('ablauf.intro'))}
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site)]}
+>
+  <SeitenKopf titel={titel} intro={dk.intro} pfad={pfad} bild={dk.bild}>
+    {config.portalLink && <Button href={config.portalLink.url} iconLinks="lock-keyhole">{config.portalLink.label}</Button>}
+  </SeitenKopf>
+
+  {
+    config.ablauf && (
+      <section class="sektion">
+        <AblaufGepinnt s={{ typ: 'ablauf', layout: 'gepinnt', aktiv: true } as any} />
+      </section>
+    )
+  }
+
+  {
+    dk.bausteine.length > 0 && (
+      <section class="sektion flaeche">
+        <div class="wrap">
+          <ul class="dk-bausteine" role="list" data-anim-kinder>
+            {dk.bausteine.map((b) => (
+              <li>
+                <span class="dk-icon">
+                  <Icon name={b.icon} size={26} strich={1.5} />
+                </span>
+                <h2 class="h4">{b.titel}</h2>
+                <p class="gedaempft">{b.text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    dk.sicherheit.length > 0 && (
+      <section class="sektion invers dk-sicherheit">
+        <div class="wrap dk-sich-raster">
+          <div>
+            <span class="dk-schild">
+              <Icon name="shield-check" size={34} strich={1.4} />
+            </span>
+            <h2 class="h2" data-anim="zeilen">
+              {t('seite.digital.sicherheit')}
+            </h2>
+          </div>
+          <dl data-anim-kinder>
+            {dk.sicherheit.map((x) => (
+              <div>
+                <dt>{x.titel}</dt>
+                <dd>{x.text}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    config.software.length > 0 && (
+      <section class="sektion">
+        <div class="wrap dk-software">
+          <h2 class="h3">{t('vertrauen.software')}</h2>
+          <ul role="list">
+            {config.software.map((x) => (
+              <li>
+                <strong>{x.name}</strong>
+                {x.beschreibung && <span>{x.beschreibung}</span>}
+              </li>
+            ))}
+          </ul>
+          {aktiv('unterlagen') && <Button href="/unterlagen/" variante="sekundaer">{t('nav.unterlagen')}</Button>}
+        </div>
+      </section>
+    )
+  }
+  <AbschlussCta />
+</Base>
+
+<style>
+  .dk-bausteine {
+    display: grid;
+    gap: 2.5rem var(--gutter);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .dk-bausteine li {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+  }
+  .dk-icon {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    margin-bottom: 0.5rem;
+    border-radius: var(--r-md);
+    background: var(--bg);
+    color: var(--brand-ink);
+    border: 1px solid var(--line);
+  }
+  .dk-sich-raster {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .dk-schild {
+    display: inline-grid;
+    place-items: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 50%;
+    background: var(--inverse-2);
+    color: var(--brand-on-inverse);
+  }
+  .dk-sicherheit dl {
+    display: grid;
+    gap: 1.75rem;
+    margin: 0;
+  }
+  .dk-sicherheit dl div {
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--inverse-line);
+  }
+  .dk-sicherheit dt {
+    font-weight: 680;
+    font-size: var(--step-1);
+  }
+  .dk-sicherheit dd {
+    margin: 0.4rem 0 0;
+    color: var(--on-inverse-muted);
+  }
+  .dk-software {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+  }
+  .dk-software ul {
+    display: grid;
+    gap: 1rem 2rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .dk-software li {
+    display: grid;
+    gap: 0.2rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .dk-software li span {
+    color: var(--ink-muted);
+    font-size: 0.92rem;
+  }
+  @media (min-width: 48rem) {
+    .dk-bausteine,
+    .dk-software ul {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .dk-sicherheit dl {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 2rem;
+    }
+  }
+  @media (min-width: 64rem) {
+    .dk-bausteine {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .dk-sich-raster {
+      grid-template-columns: 5fr 7fr;
+      column-gap: calc(var(--gutter) * 3);
+    }
+    .dk-software ul {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

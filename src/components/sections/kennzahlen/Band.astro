@@ -1,0 +1,85 @@
+---
+/** Kennzahlen als dunkles Band mit senkrechten Trennlinien. */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t } from '../../../lib/config';
+import { zahl } from '../../../lib/format';
+
+interface Props {
+  s: AktiveSektion;
+}
+const { s } = Astro.props;
+if (!config.kennzahlen.length) return;
+---
+
+<div class="kb invers">
+  <div class="wrap">
+    <h2 class="kb-titel h4">{s.titel ?? t('kennzahlen.titel')}</h2>
+    <dl class="kb-liste" data-anim-kinder>
+      {
+        config.kennzahlen.map((k) => (
+          <div>
+            <dd class="ziffern">
+              {k.praefix}
+              <span data-zaehler={k.wert} data-nachkomma={k.nachkommastellen}>
+                {zahl(k.wert, k.nachkommastellen)}
+              </span>
+              {k.suffix && <span class="kb-suffix">{k.suffix}</span>}
+            </dd>
+            <dt>{k.label}</dt>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</div>
+
+<style>
+  .kb {
+    padding-block: clamp(3.5rem, 2.5rem + 4vw, 6rem);
+    border-radius: 0;
+  }
+  :global([data-preset='warm']) .kb {
+    margin-inline: clamp(0.5rem, 2vw, 1.5rem);
+    border-radius: var(--r-xl);
+  }
+  .kb-titel {
+    margin-bottom: 2.5rem;
+    color: var(--on-inverse-muted);
+    font-weight: 600;
+  }
+  .kb-liste {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 0;
+    margin: 0;
+  }
+  .kb-liste div {
+    display: grid;
+    gap: 0.6rem;
+    padding-inline: 1.25rem;
+    border-left: 1px solid var(--inverse-line);
+  }
+  dd {
+    margin: 0;
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: clamp(2.4rem, 1.6rem + 3.4vw, 4.6rem);
+    letter-spacing: -0.035em;
+    line-height: 1;
+    color: var(--on-inverse);
+  }
+  .kb-suffix {
+    font-size: 0.55em;
+    color: var(--brand-on-inverse);
+  }
+  dt {
+    font-size: 0.92rem;
+    color: var(--on-inverse-muted);
+    max-width: 22ch;
+  }
+  @media (min-width: 64rem) {
+    .kb-liste {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

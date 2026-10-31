@@ -1,0 +1,105 @@
+---
+/**
+ * Verteiler: rendert eine Sektion der Startseite im konfigurierten Layout.
+ * Neue Layouts werden hier registriert (Schlüssel „typ:layout“).
+ */
+import type { AktiveSektion } from '../../lib/config';
+import HeroStatement from './hero/Statement.astro';
+import HeroSplit from './hero/Split.astro';
+import HeroWeiche from './hero/Weiche.astro';
+import ZielgruppenKarten from './zielgruppen/Karten.astro';
+import ZielgruppenZeilen from './zielgruppen/Zeilen.astro';
+import LeistungenTabs from './leistungen/Tabs.astro';
+import LeistungenListe from './leistungen/Liste.astro';
+import LeistungenBento from './leistungen/Bento.astro';
+import AblaufGepinnt from './ablauf/Gepinnt.astro';
+import AblaufZeitleiste from './ablauf/Zeitleiste.astro';
+import KennzahlenReihe from './kennzahlen/Reihe.astro';
+import KennzahlenBand from './kennzahlen/Band.astro';
+import SpezHorizontal from './spezialisierungen/Horizontal.astro';
+import SpezRaster from './spezialisierungen/Raster.astro';
+import TeamKarten from './team/Karten.astro';
+import TeamPortraits from './team/Portraits.astro';
+import FristenKalender from './fristen/Kalender.astro';
+import FristenKompakt from './fristen/Kompakt.astro';
+import StimmenMarquee from './stimmen/Marquee.astro';
+import StimmenZitat from './stimmen/Zitat.astro';
+import KarriereSplit from './karriere/Split.astro';
+import KarriereBand from './karriere/Band.astro';
+import WissenListe from './wissen/Liste.astro';
+import WissenKarten from './wissen/Karten.astro';
+import FaqAkkordeon from './faq/Akkordeon.astro';
+import FaqZweispaltig from './faq/Zweispaltig.astro';
+import CtaBand from './cta/Band.astro';
+import CtaKarte from './cta/Karte.astro';
+import CheckBanner from './check/Banner.astro';
+import CheckKarte from './check/Karte.astro';
+import KanzleiEditorial from './kanzlei/Editorial.astro';
+import KanzleiBild from './kanzlei/Bild.astro';
+import VertrauenLaufband from './vertrauen/Laufband.astro';
+import VertrauenReihe from './vertrauen/Reihe.astro';
+
+const KOMPONENTEN: Record<string, (props: any) => any> = {
+  'hero:statement': HeroStatement,
+  'hero:split': HeroSplit,
+  'hero:weiche': HeroWeiche,
+  'zielgruppen:karten': ZielgruppenKarten,
+  'zielgruppen:zeilen': ZielgruppenZeilen,
+  'leistungen:tabs': LeistungenTabs,
+  'leistungen:liste': LeistungenListe,
+  'leistungen:bento': LeistungenBento,
+  'ablauf:gepinnt': AblaufGepinnt,
+  'ablauf:zeitleiste': AblaufZeitleiste,
+  'kennzahlen:reihe': KennzahlenReihe,
+  'kennzahlen:band': KennzahlenBand,
+  'spezialisierungen:horizontal': SpezHorizontal,
+  'spezialisierungen:raster': SpezRaster,
+  'team:karten': TeamKarten,
+  'team:portraits': TeamPortraits,
+  'fristen:kalender': FristenKalender,
+  'fristen:kompakt': FristenKompakt,
+  'stimmen:marquee': StimmenMarquee,
+  'stimmen:zitat': StimmenZitat,
+  'karriere:split': KarriereSplit,
+  'karriere:band': KarriereBand,
+  'wissen:liste': WissenListe,
+  'wissen:karten': WissenKarten,
+  'faq:akkordeon': FaqAkkordeon,
+  'faq:zweispaltig': FaqZweispaltig,
+  'cta:band': CtaBand,
+  'cta:karte': CtaKarte,
+  'check:banner': CheckBanner,
+  'check:karte': CheckKarte,
+  'kanzlei:editorial': KanzleiEditorial,
+  'kanzlei:bild': KanzleiBild,
+  'vertrauen:laufband': VertrauenLaufband,
+  'vertrauen:reihe': VertrauenReihe,
+};
+
+/** Layouts, die ihren eigenen Hintergrund und Innenabstand mitbringen */
+const VOLLFLAECHE = new Set(['hero', 'cta:band', 'kennzahlen:band', 'karriere:band', 'vertrauen:laufband', 'spezialisierungen:horizontal']);
+
+interface Props {
+  s: AktiveSektion;
+  vt?: boolean;
+}
+const { s, vt = true } = Astro.props;
+const Komponente = KOMPONENTEN[`${s.typ}:${s.layout}`];
+if (!Komponente) throw new Error(`Unbekanntes Layout "${s.layout}" für Sektion "${s.typ}".`);
+const voll = VOLLFLAECHE.has(s.typ) || VOLLFLAECHE.has(`${s.typ}:${s.layout}`);
+---
+
+<section
+  id={s.id}
+  class:list={[
+    'sektion',
+    `s-${s.typ}`,
+    voll && 'sektion-voll',
+    s.hintergrund === 'flaeche' && 'flaeche',
+    s.hintergrund === 'invers' && 'invers',
+  ]}
+  data-typ={s.typ}
+  data-layout={s.layout}
+>
+  <Komponente s={s} vt={vt} />
+</section>

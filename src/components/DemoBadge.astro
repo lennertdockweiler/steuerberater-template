@@ -1,0 +1,178 @@
+---
+/** Dezenter Demo-Hinweis: „Entwurf für … – erstellt von …“ mit Kontakt zur Agentur. */
+import { config, t } from '../lib/config';
+import { telHref } from '../lib/format';
+import Icon from './ui/Icon.astro';
+
+const a = config.demo.agentur;
+const text = config.demo.banner.text ?? t('demo.badge', { betrieb: config.betrieb.name });
+---
+
+<aside class="demo-badge" data-demo-badge aria-label={t('demo.label')} transition:persist="demo-badge">
+  <button type="button" class="demo-knopf" aria-expanded="false" aria-controls="demo-details">
+    <span class="demo-punkt" aria-hidden="true"></span>
+    <span class="demo-text">{text}</span>
+    <span class="demo-kurz" aria-hidden="true">{t('demo.kurz')}</span>
+    <Icon name="chevron-up" size={16} strich={2} class="demo-pfeil" />
+  </button>
+  <div class="demo-details" id="demo-details" hidden>
+    {a && <p class="demo-von">{t('demo.von', { agentur: a.name })}</p>}
+    {
+      a && (
+        <ul role="list">
+          {a.telefon && (
+            <li>
+              <a href={telHref(a.telefon)}>
+                <Icon name="phone" size={16} />
+                {a.telefon}
+              </a>
+            </li>
+          )}
+          {a.email && (
+            <li>
+              <a href={`mailto:${a.email}`}>
+                <Icon name="mail" size={16} />
+                {a.email}
+              </a>
+            </li>
+          )}
+          {a.website && (
+            <li>
+              <a href={a.website} target="_blank" rel="noopener">
+                <Icon name="globe" size={16} />
+                {a.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+              </a>
+            </li>
+          )}
+        </ul>
+      )
+    }
+    <button type="button" class="demo-weg" data-demo-weg>{t('demo.schliessen')}</button>
+  </div>
+</aside>
+
+<style>
+  .demo-badge {
+    position: fixed;
+    left: max(0.75rem, env(safe-area-inset-left));
+    bottom: calc(5.2rem + env(safe-area-inset-bottom));
+    z-index: 45;
+    max-width: min(22rem, calc(100vw - 1.5rem));
+    font-size: 0.8rem;
+    color: var(--on-inverse);
+  }
+  .demo-knopf {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 2.5rem;
+    max-width: 100%;
+    padding: 0.35rem 0.85rem 0.35rem 0.75rem;
+    border: 1px solid color-mix(in oklab, var(--on-inverse) 18%, transparent);
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--inverse) 90%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: inherit;
+    font-weight: 600;
+    box-shadow: 0 10px 30px -12px rgb(0 0 0 / 0.45);
+    transition: transform var(--dur-1) var(--ease-out);
+  }
+  .demo-knopf:active {
+    transform: scale(0.97);
+  }
+  .demo-kurz {
+    display: none;
+  }
+  @media (max-width: 63.99rem) {
+    .demo-text {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+    .demo-kurz {
+      display: inline;
+    }
+  }
+  .demo-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .demo-punkt {
+    flex: none;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 35%, transparent);
+  }
+  .demo-knopf :global(.demo-pfeil) {
+    flex: none;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .demo-knopf[aria-expanded='false'] :global(.demo-pfeil) {
+    transform: rotate(180deg);
+  }
+  .demo-details {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 0.5rem);
+    width: max-content;
+    max-width: min(22rem, calc(100vw - 1.5rem));
+    padding: 1rem 1.1rem;
+    border-radius: 14px;
+    background: var(--inverse);
+    box-shadow: 0 18px 40px -16px rgb(0 0 0 / 0.5);
+    animation: demo-ein 240ms var(--ease-out);
+  }
+  @keyframes demo-ein {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+  .demo-von {
+    margin-bottom: 0.6rem;
+    color: var(--on-inverse-muted);
+  }
+  ul {
+    display: grid;
+    gap: 0.15rem;
+    margin: 0 0 0.6rem;
+    padding: 0;
+  }
+  ul a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.25rem;
+    color: var(--on-inverse);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  ul a:hover {
+    text-decoration: underline;
+  }
+  .demo-weg {
+    min-height: 2.25rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--on-inverse-muted);
+    text-decoration: underline;
+    font-size: 0.78rem;
+  }
+  @media (min-width: 64rem) {
+    .demo-badge {
+      bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+  }
+  @media print {
+    .demo-badge {
+      display: none;
+    }
+  }
+</style>

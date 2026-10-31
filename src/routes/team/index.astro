@@ -1,0 +1,95 @@
+---
+import Base from '../../layouts/Base.astro';
+import SeitenKopf from '../../components/ui/SeitenKopf.astro';
+import AbschlussCta from '../../components/ui/AbschlussCta.astro';
+import TeamKarte from '../../components/ui/TeamKarte.astro';
+import MitarbeiterKarte from '../../components/ui/MitarbeiterKarte.astro';
+import Button from '../../components/ui/Button.astro';
+import { config, t } from '../../lib/config';
+import { aktiv } from '../../lib/routes';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema } from '../../lib/seo';
+
+const pfad = [{ label: t('seite.team.titel'), href: '/team/' }];
+---
+
+<Base
+  titel={seitenTitel('team', `${t('seite.team.titel')}: ${config.berufstraeger.map((p) => p.name).join(', ')}`)}
+  beschreibung={seitenBeschreibung('team', `${t('team.intro')} ${config.berufstraeger.map((p) => `${p.name}, ${p.titel[0]}`).join('; ')}.`)}
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site)]}
+>
+  <SeitenKopf titel={t('team.titel')} intro={t('team.intro')} pfad={pfad} />
+  <section class="sektion" aria-labelledby="t-bt">
+    <div class="wrap">
+      <h2 class="h3 t-h2" id="t-bt">{t('seite.team.berufstraeger')}</h2>
+      <div class="t-bt" data-anim-kinder>
+        {config.berufstraeger.map((p) => <TeamKarte p={p} />)}
+      </div>
+    </div>
+  </section>
+  {
+    config.team.length > 0 && (
+      <section class="sektion flaeche" aria-labelledby="t-team">
+        <div class="wrap">
+          <h2 class="h3 t-h2" id="t-team">
+            {t('seite.team.mitarbeitende')}
+          </h2>
+          <div class="t-team" data-anim-kinder>
+            {config.team.map((m) => (
+              <MitarbeiterKarte m={m} />
+            ))}
+          </div>
+          {aktiv('karriere') && (
+            <div class="t-karriere">
+              <p class="h4">{t('karriere.titel')}</p>
+              <Button href="/karriere/" variante="sekundaer">
+                {t('aktion.offeneStellen')}
+              </Button>
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
+  <AbschlussCta />
+</Base>
+
+<style>
+  .t-h2 {
+    margin-bottom: 2rem;
+  }
+  .t-bt {
+    display: grid;
+    gap: 3rem var(--gutter);
+  }
+  .t-team {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem var(--gutter);
+  }
+  .t-karriere {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line-strong);
+  }
+  @media (min-width: 48rem) {
+    .t-bt {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .t-team {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 64rem) {
+    .t-bt {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .t-team {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+</style>

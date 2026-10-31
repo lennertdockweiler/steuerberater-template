@@ -1,0 +1,341 @@
+---
+/**
+ * Unterlagen übermitteln: sicherer Weg über das Portal + abhakbare Checklisten
+ * (localStorage) mit Druckansicht (Print-CSS).
+ */
+import Base from '../layouts/Base.astro';
+import SeitenKopf from '../components/ui/SeitenKopf.astro';
+import Icon from '../components/ui/Icon.astro';
+import Button from '../components/ui/Button.astro';
+import { config, t, checklisten } from '../lib/config';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema } from '../lib/seo';
+
+const portal = config.portalLink;
+const pfad = [{ label: t('seite.unterlagen.titel'), href: '/unterlagen/' }];
+---
+
+<Base
+  titel={seitenTitel('unterlagen', t('seite.unterlagen.titel'))}
+  beschreibung={seitenBeschreibung('unterlagen', config.unterlagen.intro ?? t('seite.unterlagen.intro'))}
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site)]}
+>
+  <SeitenKopf titel={t('seite.unterlagen.titel')} intro={config.unterlagen.intro ?? t('seite.unterlagen.intro')} pfad={pfad} />
+
+  {
+    portal && (
+      <section class="sektion" data-nicht-drucken>
+        <div class="wrap">
+          <div class="ul-portal">
+            <div class="ul-portal-text">
+              <span class="ul-schloss">
+                <Icon name="lock-keyhole" size={30} strich={1.5} />
+              </span>
+              <h2 class="h2">{t('seite.unterlagen.portalTitel')}</h2>
+              {portal.anbieter && <p class="ul-anbieter">{portal.anbieter}</p>}
+              <Button href={portal.url} variante="hell" magnet>
+                {portal.label}
+              </Button>
+            </div>
+            <ol class="ul-schritte" role="list">
+              <li>
+                <span class="ziffern">01</span>
+                {t('seite.unterlagen.schritt1')}
+              </li>
+              <li>
+                <span class="ziffern">02</span>
+                {t('seite.unterlagen.schritt2')}
+              </li>
+              <li>
+                <span class="ziffern">03</span>
+                {t('seite.unterlagen.schritt3')}
+              </li>
+            </ol>
+          </div>
+          <p class="ul-email-hinweis">
+            <Icon name="mail-x" size={20} />
+            {t('seite.unterlagen.keineEmail')}
+          </p>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="sektion flaeche" aria-labelledby="ul-checklisten">
+    <div class="wrap">
+      <h2 class="h2 ul-h2" id="ul-checklisten" data-nicht-drucken>{t('seite.unterlagen.checklisten')}</h2>
+      <p class="gedaempft ul-speicher" data-nicht-drucken>{t('seite.unterlagen.gespeichert')}</p>
+      <div class="ul-listen">
+        {
+          checklisten.map((c) => (
+            <section class="ul-liste" data-checkliste={c.id} aria-labelledby={`cl-${c.id}`}>
+              <div class="ul-kopf">
+                <h3 class="h4" id={`cl-${c.id}`}>
+                  {c.titel}
+                </h3>
+                <p class="ul-fortschritt" aria-live="polite">
+                  <span data-fortschritt-text data-vorlage={t('seite.unterlagen.fortschritt')}>
+                    {t('seite.unterlagen.fortschritt', { erledigt: 0, gesamt: c.punkte.length })}
+                  </span>
+                </p>
+                <div class="ul-balken" aria-hidden="true">
+                  <span data-fortschritt-balken />
+                </div>
+              </div>
+              <ul role="list">
+                {c.punkte.map((p, i) => (
+                  <li>
+                    <label>
+                      <input type="checkbox" value={`p${i}`} />
+                      <span class="ul-box" aria-hidden="true">
+                        <Icon name="check" size={16} strich={3} />
+                      </span>
+                      <span class="ul-text">
+                        {p.text}
+                        {p.hinweis && <small>{p.hinweis}</small>}
+                      </span>
+                    </label>
+                  </li>
+                ))}
+              </ul>
+              <div class="ul-aktionen" data-nicht-drucken>
+                <button type="button" class="btn btn-sekundaer btn-klein" data-drucken>
+                  <span class="btn-icon">
+                    <Icon name="printer" size="100%" strich={2} />
+                  </span>
+                  <span class="btn-label">{t('aktion.drucken')}</span>
+                </button>
+                <button type="button" class="ul-reset" data-zuruecksetzen>
+                  {t('aktion.zuruecksetzen')}
+                </button>
+              </div>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ul-portal {
+    display: grid;
+    gap: 2rem;
+    padding: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+    border-radius: var(--r-xl);
+    background: var(--inverse);
+    color: var(--on-inverse);
+  }
+  .ul-portal-text {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+  .ul-schloss {
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: var(--inverse-2);
+    color: var(--brand-on-inverse);
+  }
+  .ul-anbieter {
+    color: var(--on-inverse-muted);
+  }
+  .ul-schritte {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    align-content: center;
+  }
+  .ul-schritte li {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--inverse-line);
+  }
+  .ul-schritte span {
+    font-weight: 700;
+    color: var(--brand-on-inverse);
+  }
+  .ul-email-hinweis {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    margin-top: 1.5rem;
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+  }
+  .ul-email-hinweis :global(svg) {
+    flex: none;
+    color: var(--accent-ink);
+  }
+  .ul-h2 {
+    margin-bottom: 0.75rem;
+  }
+  .ul-speicher {
+    margin-bottom: 2.5rem;
+    font-size: 0.9rem;
+  }
+  .ul-listen {
+    display: grid;
+    gap: var(--gutter);
+  }
+  .ul-liste {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+    padding: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+    border: 1px solid var(--line);
+  }
+  .ul-liste[data-fertig] {
+    border-color: var(--success);
+  }
+  .ul-kopf {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .ul-fortschritt {
+    font-size: 0.85rem;
+    font-weight: 650;
+    color: var(--brand-ink);
+  }
+  .ul-balken {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .ul-balken span {
+    display: block;
+    height: 100%;
+    background: var(--brand);
+    transform-origin: left;
+    transform: scaleX(var(--anteil, 0));
+    transition: transform 400ms var(--ease-out);
+  }
+  .ul-liste ul {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ul-liste label {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.85rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .ul-liste input {
+    position: absolute;
+    opacity: 0;
+    width: 1.4rem;
+    height: 1.4rem;
+    margin: 0.65rem 0 0;
+  }
+  .ul-box {
+    display: grid;
+    place-items: center;
+    width: 1.4rem;
+    height: 1.4rem;
+    margin-top: 0.1rem;
+    border: 2px solid var(--line-strong);
+    border-radius: var(--r-sm);
+    color: transparent;
+    transition:
+      background-color 200ms,
+      border-color 200ms,
+      color 200ms,
+      transform 250ms var(--ease-soft);
+  }
+  .ul-liste input:checked + .ul-box {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: var(--on-brand);
+    transform: scale(1.08);
+  }
+  .ul-liste input:focus-visible + .ul-box {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  .ul-text {
+    display: grid;
+    gap: 0.1rem;
+    transition: color 200ms;
+  }
+  .ul-liste input:checked ~ .ul-text {
+    color: var(--ink-muted);
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+  }
+  .ul-text small {
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+  .ul-aktionen {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .ul-reset {
+    min-height: 2.75rem;
+    border: 0;
+    background: none;
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    text-decoration: underline;
+  }
+  :global(.no-js) .ul-aktionen {
+    display: none;
+  }
+  @media (min-width: 48rem) {
+    .ul-listen {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 64rem) {
+    .ul-portal {
+      grid-template-columns: 6fr 5fr;
+      column-gap: 4rem;
+    }
+  }
+  /* Druckansicht: nur die gewählte Checkliste (oder alle), schlicht schwarz-weiß */
+  @media print {
+    :global(.sk),
+    :global([data-nicht-drucken]) {
+      display: none !important;
+    }
+    :global(.flaeche) {
+      background: none !important;
+    }
+    .ul-listen {
+      display: block;
+    }
+    .ul-liste {
+      border: 0;
+      padding: 0;
+      break-inside: avoid;
+      margin-bottom: 2rem;
+    }
+    :global(body:has([data-druck])) .ul-liste:not([data-druck]) {
+      display: none;
+    }
+    .ul-box {
+      border-color: #000;
+    }
+    .ul-liste input:checked ~ .ul-text {
+      text-decoration: line-through;
+    }
+  }
+</style>

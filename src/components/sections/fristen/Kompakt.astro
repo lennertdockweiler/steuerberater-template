@@ -1,0 +1,49 @@
+---
+import type { AktiveSektion } from '../../../lib/config';
+import { t, titelOder } from '../../../lib/config';
+import { aktiv } from '../../../lib/routes';
+import FristenWidget from '../../ui/FristenWidget.astro';
+import Button from '../../ui/Button.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'fristen' }>;
+}
+const { s } = Astro.props;
+---
+
+<div class="wrap fk">
+  <div class="fk-kopf">
+    {s.kicker && <p class="kicker">{s.kicker}</p>}
+    <h2 class="h2" data-anim="zeilen">{titelOder(s.titel, 'fristen.titel')}</h2>
+    <p class="gedaempft" data-anim="reveal-up">{s.intro ?? t('fristen.intro')}</p>
+    {aktiv('steuertermine') && <div data-anim="reveal-up"><Button href="/wissen/steuertermine/" variante="sekundaer" icon="calendar-days">{t('aktion.alleFristen')}</Button></div>}
+  </div>
+  <FristenWidget anzahl={s.anzahl} layout="kompakt" />
+</div>
+
+<style>
+  .fk {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .fk-kopf {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+    justify-items: start;
+  }
+  .fk-kopf .kicker {
+    margin-bottom: 0;
+  }
+  @media (min-width: 64rem) {
+    .fk {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      column-gap: calc(var(--gutter) * 3);
+    }
+    .fk-kopf {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+      align-self: start;
+    }
+  }
+</style>

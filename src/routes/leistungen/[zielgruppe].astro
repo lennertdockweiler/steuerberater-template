@@ -1,0 +1,99 @@
+---
+import Base from '../../layouts/Base.astro';
+import SeitenKopf from '../../components/ui/SeitenKopf.astro';
+import LeistungsKarten from '../../components/ui/LeistungsKarten.astro';
+import AbschlussCta from '../../components/ui/AbschlussCta.astro';
+import Akkordeon from '../../components/ui/Akkordeon.astro';
+import Prosa from '../../components/ui/Prosa.astro';
+import Button from '../../components/ui/Button.astro';
+import { config, t } from '../../lib/config';
+import { aktiv, terminPfad } from '../../lib/routes';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema, faqSchema } from '../../lib/seo';
+import type { Zielgruppe } from '../../../variants/_schema';
+
+export function getStaticPaths() {
+  return config.zielgruppen.map((z) => ({ params: { zielgruppe: z.slug }, props: { z } }));
+}
+const { z } = Astro.props as { z: Zielgruppe };
+const liste = config.leistungen.filter((l) => l.zielgruppe.includes(z.slug));
+const fragen = liste.flatMap((l) => l.faq).slice(0, 8);
+const pfad = [
+  { label: t('seite.leistungen.titel'), href: '/leistungen/' },
+  { label: z.titel, href: `/leistungen/${z.slug}/` },
+];
+const ort = config.betrieb.adresse.ort;
+---
+
+<Base
+  titel={seitenTitel(null, t('seite.zielgruppe.seo', { zielgruppe: z.titel }))}
+  beschreibung={seitenBeschreibung(null, `${z.kurztext} ${config.betrieb.kurzname}, ${t('seite.zielgruppe.titel', { zielgruppe: z.titel })} in ${ort}.`)}
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site), ...(fragen.length ? [faqSchema(fragen)] : [])]}
+>
+  <SeitenKopf titel={t('seite.zielgruppe.titel', { zielgruppe: z.titel })} intro={z.kurztext} pfad={pfad} bild={z.bild} kicker={z.ichBin}>
+    <div class="zg-ctas">
+      <Button href={terminPfad()}>{t('aktion.termin')}</Button>
+      {aktiv('mandantenCheck') && <Button href="/mandanten-check/" variante="sekundaer">{t('aktion.check')}</Button>}
+    </div>
+  </SeitenKopf>
+
+  {
+    z.text.length > 0 && (
+      <section class="sektion">
+        <div class="wrap">
+          <Prosa class="zg-prosa">
+            {z.text.map((p) => (
+              <p>{p}</p>
+            ))}
+          </Prosa>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="sektion flaeche" aria-labelledby="zg-leistungen">
+    <div class="wrap">
+      <h2 class="h2 zg-h2" id="zg-leistungen" data-anim="zeilen">{t('leistungen.fuerTitel', { zielgruppe: z.titel })}</h2>
+      <LeistungsKarten liste={liste} spalten={3} />
+    </div>
+  </section>
+
+  {
+    fragen.length > 0 && (
+      <section class="sektion" aria-labelledby="zg-faq">
+        <div class="wrap zg-faq">
+          <h2 class="h2" id="zg-faq" data-anim="zeilen">
+            {t('faq.titel')}
+          </h2>
+          <Akkordeon eintraege={fragen} name="zg-faq" />
+        </div>
+      </section>
+    )
+  }
+  <AbschlussCta />
+</Base>
+
+<style>
+  .zg-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  :global(.zg-prosa) {
+    font-size: var(--step-1);
+    max-width: 60ch;
+  }
+  .zg-h2 {
+    margin-bottom: var(--space-block);
+  }
+  .zg-faq {
+    display: grid;
+    gap: 2rem;
+  }
+  @media (min-width: 64rem) {
+    .zg-faq {
+      grid-template-columns: 4fr 8fr;
+      column-gap: calc(var(--gutter) * 2);
+    }
+  }
+</style>

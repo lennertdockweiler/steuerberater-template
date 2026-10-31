@@ -1,0 +1,283 @@
+---
+import Base from '../../layouts/Base.astro';
+import SeitenKopf from '../../components/ui/SeitenKopf.astro';
+import Bewerbungsformular from '../../components/interactive/Bewerbungsformular.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Button from '../../components/ui/Button.astro';
+import Prosa from '../../components/ui/Prosa.astro';
+import { config, t } from '../../lib/config';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema } from '../../lib/seo';
+
+const k = config.karriere;
+const pfad = [{ label: t('nav.karriere'), href: '/karriere/' }];
+const ort = config.betrieb.adresse.ort;
+---
+
+<Base
+  titel={seitenTitel('karriere', t('seite.karriere.seo', { ort }))}
+  beschreibung={seitenBeschreibung('karriere', `${k.intro ?? t('karriere.intro')} ${config.stellen.map((s) => s.titel).slice(0, 2).join(', ')}.`)}
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site)]}
+>
+  <SeitenKopf titel={k.titel ?? t('karriere.titel')} intro={k.intro ?? t('karriere.intro')} pfad={pfad} bild={k.bild}>
+    <Button href="#stellen" icon="arrow-down">{t('aktion.offeneStellen')}</Button>
+  </SeitenKopf>
+
+  {
+    k.kultur.length > 0 && (
+      <section class="sektion">
+        <div class="wrap kr-kultur">
+          <Prosa>
+            {k.kultur.map((p) => (
+              <p>{p}</p>
+            ))}
+          </Prosa>
+          {k.zitat && (
+            <figure class="kr-zitat" data-anim="reveal-up">
+              <blockquote>
+                <p>{`„${k.zitat.text}“`}</p>
+              </blockquote>
+              <figcaption>
+                <strong>{k.zitat.name}</strong>
+                <span>{k.zitat.rolle}</span>
+              </figcaption>
+            </figure>
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    config.benefits.length > 0 && (
+      <section class="sektion flaeche" aria-labelledby="benefits">
+        <div class="wrap">
+          <h2 class="h2 kr-h2" id="benefits" data-anim="zeilen">
+            {t('seite.karriere.benefits')}
+          </h2>
+          <ul class="kr-benefits" role="list" data-anim-kinder>
+            {config.benefits.map((b) => (
+              <li>
+                <span class="kr-icon">
+                  <Icon name={b.icon} size={24} />
+                </span>
+                <h3 class="h4">{b.titel}</h3>
+                <p class="gedaempft">{b.text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="sektion" id="stellen" aria-labelledby="stellen-titel">
+    <div class="wrap">
+      <h2 class="h2 kr-h2" id="stellen-titel" data-anim="zeilen">{t('seite.karriere.stellen')}</h2>
+      {
+        config.stellen.length ? (
+          <ul class="kr-stellen" role="list" data-anim-kinder>
+            {config.stellen.map((s) => (
+              <li>
+                <a href={`/karriere/${s.slug}/`}>
+                  <span class="kr-stelle">{s.titel}</span>
+                  <span class="kr-meta">
+                    <span class="badge">{s.art}</span>
+                    <span>{s.arbeitsort}</span>
+                    <span>{s.beginn}</span>
+                  </span>
+                  <span class="kr-text">{s.kurztext}</span>
+                  <Icon name="arrow-right" size={24} class="kr-pfeil" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="lead">{t('seite.karriere.keineStellen')}</p>
+        )
+      }
+    </div>
+  </section>
+
+  {
+    k.bewerbungsSchritte.length > 0 && (
+      <section class="sektion flaeche" aria-labelledby="prozess">
+        <div class="wrap">
+          <h2 class="h2 kr-h2" id="prozess" data-anim="zeilen">
+            {t('seite.karriere.prozess')}
+          </h2>
+          <ol class="kr-prozess" role="list" data-anim-kinder>
+            {k.bewerbungsSchritte.map((s, i) => (
+              <li>
+                <span class="kr-nr ziffern">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="h4">{s.titel}</h3>
+                <p class="gedaempft">{s.text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="sektion" id="bewerben" aria-labelledby="bewerben-titel">
+    <div class="wrap kr-form">
+      <div>
+        <h2 class="h2" id="bewerben-titel" data-anim="zeilen">{t('seite.karriere.kurzbewerbung')}</h2>
+        <p class="lead">{t('seite.karriere.kurzbewerbungIntro')}</p>
+      </div>
+      <Bewerbungsformular />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .kr-kultur {
+    display: grid;
+    gap: 3rem;
+  }
+  .kr-zitat {
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border-radius: var(--r-lg);
+    background: var(--brand-soft);
+  }
+  .kr-zitat blockquote {
+    margin: 0;
+    font-family: var(--ff-display);
+    font-size: var(--step-2);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
+  .kr-zitat figcaption {
+    display: grid;
+    font-size: 0.92rem;
+  }
+  .kr-zitat figcaption span {
+    color: var(--ink-muted);
+  }
+  .kr-h2 {
+    margin-bottom: 2.5rem;
+  }
+  .kr-benefits {
+    display: grid;
+    gap: 2.25rem var(--gutter);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .kr-benefits li {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+  }
+  .kr-icon {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 0.25rem;
+    border-radius: 50%;
+    background: var(--bg);
+    color: var(--brand-ink);
+  }
+  .kr-stellen {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line-strong);
+  }
+  .kr-stellen a {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.6rem 1.5rem;
+    padding: 1.75rem 0;
+    border-bottom: 1px solid var(--line-strong);
+    text-decoration: none;
+  }
+  .kr-stelle {
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-2);
+    letter-spacing: var(--hl-tracking);
+    line-height: 1.15;
+  }
+  .kr-meta {
+    grid-column: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 1rem;
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+  }
+  .kr-text {
+    grid-column: 1;
+    color: var(--ink-muted);
+    max-width: 60ch;
+  }
+  .kr-stellen a :global(.kr-pfeil) {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    align-self: center;
+    transition: transform 300ms var(--ease-out);
+  }
+  .kr-stellen a:hover :global(.kr-pfeil) {
+    transform: translateX(5px);
+  }
+  .kr-stellen a:hover .kr-stelle {
+    color: var(--brand-ink);
+  }
+  .kr-prozess {
+    display: grid;
+    gap: 2rem var(--gutter);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .kr-prozess li {
+    display: grid;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--ink);
+  }
+  .kr-nr {
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-2);
+    color: var(--brand-ink);
+  }
+  .kr-form {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .kr-form .lead {
+    margin-top: 1rem;
+  }
+  @media (min-width: 48rem) {
+    .kr-benefits {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .kr-prozess {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 64rem) {
+    .kr-kultur {
+      grid-template-columns: 7fr 5fr;
+      column-gap: calc(var(--gutter) * 3);
+    }
+    .kr-benefits {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .kr-prozess {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .kr-form {
+      grid-template-columns: 5fr 7fr;
+      column-gap: calc(var(--gutter) * 3);
+    }
+  }
+</style>

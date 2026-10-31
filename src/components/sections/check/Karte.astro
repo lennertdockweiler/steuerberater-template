@@ -1,0 +1,57 @@
+---
+/** Teaser für den Mandanten-Check als ruhige Karte. */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t, titelOder } from '../../../lib/config';
+import { aktiv } from '../../../lib/routes';
+import Button from '../../ui/Button.astro';
+import Icon from '../../ui/Icon.astro';
+
+interface Props {
+  s: AktiveSektion;
+}
+const { s } = Astro.props;
+const mc = config.mandantenCheck;
+if (!mc || !aktiv('mandantenCheck')) return;
+---
+
+<div class="wrap">
+  <div class="cka">
+    <span class="cka-icon"><Icon name="list-checks" size={30} strich={1.5} /></span>
+    <div class="cka-text">
+      <h2 class="h3" data-anim="zeilen">{titelOder(s.titel ?? mc.titel, 'check.titel')}</h2>
+      <p class="gedaempft" data-anim="reveal-up">{s.intro ?? mc.intro ?? t('check.intro')}</p>
+    </div>
+    <div class="cka-knopf" data-anim="reveal-up"><Button href="/mandanten-check/" magnet>{t('aktion.checkStarten')}</Button></div>
+  </div>
+</div>
+
+<style>
+  .cka {
+    display: grid;
+    gap: 1.5rem;
+    padding: clamp(1.5rem, 1rem + 2.5vw, 3rem);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-xl);
+    background: var(--bg);
+  }
+  .cka-icon {
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+  }
+  .cka-text {
+    display: grid;
+    gap: 0.6rem;
+  }
+  @media (min-width: 64rem) {
+    .cka {
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      column-gap: 2.5rem;
+    }
+  }
+</style>

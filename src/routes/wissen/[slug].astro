@@ -1,0 +1,311 @@
+---
+/**
+ * Wissensartikel: Lesefortschritt, Inhaltsverzeichnis, Stand-Datum,
+ * Hinweis „ersetzt keine Beratung“, Autorenbox, Article-Schema.
+ */
+import { render } from 'astro:content';
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import Foto from '../../components/ui/Foto.astro';
+import Prosa from '../../components/ui/Prosa.astro';
+import Icon from '../../components/ui/Icon.astro';
+import ArtikelKarte from '../../components/ui/ArtikelKarte.astro';
+import AbschlussCta from '../../components/ui/AbschlussCta.astro';
+import { t, berufstraegerBySlug } from '../../lib/config';
+import { aktiv } from '../../lib/routes';
+import { ladeBild, breitenFuer, zuschnittHoehe, BILD_QUALITAET } from '../../lib/bilder';
+import { alleArtikel, isoVon, type Artikel } from '../../lib/wissen';
+import { datum, lesezeit } from '../../lib/format';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema, artikelSchema, absolut } from '../../lib/seo';
+
+export async function getStaticPaths() {
+  const liste = await alleArtikel();
+  return liste.map((a) => ({ params: { slug: a.id }, props: { a } }));
+}
+const { a } = Astro.props as { a: Artikel };
+const { Content, headings } = await render(a);
+const toc = headings.filter((h) => h.depth === 2);
+const autor = berufstraegerBySlug(a.data.autor);
+const pfad = [
+  { label: t('seite.wissen.titel'), href: '/wissen/' },
+  { label: a.data.titel, href: `/wissen/${a.id}/` },
+];
+const img = await ladeBild(a.data.bild);
+const bildUrl = img ? absolut((await getImage({ src: img, width: 1200, format: 'jpg' })).src, Astro.site) : undefined;
+// Artikelbild ist das LCP-Element: mit identischen Parametern wie <Foto> vorladen
+const bildSizes = '(min-width: 90rem) 86rem, 100vw';
+const preload = img
+  ? { srcset: (await getImage({ src: img, format: 'avif', widths: breitenFuer(img), sizes: bildSizes, quality: BILD_QUALITAET, width: img.width, height: zuschnittHoehe(img, '21 / 9') })).srcSet.attribute, sizes: bildSizes }
+  : null;
+const weitere = (await alleArtikel()).filter((x) => x.id !== a.id).slice(0, 2);
+---
+
+<Base
+  titel={seitenTitel(null, a.data.titel)}
+  beschreibung={seitenBeschreibung(null, a.data.beschreibung)}
+  ogTyp="article"
+  preload={preload}
+  jsonLd={[
+    breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site),
+    artikelSchema({ titel: a.data.titel, beschreibung: a.data.beschreibung, datum: a.data.datum, stand: a.data.stand, autor, pfad: `/wissen/${a.id}/`, bildUrl }, Astro.site),
+  ]}
+>
+  <div class="lf" aria-hidden="true"><span data-lesefortschritt></span></div>
+  <article class="ar" data-artikel>
+    <header class="wrap ar-kopf">
+      <Breadcrumbs teile={pfad} />
+      <p class="ar-meta">
+        <span class="ar-kat">{a.data.kategorie}</span>
+        <time datetime={isoVon(a.data.datum)} class="datum">{datum(isoVon(a.data.datum))}</time>
+        <span>{t('seite.artikel.lesezeit', { min: lesezeit(a.body ?? '') })}</span>
+      </p>
+      <h1 class="h1 ar-titel">{a.data.titel}</h1>
+      <p class="lead ar-lead">{a.data.beschreibung}</p>
+      {
+        a.data.bild && (
+          <Foto
+            bild={{ datei: a.data.bild, alt: a.data.bildAlt ?? '', dekorativ: !a.data.bildAlt }}
+            ratio="21 / 9"
+            sizes={bildSizes}
+            zuschneiden
+            priority
+            vtName={`artikel-${a.id}`}
+            class="ar-bild"
+          />
+        )
+      }
+    </header>
+
+    <div class="wrap ar-raster">
+      {
+        toc.length > 1 && (
+          <nav class="ar-toc" aria-label={t('seite.artikel.inhalt')} data-toc>
+            <p class="ar-toc-titel">{t('seite.artikel.inhalt')}</p>
+            <ol role="list">
+              {toc.map((h) => (
+                <li>
+                  <a href={`#${h.slug}`}>{h.text}</a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )
+      }
+      <div class="ar-inhalt">
+        <p class="ar-stand">
+          <Icon name="calendar-check" size={18} />
+          {t('seite.artikel.stand')}: <time datetime={isoVon(a.data.stand)} class="datum">{datum(isoVon(a.data.stand))}</time>
+        </p>
+        <Prosa>
+          <Content />
+        </Prosa>
+        <aside class="ar-hinweis" role="note">
+          <Icon name="info" size={22} />
+          <p>{t('seite.artikel.hinweis')}</p>
+        </aside>
+        {
+          autor && (
+            <div class="ar-autor">
+              <Foto bild={autor.foto} ratio="1 / 1" sizes="5rem" class="ar-autor-bild" />
+              <div>
+                <p class="ar-label">{t('seite.artikel.autor')}</p>
+                <p class="ar-autor-name">{aktiv('team') ? <a href={`/team/${autor.slug}/`}>{autor.name}</a> : autor.name}</p>
+                <p class="gedaempft">{autor.titel.join(', ')}</p>
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </article>
+
+  {
+    weitere.length > 0 && (
+      <section class="sektion flaeche" aria-labelledby="ar-weitere">
+        <div class="wrap">
+          <h2 class="h2 ar-h2" id="ar-weitere">
+            {t('seite.artikel.weitere')}
+          </h2>
+          <div class="ar-weitere">
+            {weitere.map((w) => (
+              <ArtikelKarte a={w} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+  <AbschlussCta />
+</Base>
+
+<style>
+  .lf {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 55;
+    height: 3px;
+    pointer-events: none;
+  }
+  .lf span {
+    display: block;
+    height: 100%;
+    background: var(--brand);
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+  .ar {
+    padding-top: calc(var(--header-h) + clamp(1.25rem, 0.5rem + 2.5vw, 3rem));
+    padding-bottom: var(--space-section);
+  }
+  .ar-kopf {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .ar-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+  }
+  .ar-kat {
+    font-weight: 700;
+    color: var(--brand-ink);
+  }
+  .ar-titel {
+    max-width: 22ch;
+    animation: ar-auf 900ms var(--ease-out) both;
+  }
+  @keyframes ar-auf {
+    from {
+      transform: translateY(0.25em);
+      opacity: 0.35;
+    }
+  }
+  .ar-lead {
+    max-width: 56ch;
+  }
+  .ar-kopf :global(.ar-bild) {
+    margin-top: 1.5rem;
+    border-radius: var(--r-xl);
+  }
+  .ar-raster {
+    display: grid;
+    gap: 2.5rem;
+    margin-top: var(--space-block);
+  }
+  .ar-toc {
+    font-size: 0.92rem;
+  }
+  .ar-toc-titel,
+  .ar-label {
+    margin-bottom: 0.75rem;
+    font-size: var(--step--1);
+    font-weight: 650;
+    color: var(--brand-ink);
+  }
+  .ar-toc ol {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-left: 1px solid var(--line-strong);
+  }
+  .ar-toc a {
+    display: block;
+    padding: 0.45rem 0 0.45rem 1rem;
+    margin-left: -1px;
+    border-left: 2px solid transparent;
+    text-decoration: none;
+    color: var(--ink-muted);
+    transition:
+      color 200ms,
+      border-color 200ms;
+  }
+  .ar-toc a:hover,
+  .ar-toc a[aria-current] {
+    color: var(--ink);
+    border-left-color: var(--brand);
+  }
+  .ar-inhalt {
+    display: grid;
+    gap: 2rem;
+    min-width: 0;
+  }
+  .ar-stand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: fit-content;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background: var(--brand-soft);
+    color: var(--brand-ink);
+    font-size: 0.88rem;
+    font-weight: 650;
+  }
+  .ar-hinweis {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    max-width: var(--measure);
+    padding: 1.25rem 1.5rem;
+    border-left: 3px solid var(--accent);
+    background: var(--surface);
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+  }
+  .ar-hinweis :global(svg) {
+    color: var(--accent-ink);
+  }
+  .ar-autor {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: 1.25rem;
+    align-items: center;
+    max-width: var(--measure);
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+  .ar-autor :global(.ar-autor-bild) {
+    border-radius: 50%;
+  }
+  .ar-autor .ar-label {
+    margin-bottom: 0.2rem;
+  }
+  .ar-autor-name {
+    font-weight: 700;
+    font-size: var(--step-1);
+  }
+  .ar-autor-name a {
+    text-decoration: none;
+  }
+  .ar-autor-name a:hover {
+    text-decoration: underline;
+  }
+  .ar-h2 {
+    margin-bottom: 2rem;
+  }
+  .ar-weitere {
+    display: grid;
+    gap: 2.5rem var(--gutter);
+  }
+  @media (min-width: 48rem) {
+    .ar-weitere {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 64rem) {
+    .ar-raster {
+      grid-template-columns: 16rem minmax(0, 1fr);
+      column-gap: calc(var(--gutter) * 3);
+    }
+    .ar-toc {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+      align-self: start;
+    }
+  }
+</style>

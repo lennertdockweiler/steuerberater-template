@@ -1,0 +1,123 @@
+---
+/** Schieberegler mit gekoppeltem Zahlenfeld (Touch-tauglich, per Tastatur bedienbar). */
+interface Props {
+  id: string;
+  name: string;
+  label: string;
+  min: number;
+  max: number;
+  schritt?: number;
+  wert: number;
+  einheit?: string;
+}
+const { id, name, label, min, max, schritt = 1, wert, einheit } = Astro.props;
+---
+
+<div class="regler">
+  <div class="regler-kopf">
+    <label for={id}>{label}</label>
+    <span class="regler-feld">
+      <input type="number" inputmode="decimal" name={name} data-koppel={name} min={min} max={max} step={schritt} value={wert} aria-label={label} class="regler-zahl" />
+      {einheit && <span class="regler-einheit">{einheit}</span>}
+    </span>
+  </div>
+  <input type="range" id={id} name={`${name}-regler`} data-koppel={name} min={min} max={max} step={schritt} value={wert} class="regler-band" />
+</div>
+
+<style>
+  .regler {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .regler-kopf {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .regler-kopf label {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .regler-feld {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0 0.75rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-md);
+    background: var(--bg);
+  }
+  .regler-feld:focus-within {
+    border-color: var(--brand-ink);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand) 25%, transparent);
+  }
+  .regler-zahl {
+    width: 6.5rem;
+    min-height: 2.75rem;
+    border: 0;
+    background: none;
+    text-align: right;
+    font-size: max(16px, 1rem);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    outline: none;
+    -moz-appearance: textfield;
+  }
+  .regler-zahl::-webkit-inner-spin-button,
+  .regler-zahl::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+  }
+  .regler-einheit {
+    color: var(--ink-muted);
+    font-size: 0.9rem;
+  }
+  .regler-band {
+    --fuellung: 50%;
+    width: 100%;
+    height: 2.75rem;
+    margin: 0;
+    background: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+  }
+  .regler-band::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--brand) var(--fuellung), var(--line) var(--fuellung));
+  }
+  .regler-band::-moz-range-track {
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--brand) var(--fuellung), var(--line) var(--fuellung));
+  }
+  .regler-band::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 1.6rem;
+    height: 1.6rem;
+    margin-top: calc(3px - 0.8rem);
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--brand);
+    box-shadow: 0 4px 12px -4px rgb(0 0 0 / 0.35);
+    transition: transform 200ms var(--ease-out);
+  }
+  .regler-band::-moz-range-thumb {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--brand);
+  }
+  .regler-band:active::-webkit-slider-thumb {
+    transform: scale(1.15);
+  }
+  .regler-band:focus-visible {
+    outline: none;
+  }
+  .regler-band:focus-visible::-webkit-slider-thumb {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+</style>

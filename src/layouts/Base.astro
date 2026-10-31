@@ -1,0 +1,103 @@
+---
+/**
+ * Basis-Layout jeder Seite: Theme-Tokens, Schriften, SEO, View Transitions,
+ * Header, Footer, mobile Aktionsleiste und Demo-Badge.
+ */
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { Font } from 'astro:assets';
+import { config, design, theme, istDemo, t } from '../lib/config';
+import { themeCss } from '../lib/theme';
+import { cssVariable } from '../data/fonts';
+import Seo from '../components/Seo.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileLeiste from '../components/MobileLeiste.astro';
+import DemoBadge from '../components/DemoBadge.astro';
+
+interface Props {
+  titel: string;
+  beschreibung: string;
+  noindex?: boolean;
+  ogBild?: string;
+  ogTyp?: 'website' | 'article' | 'profile';
+  jsonLd?: object[];
+  /** Header liegt transparent über dem Hero */
+  ueberHero?: boolean;
+  /** Preload für das LCP-Bild (AVIF-srcset) */
+  preload?: { srcset: string; sizes: string } | null;
+  seitenKlasse?: string;
+}
+const { titel, beschreibung, noindex, ogBild, ogTyp, jsonLd, ueberHero = false, preload, seitenKlasse } = Astro.props;
+
+const s = design.schriften;
+const p = design.preset.typo;
+const r = design.radius;
+const rollen = `:root{--ff-display:var(${cssVariable(s.headline)});--ff-body:var(${cssVariable(s.text)});--r-sm:${r.sm};--r-md:${r.md};--r-lg:${r.lg};--r-xl:${r.xl};--r-btn:${r.btn};--hl-weight:${p.headlineGewicht};--hl-tracking:${p.headlineLaufweite};--hl-leading:${p.headlineZeilenhoehe};--df:${p.displayFaktor}}`;
+const schriftKeys = [...new Set([s.headline, s.text])];
+---
+
+<!doctype html>
+<html
+  lang="de"
+  class="no-js"
+  data-preset={design.presetKey}
+  data-motion={design.intensitaet}
+  data-anrede={config.meta.anrede}
+  data-tonung={design.bildstil.tonung}
+  data-grain={String(design.bildstil.grain)}
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script is:inline>
+      document.documentElement.classList.replace('no-js', 'js');
+    </script>
+    {schriftKeys.map((k, i) => <Font cssVariable={cssVariable(k) as any} preload={i === 0 ? [{ style: 'normal' }] : false} />)}
+    <style is:inline set:html={themeCss(theme) + rollen}></style>
+    {preload && <link rel="preload" as="image" type="image/avif" imagesrcset={preload.srcset} imagesizes={preload.sizes} fetchpriority="high" />}
+    <Seo titel={titel} beschreibung={beschreibung} noindex={noindex} ogBild={ogBild} ogTyp={ogTyp} jsonLd={jsonLd} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content={theme.tokens.bg} />
+    <meta name="format-detection" content="telephone=no" />
+    <ClientRouter />
+  </head>
+  <body class={seitenKlasse} data-variante={config.meta.slug}>
+    <a href="#inhalt" class="sprunglink">{t('nav.zumInhalt')}</a>
+    <Header ueberHero={ueberHero} />
+    <main id="inhalt" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <MobileLeiste />
+    {istDemo && <DemoBadge />}
+    <script>
+      import '../scripts/app';
+    </script>
+  </body>
+</html>
+
+<style>
+  .sprunglink {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 100;
+    padding: 0.75rem 1.1rem;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: var(--r-md);
+    font-weight: 650;
+    text-decoration: none;
+    transform: translateY(-160%);
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .sprunglink:focus-visible {
+    transform: none;
+  }
+  main {
+    display: block;
+    outline: none;
+  }
+</style>

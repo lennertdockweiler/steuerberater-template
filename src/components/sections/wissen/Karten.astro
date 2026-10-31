@@ -1,0 +1,52 @@
+---
+/** Neueste Beiträge: ein großer, zwei kleinere (bewusst keine gleichförmigen Spalten). */
+import type { AktiveSektion } from '../../../lib/config';
+import { t, titelOder } from '../../../lib/config';
+import { aktiv } from '../../../lib/routes';
+import { alleArtikel } from '../../../lib/wissen';
+import SektionKopf from '../../ui/SektionKopf.astro';
+import ArtikelKarte from '../../ui/ArtikelKarte.astro';
+import Button from '../../ui/Button.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'wissen' }>;
+}
+const { s } = Astro.props;
+if (!aktiv('wissen')) return;
+const artikel = (await alleArtikel()).slice(0, s.anzahl);
+if (!artikel.length) return;
+---
+
+<div class="wrap">
+  <SektionKopf kicker={s.kicker} titel={titelOder(s.titel, 'wissen.titel')} intro={s.intro ?? t('wissen.intro')}>
+    <Button href="/wissen/" variante="sekundaer">{t('aktion.alleArtikel')}</Button>
+  </SektionKopf>
+  <div class="wk" data-anim-kinder>
+    {artikel.map((a, i) => <ArtikelKarte a={a} gross={i === 0} />)}
+  </div>
+</div>
+
+<style>
+  .wk {
+    display: grid;
+    gap: 2.5rem var(--gutter);
+  }
+  @media (min-width: 48rem) {
+    .wk {
+      grid-template-columns: 1fr 1fr;
+    }
+    .wk > :global(:first-child) {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 64rem) {
+    .wk {
+      grid-template-columns: 6fr 3fr 3fr;
+      align-items: start;
+    }
+    .wk > :global(:first-child) {
+      grid-column: 1;
+      grid-row: span 2;
+    }
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+/**
+ * Lucide-Icon als Inline-SVG (einheitliches Set, keine Emojis).
+ * Name siehe https://lucide.dev/icons
+ */
+import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+
+interface Props {
+  name: string;
+  size?: number | string;
+  strich?: number;
+  label?: string;
+  class?: string;
+}
+const { name, size = 24, strich = 1.75, label, class: klasse } = Astro.props;
+
+const g = globalThis as unknown as { __iconCache?: Map<string, string> };
+const cache = (g.__iconCache ??= new Map<string, string>());
+let inner = cache.get(name);
+if (inner === undefined) {
+  const require = createRequire(import.meta.url);
+  try {
+    const svg = readFileSync(require.resolve(`lucide-static/icons/${name}.svg`), 'utf8');
+    inner = svg.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '').trim();
+  } catch {
+    console.warn(`\x1b[33m⚠ Icon "${name}" existiert nicht in Lucide, verwende "circle".\x1b[0m`);
+    inner = '<circle cx="12" cy="12" r="9" />';
+  }
+  cache.set(name, inner);
+}
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={strich}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class:list={['icon', klasse]}
+  aria-hidden={label ? undefined : 'true'}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  focusable="false"
+  set:html={inner}
+/>

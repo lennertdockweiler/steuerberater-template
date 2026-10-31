@@ -1,0 +1,202 @@
+---
+/** Stellenanzeige mit JobPosting-Schema (Google for Jobs) und Kurzbewerbung. */
+import Base from '../../layouts/Base.astro';
+import SeitenKopf from '../../components/ui/SeitenKopf.astro';
+import Bewerbungsformular from '../../components/interactive/Bewerbungsformular.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Foto from '../../components/ui/Foto.astro';
+import Button from '../../components/ui/Button.astro';
+import { config, t, berufstraegerBySlug } from '../../lib/config';
+import { euro, telHref } from '../../lib/format';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema, stellenSchema } from '../../lib/seo';
+import type { Stelle } from '../../../variants/_schema';
+
+export function getStaticPaths() {
+  return config.stellen.map((s) => ({ params: { slug: s.slug }, props: { s } }));
+}
+const { s } = Astro.props as { s: Stelle };
+const pfad = [
+  { label: t('nav.karriere'), href: '/karriere/' },
+  { label: s.titel, href: `/karriere/${s.slug}/` },
+];
+const person = berufstraegerBySlug(s.ansprechpartner) ?? config.berufstraeger[0];
+const gehalt = s.gehalt
+  ? `${euro(s.gehalt.min, true)} – ${euro(s.gehalt.max, true)} ${s.gehalt.einheit === 'YEAR' ? t('seite.stelle.proJahr') : t('seite.stelle.proMonat')}`
+  : undefined;
+const listen = [
+  { titel: t('seite.stelle.aufgaben'), punkte: s.aufgaben },
+  { titel: t('seite.stelle.profil'), punkte: s.profil },
+  { titel: t('seite.stelle.wirBieten'), punkte: s.wirBieten },
+].filter((l) => l.punkte.length);
+---
+
+<Base
+  titel={seitenTitel(null, `${s.titel} in ${config.betrieb.adresse.ort}`)}
+  beschreibung={seitenBeschreibung(null, s.kurztext)}
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site), stellenSchema(s, Astro.site)]}
+>
+  <SeitenKopf titel={s.titel} intro={s.kurztext} pfad={pfad} kicker={config.betrieb.kurzname}>
+    <dl class="st-fakten">
+      <div>
+        <dt>{t('seite.stelle.art')}</dt>
+        <dd>{s.art}{s.stunden ? `, ${s.stunden}` : ''}</dd>
+      </div>
+      <div>
+        <dt>{t('seite.stelle.ort')}</dt>
+        <dd>{`${config.betrieb.adresse.ort}, ${s.arbeitsort}`}</dd>
+      </div>
+      <div>
+        <dt>{t('seite.stelle.beginn')}</dt>
+        <dd>{s.beginn}</dd>
+      </div>
+      {
+        gehalt && (
+          <div>
+            <dt>{t('seite.stelle.gehalt')}</dt>
+            <dd class="ziffern">{gehalt}</dd>
+          </div>
+        )
+      }
+    </dl>
+    <Button href="#bewerben" icon="arrow-down">{t('aktion.bewerben')}</Button>
+  </SeitenKopf>
+
+  <section class="sektion">
+    <div class="wrap st">
+      <div class="st-listen">
+        {
+          listen.map((l) => (
+            <div class="st-liste" data-anim="reveal-up">
+              <h2 class="h3">{l.titel}</h2>
+              <ul role="list">
+                {l.punkte.map((p) => (
+                  <li>
+                    <Icon name="check" size={20} strich={2.2} />
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+      <aside class="st-person">
+        <p class="st-label">{t('seite.stelle.ansprechpartner')}</p>
+        <Foto bild={person.foto} ratio="1 / 1" sizes="12rem" class="st-foto" />
+        <p class="st-name">{person.name}</p>
+        <p class="gedaempft">{person.titel[0]}</p>
+        <a href={telHref(person.telefon ?? config.betrieb.telefon)} class="st-kontakt"><Icon name="phone" size={18} />{person.telefon ?? config.betrieb.telefon}</a>
+        <a href={`mailto:${person.email}`} class="st-kontakt"><Icon name="mail" size={18} />{person.email}</a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="sektion flaeche" id="bewerben" aria-labelledby="bewerben-titel">
+    <div class="wrap-schmal">
+      <h2 class="h2" id="bewerben-titel">{t('seite.karriere.kurzbewerbung')}</h2>
+      <p class="lead st-lead">{t('seite.karriere.kurzbewerbungIntro')}</p>
+      <Bewerbungsformular stelle={s.titel} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .st-fakten {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 2rem;
+    margin: 0.5rem 0 0.75rem;
+    width: 100%;
+    max-width: 40rem;
+  }
+  .st-fakten dt {
+    font-size: var(--step--1);
+    font-weight: 650;
+    color: var(--brand-ink);
+  }
+  .st-fakten dd {
+    margin: 0.15rem 0 0;
+    font-weight: 600;
+  }
+  .st {
+    display: grid;
+    gap: 3rem;
+  }
+  .st-listen {
+    display: grid;
+    gap: 3rem;
+  }
+  .st-liste {
+    display: grid;
+    gap: 1.25rem;
+    max-width: var(--measure);
+  }
+  .st-liste ul {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .st-liste li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
+  }
+  .st-liste li :global(svg) {
+    color: var(--brand-ink);
+    margin-top: 0.15rem;
+  }
+  .st-person {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+    justify-items: start;
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    max-width: 22rem;
+  }
+  .st-person :global(.st-foto) {
+    width: 6rem;
+    border-radius: 50%;
+    margin-block: 0.5rem;
+  }
+  .st-label {
+    font-size: var(--step--1);
+    font-weight: 650;
+    color: var(--brand-ink);
+  }
+  .st-name {
+    font-weight: 700;
+    font-size: var(--step-1);
+  }
+  .st-kontakt {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.5rem;
+    text-decoration: none;
+    font-size: 0.92rem;
+    overflow-wrap: anywhere;
+  }
+  .st-kontakt:hover {
+    text-decoration: underline;
+  }
+  .st-lead {
+    margin: 1rem 0 2.5rem;
+  }
+  @media (min-width: 64rem) {
+    .st {
+      grid-template-columns: 8fr 4fr;
+      column-gap: calc(var(--gutter) * 3);
+    }
+    .st-person {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+    .st-fakten {
+      grid-template-columns: repeat(4, auto);
+    }
+  }
+</style>

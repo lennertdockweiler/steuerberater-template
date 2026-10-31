@@ -1,0 +1,136 @@
+---
+/** Neueste Beiträge als Zeilen; Desktop mit cursorfolgender Bildvorschau. */
+import type { AktiveSektion } from '../../../lib/config';
+import { t, titelOder } from '../../../lib/config';
+import { aktiv } from '../../../lib/routes';
+import { alleArtikel, artikelPfad, isoVon } from '../../../lib/wissen';
+import { datum } from '../../../lib/format';
+import SektionKopf from '../../ui/SektionKopf.astro';
+import Foto from '../../ui/Foto.astro';
+import Icon from '../../ui/Icon.astro';
+import Button from '../../ui/Button.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'wissen' }>;
+}
+const { s } = Astro.props;
+if (!aktiv('wissen')) return;
+const artikel = (await alleArtikel()).slice(0, s.anzahl);
+if (!artikel.length) return;
+---
+
+<div class="wrap">
+  <SektionKopf kicker={s.kicker} titel={titelOder(s.titel, 'wissen.titel')} intro={s.intro ?? t('wissen.intro')}>
+    <Button href="/wissen/" variante="sekundaer">{t('aktion.alleArtikel')}</Button>
+  </SektionKopf>
+  <div class="wl" data-cursor-liste>
+    <ul class="wl-liste" role="list" data-anim-kinder>
+      {
+        artikel.map((a, i) => (
+          <li>
+            <a href={artikelPfad(a)} class="wl-zeile" data-vorschau-index={i}>
+              <time datetime={isoVon(a.data.datum)} class="wl-datum datum">
+                {datum(isoVon(a.data.datum))}
+              </time>
+              <span class="wl-kat">{a.data.kategorie}</span>
+              <span class="wl-titel">{a.data.titel}</span>
+              <Icon name="arrow-up-right" size={22} class="wl-pfeil" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="wl-vorschau" data-cursor-vorschau aria-hidden="true">
+      {
+        artikel.map((a, i) => (
+          <div class="wl-vbild" data-vorschau-bild style={`opacity:${i === 0 ? 1 : 0}`}>
+            <Foto bild={a.data.bild ? { datei: a.data.bild, alt: '', dekorativ: true } : undefined} ratio="3 / 2" sizes="20rem" />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .wl {
+    position: relative;
+  }
+  .wl-liste {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line-strong);
+  }
+  .wl-zeile {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: 'datum kat pfeil' 'titel titel pfeil';
+    gap: 0.4rem 1rem;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--line-strong);
+    text-decoration: none;
+  }
+  .wl-datum {
+    grid-area: datum;
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+  }
+  .wl-kat {
+    grid-area: kat;
+    font-size: 0.85rem;
+    font-weight: 650;
+    color: var(--brand-ink);
+  }
+  .wl-titel {
+    grid-area: titel;
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-2);
+    letter-spacing: var(--hl-tracking);
+    line-height: 1.15;
+    transition: transform 500ms var(--ease-out);
+  }
+  .wl-zeile :global(.wl-pfeil) {
+    grid-area: pfeil;
+    align-self: center;
+    transition: transform 400ms var(--ease-out);
+  }
+  .wl-zeile:hover .wl-titel {
+    transform: translateX(0.4rem);
+  }
+  .wl-zeile:hover :global(.wl-pfeil) {
+    transform: translate(3px, -3px);
+  }
+  .wl-vorschau {
+    display: none;
+  }
+  @media (min-width: 64rem) {
+    .wl-zeile {
+      grid-template-columns: 8rem 11rem 1fr auto;
+      grid-template-areas: 'datum kat titel pfeil';
+      align-items: baseline;
+    }
+  }
+  @media (min-width: 64rem) and (pointer: fine) {
+    .wl-vorschau {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 19rem;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0;
+    }
+    .wl-vbild {
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+    }
+    .wl-vbild :global(.rahmen) {
+      border-radius: var(--r-lg);
+      box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.45);
+    }
+  }
+</style>

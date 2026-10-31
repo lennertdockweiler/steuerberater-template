@@ -1,0 +1,218 @@
+---
+import Base from '../layouts/Base.astro';
+import SeitenKopf from '../components/ui/SeitenKopf.astro';
+import Kontaktformular from '../components/interactive/Kontaktformular.astro';
+import ZweiKlick from '../components/interactive/ZweiKlick.astro';
+import KartenVorschau from '../components/ui/KartenVorschau.astro';
+import Icon from '../components/ui/Icon.astro';
+import Button from '../components/ui/Button.astro';
+import { config, t } from '../lib/config';
+import { aktiv, terminPfad } from '../lib/routes';
+import { telHref, whatsappHref } from '../lib/format';
+import { zeitenZeilen } from '../lib/oeffnungszeiten';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema } from '../lib/seo';
+
+const b = config.betrieb;
+const { lat, lng } = b.geo;
+const karte = config.integrationen.karte;
+const google = karte.anbieter === 'google';
+const embed = google
+  ? `https://www.google.com/maps?q=${lat},${lng}&z=16&output=embed`
+  : `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.008},${lat - 0.004},${lng + 0.008},${lat + 0.004}&layer=mapnik&marker=${lat},${lng}`;
+const route = google ? `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}` : `https://www.openstreetmap.org/directions?to=${lat}%2C${lng}`;
+const pfad = [{ label: t('seite.kontakt.titel'), href: '/kontakt/' }];
+const zeiten = zeitenZeilen(b.oeffnungszeiten.regulaer);
+---
+
+<Base
+  titel={seitenTitel('kontakt', t('seite.kontakt.seo', { ort: b.adresse.ort }))}
+  beschreibung={seitenBeschreibung('kontakt', `${b.name}, ${b.adresse.strasse}, ${b.adresse.plz} ${b.adresse.ort}. ${t('seite.kontakt.intro')}`)}
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site)]}
+>
+  <SeitenKopf titel={t('seite.kontakt.titel')} intro={t('seite.kontakt.intro')} pfad={pfad} />
+
+  <section class="sektion">
+    <div class="wrap ko">
+      <div class="ko-info">
+        <address class="ko-nap">
+          <p class="ko-name">{b.name}</p>
+          <p>{b.adresse.strasse}<br />{b.adresse.plz} {b.adresse.ort}</p>
+        </address>
+        <ul class="ko-wege" role="list">
+          <li>
+            <a href={telHref(b.telefon)}>
+              <Icon name="phone" size={22} />
+              <span><strong>{t('aktion.anrufen')}</strong>{b.telefon}</span>
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${b.email}`}>
+              <Icon name="mail" size={22} />
+              <span><strong>{t('aktion.email')}</strong>{b.email}</span>
+            </a>
+          </li>
+          {
+            b.whatsapp && (
+              <li>
+                <a href={whatsappHref(b.whatsapp)} target="_blank" rel="noopener">
+                  <Icon name="message-circle" size={22} />
+                  <span>
+                    <strong>WhatsApp</strong>
+                    {b.whatsapp}
+                  </span>
+                </a>
+              </li>
+            )
+          }
+          {
+            aktiv('termin') && (
+              <li>
+                <a href={terminPfad()}>
+                  <Icon name="calendar-check" size={22} />
+                  <span>
+                    <strong>{t('aktion.termin')}</strong>
+                    {t('seite.kontakt.terminText')}
+                  </span>
+                </a>
+              </li>
+            )
+          }
+        </ul>
+        <div class="ko-zeiten">
+          <h2 class="h4">{t('seite.kontakt.oeffnungszeiten')}</h2>
+          <dl>
+            {
+              zeiten.map((z) => (
+                <div>
+                  <dt>{z.tage}</dt>
+                  <dd class="datum">{z.zeiten}</dd>
+                </div>
+              ))
+            }
+          </dl>
+          {b.oeffnungszeiten.hinweis && <p class="gedaempft ko-hinweis">{b.oeffnungszeiten.hinweis}</p>}
+        </div>
+      </div>
+      <div class="ko-form">
+        <h2 class="h3">{t('seite.kontakt.formTitel')}</h2>
+        <Kontaktformular />
+      </div>
+    </div>
+  </section>
+
+  {
+    karte.aktiv && (
+      <section class="sektion ko-karte-sektion" aria-labelledby="anfahrt">
+        <div class="wrap">
+          <div class="ko-karte-kopf">
+            <h2 class="h3" id="anfahrt">
+              {t('seite.kontakt.anfahrt')}
+            </h2>
+            <Button href={route} variante="sekundaer" klein icon="arrow-up-right">
+              {t('karte.route')}
+            </Button>
+          </div>
+          <ZweiKlick src={embed} titel={t('seite.kontakt.anfahrt')} hinweis={google ? t('karte.hinweisGoogle') : t('karte.hinweisOsm')} knopf={t('karte.laden')} icon="map-pin">
+            <KartenVorschau lat={lat} lng={lng} />
+          </ZweiKlick>
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .ko {
+    display: grid;
+    gap: 3rem;
+  }
+  .ko-info {
+    display: grid;
+    gap: 2.5rem;
+    align-content: start;
+  }
+  .ko-nap {
+    font-style: normal;
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+  .ko-name {
+    font-weight: 700;
+  }
+  .ko-wege {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line-strong);
+  }
+  .ko-wege a {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--line-strong);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .ko-wege a :global(svg) {
+    color: var(--brand-ink);
+  }
+  .ko-wege a span {
+    display: grid;
+  }
+  .ko-wege strong {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    font-weight: 600;
+  }
+  .ko-wege a:hover span {
+    color: var(--brand-ink);
+  }
+  .ko-zeiten dl {
+    display: grid;
+    gap: 0.4rem;
+    margin: 1rem 0 0;
+  }
+  .ko-zeiten dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .ko-zeiten dd {
+    margin: 0;
+    font-weight: 600;
+  }
+  .ko-hinweis {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+  }
+  .ko-form {
+    display: grid;
+    gap: 1.5rem;
+    align-content: start;
+    padding: clamp(1.25rem, 1rem + 2vw, 2.5rem);
+    border-radius: var(--r-xl);
+    background: var(--surface);
+  }
+  .ko-karte-sektion {
+    padding-top: 0;
+  }
+  .ko-karte-kopf {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  @media (min-width: 64rem) {
+    .ko {
+      grid-template-columns: 5fr 7fr;
+      column-gap: calc(var(--gutter) * 3);
+    }
+  }
+</style>

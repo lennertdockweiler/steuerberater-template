@@ -1,0 +1,114 @@
+---
+/** Kurzporträt der Kanzlei als editorialer Textblock mit Randnotiz. */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t, titelOder } from '../../../lib/config';
+import Summenstrich from '../../ui/Summenstrich.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'kanzlei' }>;
+}
+const { s } = Astro.props;
+const absaetze = s.text ?? config.zielgruppen[0]?.text ?? [];
+---
+
+<div class="wrap ke">
+  <aside class="ke-rand" data-anim="reveal-fade">
+    <p class="ke-jahr">{t('kanzlei.seit', { jahr: config.betrieb.gruendungsjahr })}</p>
+    <p>{config.betrieb.adresse.ort}</p>
+    {config.mitgliedschaften.length > 0 && <p class="ke-mitglied">{`${t('vertrauen.mitglied')} ${config.mitgliedschaften.map((m) => m.name).join(', ')}`}</p>}
+  </aside>
+  <div class="ke-haupt">
+    {s.kicker && <p class="kicker">{s.kicker}</p>}
+    <h2 class="h2 ke-titel" data-anim="zeilen">{titelOder(s.titel, 'kanzlei.titel')}</h2>
+    {s.intro && <p class="ke-intro" data-anim="reveal-up">{s.intro}</p>}
+    <div class="ke-text fliesstext" data-anim="reveal-up">
+      {absaetze.map((p) => <p>{p}</p>)}
+    </div>
+    {
+      s.zitat && (
+        <figure class="ke-zitat" data-anim="reveal-up">
+          <Summenstrich fein />
+          <blockquote>
+            <p>{`„${s.zitat.text}“`}</p>
+          </blockquote>
+          <figcaption>{s.zitat.name}</figcaption>
+        </figure>
+      )
+    }
+  </div>
+</div>
+
+<style>
+  .ke {
+    display: grid;
+    gap: 2rem;
+  }
+  .ke-rand {
+    display: grid;
+    gap: 0.35rem;
+    align-content: start;
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+  }
+  .ke-jahr {
+    font-family: var(--ff-display);
+    font-size: var(--step-2);
+    color: var(--brand-ink);
+  }
+  .ke-mitglied {
+    margin-top: 0.75rem;
+    max-width: 24ch;
+  }
+  .ke-haupt {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .ke-haupt .kicker {
+    margin-bottom: 0;
+  }
+  .ke-titel {
+    max-width: 22ch;
+  }
+  .ke-intro {
+    font-family: var(--ff-display);
+    font-size: var(--step-2);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    max-width: 36ch;
+  }
+  .ke-zitat {
+    margin: 1rem 0 0;
+    display: grid;
+    gap: 1rem;
+    max-width: 48ch;
+    color: var(--brand-ink);
+  }
+  .ke-zitat blockquote {
+    margin: 0;
+    font-size: var(--step-1);
+    font-style: italic;
+    color: var(--ink);
+  }
+  .ke-zitat figcaption {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+  }
+  @media (min-width: 64rem) {
+    .ke {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+      column-gap: calc(var(--gutter) * 2);
+    }
+    .ke-rand {
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--line-strong);
+    }
+    .ke-text {
+      columns: 2;
+      column-gap: calc(var(--gutter) * 2);
+      max-width: none;
+    }
+    .ke-text p {
+      break-inside: avoid;
+    }
+  }
+</style>

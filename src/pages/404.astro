@@ -1,0 +1,100 @@
+---
+import Base from '../layouts/Base.astro';
+import Button from '../components/ui/Button.astro';
+import Icon from '../components/ui/Icon.astro';
+import { config, t } from '../lib/config';
+import { hauptNavigation, serviceNavigation, terminPfad } from '../lib/routes';
+
+const links = [...hauptNavigation().map((n) => ({ label: n.label, href: n.href })), ...serviceNavigation().slice(0, 3)];
+---
+
+<Base titel={`404 – ${config.betrieb.kurzname}`} beschreibung={t('seite.404.titel')} noindex>
+  <section class="nf">
+    <div class="wrap nf-raster">
+      <div>
+        <p class="nf-zahl ziffern" aria-hidden="true">404</p>
+        <span class="summenstrich nf-strich" aria-hidden="true"></span>
+      </div>
+      <div class="nf-text">
+        <h1 class="h1">{t('seite.404.titel')}</h1>
+        <p class="lead">{t('seite.404.text')}</p>
+        <div class="nf-ctas">
+          <Button href="/" icon="arrow-right">{t('nav.start')}</Button>
+          <Button href={terminPfad()} variante="sekundaer" icon="calendar-check">{t('aktion.termin')}</Button>
+        </div>
+        <ul class="nf-links" role="list">
+          {
+            links.map((l) => (
+              <li>
+                <a href={l.href}>
+                  {l.label}
+                  <Icon name="arrow-up-right" size={16} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    padding: calc(var(--header-h) + clamp(2rem, 1rem + 5vw, 6rem)) 0 var(--space-section);
+  }
+  .nf-raster {
+    display: grid;
+    gap: 2rem;
+  }
+  .nf-zahl {
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: clamp(6rem, 3rem + 14vw, 15rem);
+    line-height: 0.85;
+    letter-spacing: -0.06em;
+    color: var(--brand-ink);
+  }
+  .nf-strich {
+    margin-top: 1rem;
+    max-width: 22rem;
+    color: var(--brand-ink);
+  }
+  .nf-text {
+    display: grid;
+    gap: 1.5rem;
+    align-content: center;
+  }
+  .nf-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .nf-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;
+    margin: 1rem 0 0;
+    padding: 1.5rem 0 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+  .nf-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 2.75rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .nf-links a:hover {
+    color: var(--brand-ink);
+  }
+  @media (min-width: 64rem) {
+    .nf-raster {
+      grid-template-columns: 5fr 7fr;
+      column-gap: calc(var(--gutter) * 3);
+      align-items: center;
+    }
+  }
+</style>

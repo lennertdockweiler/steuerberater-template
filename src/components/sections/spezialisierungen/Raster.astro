@@ -1,0 +1,102 @@
+---
+/** Branchen im asymmetrischen Raster: eine große Karte, daneben kleinere. */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t, titelOder } from '../../../lib/config';
+import { aktiv } from '../../../lib/routes';
+import SektionKopf from '../../ui/SektionKopf.astro';
+import Foto from '../../ui/Foto.astro';
+import Icon from '../../ui/Icon.astro';
+
+interface Props {
+  s: AktiveSektion;
+  /** auf der Übersichtsseite ohne eigenen Sektionskopf (die Seite hat schon H1 und Intro) */
+  ohneKopf?: boolean;
+}
+const { s, ohneKopf = false } = Astro.props;
+if (!config.spezialisierungen.length) return;
+const ziel = (slug: string) => (aktiv('spezialisierungen') ? `/spezialisierungen/${slug}/` : '/kontakt/');
+---
+
+<div class="wrap">
+  {!ohneKopf && <SektionKopf kicker={s.kicker} titel={titelOder(s.titel, 'spezialisierungen.titel')} intro={s.intro ?? t('spezialisierungen.intro')} />}
+  <ul class="sr" role="list" data-anim-kinder>
+    {
+      config.spezialisierungen.map((sp, i) => (
+        <li class:list={['sr-item', i === 0 && 'sr-gross']}>
+          <a href={ziel(sp.slug)} class="sr-karte">
+            <Foto bild={sp.bild} ratio={i === 0 ? '4 / 5' : '3 / 2'} sizes={i === 0 ? '(min-width: 64rem) 48vw, 100vw' : '(min-width: 64rem) 24vw, 100vw'} class="sr-bild" />
+            <span class="sr-titel">
+              <Icon name={sp.icon} size={22} />
+              {sp.titel}
+            </span>
+            <span class="sr-text">{sp.kurztext}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .sr {
+    display: grid;
+    gap: 2.5rem var(--gutter);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sr-karte {
+    display: grid;
+    gap: 0.75rem;
+    text-decoration: none;
+  }
+  .sr-karte :global(.sr-bild) {
+    border-radius: var(--r-xl);
+  }
+  .sr-karte :global(.sr-bild img) {
+    transition: transform 900ms var(--ease-out);
+  }
+  .sr-karte:hover :global(.sr-bild img) {
+    transform: scale(1.04);
+  }
+  .sr-titel {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.4rem;
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-2);
+    letter-spacing: var(--hl-tracking);
+    line-height: 1.1;
+  }
+  .sr-titel :global(svg) {
+    color: var(--brand-ink);
+    flex: none;
+  }
+  .sr-text {
+    color: var(--ink-muted);
+    max-width: 40ch;
+  }
+  @media (min-width: 48rem) {
+    .sr {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 64rem) {
+    .sr {
+      grid-template-columns: repeat(4, 1fr);
+      align-items: start;
+    }
+    .sr-gross {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+    .sr-item:not(.sr-gross) {
+      grid-column: span 2;
+    }
+    .sr-gross .sr-titel {
+      font-size: var(--step-3);
+    }
+  }
+</style>

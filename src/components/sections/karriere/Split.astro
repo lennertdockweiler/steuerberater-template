@@ -1,0 +1,158 @@
+---
+/** Karriere-Teaser: Bild + Benefits + offene Stellen. */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t } from '../../../lib/config';
+import { aktiv } from '../../../lib/routes';
+import Foto from '../../ui/Foto.astro';
+import Icon from '../../ui/Icon.astro';
+import Button from '../../ui/Button.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'karriere' }>;
+}
+const { s } = Astro.props;
+const bild = s.bild ?? config.karriere.bild;
+const stellen = config.stellen.slice(0, 3);
+---
+
+<div class="wrap ks">
+  <div class="ks-bild" data-anim="bild">
+    <Foto bild={bild} ratio="4 / 5" sizes="(min-width: 64rem) 40vw, 92vw" parallax class="ks-rahmen" />
+  </div>
+  <div class="ks-text">
+    {s.kicker && <p class="kicker">{s.kicker}</p>}
+    <h2 class="h2" data-anim="zeilen">{s.titel ?? config.karriere.titel ?? t('karriere.titel')}</h2>
+    <p class="lead" data-anim="reveal-up">{s.intro ?? config.karriere.intro ?? t('karriere.intro')}</p>
+    {
+      config.benefits.length > 0 && (
+        <ul class="ks-benefits" role="list" data-anim-kinder>
+          {config.benefits.slice(0, 4).map((b) => (
+            <li>
+              <Icon name={b.icon} size={22} />
+              <span>
+                <strong>{b.titel}</strong>
+                {b.text}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    {
+      stellen.length > 0 && (
+        <div class="ks-stellen">
+          <p class="ks-label">{t('seite.karriere.stellen')}</p>
+          <ul role="list">
+            {stellen.map((st) => (
+              <li>
+                <a href={aktiv('karriere') ? `/karriere/${st.slug}/` : '/kontakt/'}>
+                  <span class="ks-stelle">{st.titel}</span>
+                  <span class="ks-art">{`${st.art}, ${st.arbeitsort}`}</span>
+                  <Icon name="arrow-right" size={20} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+    {aktiv('karriere') && <Button href="/karriere/">{t('aktion.offeneStellen')}</Button>}
+  </div>
+</div>
+
+<style>
+  .ks {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .ks-bild :global(.ks-rahmen) {
+    border-radius: var(--r-xl);
+  }
+  .ks-text {
+    display: grid;
+    gap: 1.5rem;
+    align-content: start;
+    justify-items: start;
+  }
+  .ks-text .kicker {
+    margin-bottom: 0;
+  }
+  .ks-benefits {
+    display: grid;
+    gap: 1.25rem;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ks-benefits li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.9rem;
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+  }
+  .ks-benefits :global(svg) {
+    color: var(--brand-ink);
+    margin-top: 0.15rem;
+  }
+  .ks-benefits strong {
+    display: block;
+    color: var(--ink);
+  }
+  .ks-stellen {
+    width: 100%;
+  }
+  .ks-label {
+    margin-bottom: 0.5rem;
+    font-size: var(--step--1);
+    font-weight: 650;
+    color: var(--ink-muted);
+  }
+  .ks-stellen ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line-strong);
+  }
+  .ks-stellen a {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.15rem 1rem;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line-strong);
+    text-decoration: none;
+  }
+  .ks-stellen a :global(svg) {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    transition: transform 300ms var(--ease-out);
+  }
+  .ks-stellen a:hover :global(svg) {
+    transform: translateX(4px);
+  }
+  .ks-stelle {
+    font-weight: 650;
+  }
+  .ks-art {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+  }
+  @media (min-width: 48rem) {
+    .ks-benefits {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 2rem;
+    }
+  }
+  @media (min-width: 64rem) {
+    .ks {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      column-gap: calc(var(--gutter) * 3);
+      align-items: start;
+    }
+    .ks-bild {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+</style>

@@ -1,0 +1,52 @@
+---
+/**
+ * Layout-Galerie (versteckt): jede Sektion in jeder Layout-Variante mit den echten
+ * Inhalten der Variante. Hilft bei der Auswahl pro Kunde und bei der Qualitätskontrolle.
+ */
+import Base from '../../layouts/Base.astro';
+import SeitenKopf from '../../components/ui/SeitenKopf.astro';
+import Sektion from '../../components/sections/Sektion.astro';
+import { config, type AktiveSektion } from '../../lib/config';
+import { SEKTION_LAYOUTS } from '../../../variants/_schema';
+import { PITCH as P } from '../../data/pitch';
+
+const basis = (typ: string) => config.sektionen.find((s) => s.typ === typ) ?? { typ };
+const eintraege = Object.entries(SEKTION_LAYOUTS).flatMap(([typ, layouts]) =>
+  layouts.map((layout) => ({
+    typ,
+    layout,
+    s: { anzahl: 3, mitTeam: true, ...basis(typ), id: undefined, aktiv: true, layout } as unknown as AktiveSektion,
+  })),
+);
+---
+
+<Base titel={`${P.layoutsTitel} – ${config.betrieb.kurzname}`} beschreibung={P.layoutsIntro} noindex>
+  <SeitenKopf titel={P.layoutsTitel} intro={P.layoutsIntro} pfad={[{ label: 'Pitch', href: '/pitch/' }, { label: P.layoutsTitel, href: '/pitch/layouts/' }]} />
+  {
+    eintraege.map((e) => (
+      <div class="lg-eintrag">
+        <div class="wrap lg-label">
+          <code>{`{ "typ": "${e.typ}", "layout": "${e.layout}" }`}</code>
+        </div>
+        <Sektion s={e.s} vt={false} />
+      </div>
+    ))
+  }
+</Base>
+
+<style>
+  .lg-eintrag {
+    border-top: 4px solid var(--ink);
+  }
+  .lg-label {
+    padding-block: 1rem;
+  }
+  .lg-label code {
+    display: inline-block;
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--r-sm);
+    background: var(--ink);
+    color: var(--bg);
+    font-size: 0.85rem;
+  }
+</style>

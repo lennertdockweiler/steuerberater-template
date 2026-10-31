@@ -1,0 +1,74 @@
+---
+/** Kennzahlen als Zeile mit großen tabellarischen Ziffern und Count-up. */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t } from '../../../lib/config';
+import { zahl } from '../../../lib/format';
+
+interface Props {
+  s: AktiveSektion;
+}
+const { s } = Astro.props;
+if (!config.kennzahlen.length) return;
+---
+
+<div class="wrap">
+  <h2 class="sr-only">{s.titel ?? t('kennzahlen.titel')}</h2>
+  <dl class="kz" data-anim-kinder>
+    {
+      config.kennzahlen.map((k) => (
+        <div class="kz-item">
+          <dt>{k.label}</dt>
+          <dd class="ziffern">
+            {k.praefix && <span class="kz-affix">{k.praefix}</span>}
+            <span data-zaehler={k.wert} data-nachkomma={k.nachkommastellen}>
+              {zahl(k.wert, k.nachkommastellen)}
+            </span>
+            {k.suffix && <span class="kz-affix">{k.suffix}</span>}
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+</div>
+
+<style>
+  .kz {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem var(--gutter);
+    margin: 0;
+  }
+  .kz-item {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--ink);
+  }
+  dd {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.08em;
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: clamp(2.6rem, 1.6rem + 4.4vw, 5.6rem);
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+  }
+  .kz-affix {
+    font-size: 0.5em;
+    letter-spacing: -0.01em;
+    color: var(--brand-ink);
+  }
+  dt {
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+    max-width: 22ch;
+  }
+  @media (min-width: 64rem) {
+    .kz {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

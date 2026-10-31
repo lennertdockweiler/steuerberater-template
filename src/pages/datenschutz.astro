@@ -1,0 +1,88 @@
+---
+/**
+ * Datenschutzerklärung als strukturierte Vorlage. Abschnitte erscheinen nur,
+ * wenn die jeweilige Funktion aktiv ist (Formular-Endpoint, Karte, externe
+ * Buchung, Analytics). Deutlicher Prüfhinweis vor dem Livegang.
+ */
+import Base from '../layouts/Base.astro';
+import SeitenKopf from '../components/ui/SeitenKopf.astro';
+import Icon from '../components/ui/Icon.astro';
+import { config } from '../lib/config';
+import { datum } from '../lib/format';
+import { RECHT_TEXTE as R, datenschutzAbschnitte } from '../data/rechtstexte';
+import { seitenTitel, seitenBeschreibung } from '../lib/seo';
+
+const abschnitte = datenschutzAbschnitte(config, { portal: !!config.portalLink, serviceWorker: true });
+const heute = new Date().toISOString().slice(0, 10);
+---
+
+<Base titel={seitenTitel('datenschutz', R.datenschutzTitel)} beschreibung={seitenBeschreibung('datenschutz', `${R.datenschutzTitel} ${config.betrieb.name}.`)}>
+  <SeitenKopf titel={R.datenschutzTitel} pfad={[{ label: R.datenschutzTitel, href: '/datenschutz/' }]} />
+  <section class="sektion">
+    <div class="wrap-schmal ds">
+      {
+        config.meta.noindex && (
+          <p class="ds-warnung" role="note">
+            <Icon name="triangle-alert" size={22} />
+            <span>{R.datenschutzWarnung}</span>
+          </p>
+        )
+      }
+      {
+        abschnitte.map((a, i) => (
+          <section aria-labelledby={`ds-${i}`}>
+            <h2 id={`ds-${i}`}>{a.titel}</h2>
+            {a.absaetze.map((p) => (
+              <p>{p}</p>
+            ))}
+            {a.liste && (
+              <ul>
+                {a.liste.map((l) => (
+                  <li>{l}</li>
+                ))}
+              </ul>
+            )}
+          </section>
+        ))
+      }
+      <p class="ds-stand">{`${R.stand}: ${datum(heute)}`}</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ds {
+    max-width: 46rem;
+  }
+  .ds-warnung {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    padding: 1rem 1.25rem;
+    border-left: 3px solid var(--accent);
+    background: var(--surface);
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  .ds-warnung :global(svg) {
+    flex: none;
+    color: var(--accent-ink);
+  }
+  .ds h2 {
+    margin: 2.5rem 0 0.75rem;
+    font-size: var(--step-1);
+    letter-spacing: -0.01em;
+  }
+  .ds p,
+  .ds ul {
+    margin: 0 0 0.85rem;
+  }
+  .ds ul {
+    padding-left: 1.25rem;
+  }
+  .ds-stand {
+    margin-top: 3rem !important;
+    color: var(--ink-muted);
+    font-size: 0.9rem;
+  }
+</style>

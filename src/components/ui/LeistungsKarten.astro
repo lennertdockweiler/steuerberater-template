@@ -1,0 +1,100 @@
+---
+import type { Leistung } from '../../../variants/_schema';
+import { leistungPfad } from '../../lib/config';
+import Icon from './Icon.astro';
+
+interface Props {
+  liste: Leistung[];
+  spalten?: 2 | 3;
+}
+const { liste, spalten = 2 } = Astro.props;
+---
+
+<ul class:list={['lk', `lk-${spalten}`]} role="list" data-anim-kinder>
+  {
+    liste.map((l) => (
+      <li>
+        <a href={leistungPfad(l)} class="lk-karte">
+          <span class="lk-icon">
+            <Icon name={l.icon} size={24} />
+          </span>
+          <span class="lk-titel">{l.titel}</span>
+          <span class="lk-text">{l.kurztext}</span>
+          <span class="lk-mehr" aria-hidden="true">
+            <Icon name="arrow-right" size={20} />
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .lk {
+    display: grid;
+    gap: var(--gutter);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .lk-karte {
+    position: relative;
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    height: 100%;
+    padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+    text-decoration: none;
+    transition:
+      border-color 300ms,
+      transform 400ms var(--ease-out);
+  }
+  .lk-karte:hover {
+    border-color: var(--ink);
+    transform: translateY(-3px);
+  }
+  .lk-icon {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 0.5rem;
+    border-radius: var(--r-md);
+    background: var(--brand-soft);
+    color: var(--brand-ink);
+  }
+  .lk-titel {
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-1);
+    line-height: 1.2;
+    letter-spacing: calc(var(--hl-tracking) * 0.5);
+  }
+  .lk-text {
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+    padding-right: 2rem;
+  }
+  .lk-mehr {
+    position: absolute;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    transition: transform 300ms var(--ease-out);
+  }
+  .lk-karte:hover .lk-mehr {
+    transform: translateX(4px);
+  }
+  @media (min-width: 48rem) {
+    .lk {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 64rem) {
+    .lk-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

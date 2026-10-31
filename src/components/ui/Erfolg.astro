@@ -1,0 +1,86 @@
+---
+/** Erfolgsmeldung mit gezeichnetem Haken (SVG-Stroke) und optionalem Demo-Hinweis. */
+import { formularDemo, t } from '../../lib/config';
+
+interface Props {
+  titel?: string;
+  text?: string;
+}
+const { titel = t('form.erfolg.titel'), text = t('form.erfolg.text') } = Astro.props;
+---
+
+<div class="erfolg" data-erfolg hidden role="status">
+  <svg class="erfolg-haken" viewBox="0 0 52 52" aria-hidden="true">
+    <circle cx="26" cy="26" r="24" pathLength="1"></circle>
+    <path d="M15 27l7.5 7.5L38 19" pathLength="1"></path>
+  </svg>
+  <h3 class="h3" tabindex="-1">{titel}</h3>
+  <p class="gedaempft">{text}</p>
+  <slot />
+  {formularDemo && <p class="erfolg-demo">{t('form.demoHinweis')}</p>}
+</div>
+
+<style>
+  .erfolg {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    animation: erfolg-ein 500ms var(--ease-out);
+  }
+  .erfolg[hidden] {
+    display: none;
+  }
+  @keyframes erfolg-ein {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.98);
+    }
+  }
+  .erfolg h3:focus {
+    outline: none;
+  }
+  .erfolg-haken {
+    width: 4rem;
+    height: 4rem;
+  }
+  .erfolg-haken circle {
+    fill: var(--success);
+    stroke: var(--success);
+    stroke-width: 2;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    fill-opacity: 0;
+    animation:
+      kreis 600ms var(--ease-out) forwards,
+      fuellen 300ms ease 500ms forwards;
+  }
+  .erfolg-haken path {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: kreis 450ms var(--ease-out) 650ms forwards;
+  }
+  @keyframes kreis {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes fuellen {
+    to {
+      fill-opacity: 1;
+    }
+  }
+  .erfolg-demo {
+    padding: 0.75rem 1rem;
+    border-left: 3px solid var(--accent);
+    background: var(--bg);
+    font-size: 0.9rem;
+  }
+</style>

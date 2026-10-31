@@ -1,0 +1,79 @@
+---
+import type { Artikel } from '../../lib/wissen';
+import { artikelPfad, isoVon } from '../../lib/wissen';
+import { datum } from '../../lib/format';
+import Foto from './Foto.astro';
+
+interface Props {
+  a: Artikel;
+  gross?: boolean;
+  vt?: boolean;
+}
+const { a, gross = false, vt = false } = Astro.props;
+---
+
+<article class:list={['ak', gross && 'ak-gross']} data-kategorie={a.data.kategorie}>
+  <a href={artikelPfad(a)} class="ak-link">
+    <Foto
+      bild={a.data.bild ? { datei: a.data.bild, alt: a.data.bildAlt ?? '', dekorativ: !a.data.bildAlt } : undefined}
+      ratio={gross ? '4 / 3' : '3 / 2'}
+      sizes={gross ? '(min-width: 64rem) 50vw, 100vw' : '(min-width: 64rem) 25vw, (min-width: 48rem) 50vw, 100vw'}
+      vtName={vt ? `artikel-${a.id}` : undefined}
+      class="ak-bild"
+    />
+    <span class="ak-meta">
+      <span class="ak-kat">{a.data.kategorie}</span>
+      <time datetime={isoVon(a.data.datum)} class="datum">{datum(isoVon(a.data.datum))}</time>
+    </span>
+    <span class="ak-titel">{a.data.titel}</span>
+    {gross && <span class="ak-text">{a.data.beschreibung}</span>}
+  </a>
+</article>
+
+<style>
+  .ak-link {
+    display: grid;
+    gap: 0.75rem;
+    text-decoration: none;
+  }
+  .ak-link :global(.ak-bild) {
+    border-radius: var(--r-lg);
+    margin-bottom: 0.25rem;
+  }
+  .ak-link :global(.ak-bild img) {
+    transition: transform 900ms var(--ease-out);
+  }
+  .ak-link:hover :global(.ak-bild img) {
+    transform: scale(1.04);
+  }
+  .ak-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+  }
+  .ak-kat {
+    font-weight: 650;
+    color: var(--brand-ink);
+  }
+  .ak-titel {
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-1);
+    letter-spacing: calc(var(--hl-tracking) * 0.6);
+    line-height: 1.2;
+  }
+  .ak-gross .ak-titel {
+    font-size: var(--step-3);
+    letter-spacing: var(--hl-tracking);
+  }
+  .ak-text {
+    color: var(--ink-muted);
+    max-width: 50ch;
+  }
+  .ak-link:hover .ak-titel {
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.18em;
+  }
+</style>

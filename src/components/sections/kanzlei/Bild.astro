@@ -1,0 +1,93 @@
+---
+/** Kurzporträt der Kanzlei mit großem Bild und persönlichem Zitat. */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, titelOder } from '../../../lib/config';
+import Foto from '../../ui/Foto.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'kanzlei' }>;
+}
+const { s } = Astro.props;
+const absaetze = s.text ?? [];
+---
+
+<div class="wrap kbi">
+  <div class="kbi-text">
+    {s.kicker && <p class="kicker">{s.kicker}</p>}
+    <h2 class="h2" data-anim="zeilen">{titelOder(s.titel, 'kanzlei.titel')}</h2>
+    {s.intro && <p class="lead" data-anim="reveal-up">{s.intro}</p>}
+    <div class="fliesstext" data-anim="reveal-up">
+      {absaetze.map((p) => <p>{p}</p>)}
+    </div>
+    {
+      s.zitat && (
+        <blockquote class="kbi-zitat" data-anim="reveal-up">
+          <p>{`„${s.zitat.text}“`}</p>
+          <footer>{s.zitat.name}</footer>
+        </blockquote>
+      )
+    }
+  </div>
+  <div class="kbi-bild" data-anim="bild">
+    <Foto bild={s.bild} ratio="4 / 5" sizes="(min-width: 64rem) 42vw, 92vw" parallax class="kbi-rahmen" />
+    {config.betrieb.gruendungsjahr && <p class="kbi-jahr ziffern" aria-hidden="true">{config.betrieb.gruendungsjahr}</p>}
+  </div>
+</div>
+
+<style>
+  .kbi {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  .kbi-text {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .kbi-text .kicker {
+    margin-bottom: 0;
+  }
+  .kbi-zitat {
+    margin: 0.5rem 0 0;
+    padding: 1.5rem 1.75rem;
+    border-radius: var(--r-lg);
+    background: var(--brand-soft);
+  }
+  .kbi-zitat p {
+    font-family: var(--ff-display);
+    font-size: var(--step-1);
+    line-height: 1.4;
+  }
+  .kbi-zitat footer {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+  }
+  .kbi-bild {
+    position: relative;
+  }
+  .kbi-bild :global(.kbi-rahmen) {
+    border-radius: var(--r-xl);
+  }
+  :global([data-preset='warm']) .kbi-bild :global(.kbi-rahmen) {
+    border-radius: 999px 999px var(--r-xl) var(--r-xl);
+  }
+  .kbi-jahr {
+    position: absolute;
+    right: -0.5rem;
+    bottom: -1.5rem;
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: clamp(3.5rem, 2rem + 6vw, 7rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--brand);
+    mix-blend-mode: multiply;
+  }
+  @media (min-width: 64rem) {
+    .kbi {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+      column-gap: calc(var(--gutter) * 3);
+    }
+  }
+</style>

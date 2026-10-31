@@ -1,0 +1,173 @@
+{
+  "$schema": "../site.config.schema.json",
+  "//": "KOPIERVORLAGE. Mit `npm run variant:new -- <slug>` kopieren, dann alle TODO-Werte ersetzen und `npm run variant:check -- <slug>` ausführen. Schlüssel mit // sind Kommentare und werden ignoriert. Autovervollständigung: VS Code zeigt zu jedem Feld eine Beschreibung.",
+
+  "meta": {
+    "//": "noindex bleibt true, solange es eine Demo ist (Suchmaschinen gesperrt).",
+    "slug": "neue-kanzlei",
+    "anrede": "sie",
+    "noindex": true,
+    "titelVorlage": "TODO Kurzname, Steuerberater Ort"
+  },
+
+  "betrieb": {
+    "name": "TODO Vollständiger Name inkl. Rechtsform",
+    "kurzname": "TODO Kurzname",
+    "rechtsform": "TODO z. B. Einzelkanzlei, Partnerschaftsgesellschaft mbB, GmbH",
+    "inhaber": ["TODO Vorname Nachname"],
+    "slogan": "TODO Ein sachlicher Satz: Für wen, was, wie (ohne Superlative, § 57a StBerG)",
+    "gruendungsjahr": 2010,
+    "adresse": { "strasse": "TODO Straße Nr.", "plz": "00000", "ort": "TODO Ort", "bundesland": "NW" },
+    "//geo": "Koordinaten z. B. aus OpenStreetMap (Rechtsklick → Adresse anzeigen).",
+    "geo": { "lat": 51.0, "lng": 7.0 },
+    "einzugsgebiet": ["TODO Ort", "TODO Nachbarort"],
+    "telefon": "TODO 0000 000000",
+    "email": "todo@kanzlei.de",
+    "oeffnungszeiten": {
+      "regulaer": [
+        { "tage": ["mo", "di", "mi", "do"], "von": "08:00", "bis": "17:00" },
+        { "tage": ["fr"], "von": "08:00", "bis": "13:00" }
+      ],
+      "sonder": [],
+      "hinweis": "Termine auch außerhalb der Öffnungszeiten nach Vereinbarung."
+    },
+    "socialLinks": [],
+    "//bewertungen": "Nur Stimmen mit schriftlicher Einwilligung (einwilligungLiegtVor: true). Beispielstimmen mit beispiel: true kennzeichnen.",
+    "bewertungen": {
+      "quelle": "Google",
+      "schnitt": 5,
+      "anzahl": 0,
+      "echt": false,
+      "echtheitsHinweis": "TODO Hinweis nach § 5b Abs. 3 UWG: ob und wie die Echtheit der Bewertungen geprüft wird.",
+      "eintraege": []
+    }
+  },
+
+  "branding": {
+    "//": "Ohne Logo entsteht automatisch eine Wortmarke. Farben: `npm run colors -- <slug> logo.png` schlägt sie aus dem Logo vor.",
+    "farben": { "primaer": "#0B6A72" },
+    "stilPreset": "klar",
+    "animationsIntensitaet": "standard"
+  },
+
+  "//sektionen": "Reihenfolge = Reihenfolge auf der Startseite. Layouts je Typ siehe README oder /pitch/layouts/ einer gebauten Demo.",
+  "sektionen": [
+    { "typ": "hero", "layout": "statement", "titel": "TODO Kurze, selbstbewusste Headline" },
+    { "typ": "zielgruppen" },
+    { "typ": "leistungen" },
+    { "typ": "ablauf" },
+    { "typ": "kennzahlen" },
+    { "typ": "team" },
+    { "typ": "fristen", "hintergrund": "flaeche" },
+    { "typ": "check" },
+    { "typ": "karriere" },
+    { "typ": "wissen" },
+    { "typ": "faq" },
+    { "typ": "cta" }
+  ],
+
+  "seiten": {
+    "leistungen": true,
+    "spezialisierungen": true,
+    "digitaleKanzlei": true,
+    "team": true,
+    "karriere": true,
+    "wissen": true,
+    "steuertermine": true,
+    "mandantenCheck": true,
+    "termin": true,
+    "kontakt": true,
+    "rechner": true,
+    "unterlagen": true
+  },
+
+  "rechtliches": {
+    "vertretungsberechtigt": ["TODO Vorname Nachname, Steuerberater/in"],
+    "ustId": "TODO DE000000000",
+    "verbraucherstreitbeilegung": "Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen."
+  },
+
+  "integrationen": {
+    "//": "formularEndpoint leer = Demo-Modus. Für live z. B. https://formspree.io/f/xxxx eintragen.",
+    "formularEndpoint": "",
+    "karte": { "aktiv": true, "anbieter": "osm" },
+    "analytics": { "aktiv": false }
+  },
+
+  "demo": {
+    "banner": { "aktiv": true },
+    "agentur": { "name": "TODO Ihre Agentur", "telefon": "TODO", "email": "todo@agentur.de", "website": "https://agentur.de" },
+    "pitchSeite": true
+  },
+
+  "kanzleiForm": "Einzelkanzlei",
+  "//berufstraeger": "Titel EXAKT wie verliehen. Fachberater-Bezeichnungen nur, wenn tatsächlich erworben (Berufsrecht).",
+  "berufstraeger": [
+    {
+      "slug": "vorname-nachname",
+      "name": "TODO Vorname Nachname",
+      "titel": ["Steuerberater"],
+      "rolle": "Inhaber",
+      "bestelltSeit": 2010,
+      "schwerpunkte": ["TODO Schwerpunkt"],
+      "sprachen": ["Deutsch"],
+      "foto": { "datei": "team/vorname-nachname.jpg", "alt": "TODO Vorname Nachname, Steuerberater", "fokus": "50% 25%" },
+      "vita": [],
+      "email": "todo@kanzlei.de"
+    }
+  ],
+  "team": [],
+
+  "zielgruppen": [
+    { "slug": "unternehmen", "titel": "Unternehmen", "ichBin": "Ich führe ein Unternehmen", "kurztext": "TODO Kurzbeschreibung", "text": [], "icon": "building-2" },
+    { "slug": "privatpersonen", "titel": "Privatpersonen", "ichBin": "Ich bin Privatperson", "kurztext": "TODO Kurzbeschreibung", "text": [], "icon": "house" }
+  ],
+  "leistungen": [
+    {
+      "slug": "finanzbuchhaltung",
+      "zielgruppe": ["unternehmen"],
+      "titel": "Finanzbuchhaltung",
+      "kurztext": "TODO Ein Satz zum Nutzen",
+      "text": ["TODO Absatz: was dazugehört, wie die Zusammenarbeit läuft."],
+      "punkte": [],
+      "icon": "receipt-text"
+    },
+    {
+      "slug": "einkommensteuererklaerung",
+      "zielgruppe": ["privatpersonen"],
+      "titel": "Einkommensteuererklärung",
+      "kurztext": "TODO Ein Satz zum Nutzen",
+      "text": ["TODO Absatz"],
+      "icon": "file-text"
+    }
+  ],
+  "spezialisierungen": [],
+  "mitgliedschaften": [],
+  "software": [],
+
+  "buchung": {
+    "modus": "demo",
+    "beratungsarten": [
+      { "id": "vor-ort", "label": "Vor Ort", "beschreibung": "TODO In der Kanzlei in …", "icon": "building-2", "dauer": 60 },
+      { "id": "telefon", "label": "Telefon", "beschreibung": "Wir rufen Sie zum vereinbarten Zeitpunkt an", "icon": "phone", "dauer": 30 }
+    ],
+    "slotDauer": 30
+  },
+  "fristen": [],
+  "stellen": [],
+  "benefits": [],
+  "kennzahlen": [],
+  "ablauf": {
+    "schritte": [
+      { "titel": "Beleg fotografieren", "text": "TODO", "motiv": "foto" },
+      { "titel": "Automatisch hochladen", "text": "TODO", "motiv": "upload" },
+      { "titel": "Wir buchen", "text": "TODO", "motiv": "buchen" },
+      { "titel": "Sie sehen Ihre Zahlen", "text": "TODO", "motiv": "auswertung" }
+    ]
+  },
+  "faq": [],
+
+  "kammer": { "name": "TODO Steuerberaterkammer …", "adresse": "TODO Anschrift", "website": "https://www.bstbk.de" },
+  "berufshaftpflicht": { "versicherer": "TODO Versicherer", "adresse": "TODO Anschrift", "geltungsbereich": "TODO z. B. Europäische Union und EWR" },
+  "texte": {}
+}

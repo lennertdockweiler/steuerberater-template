@@ -1,0 +1,31 @@
+---
+/** Kurzbewerbung ohne Anschreiben: wenige Pflichtfelder, schnell auszufüllen. */
+import { config, t } from '../../lib/config';
+import Formular from './Formular.astro';
+import Feld from '../ui/Feld.astro';
+
+interface Props {
+  stelle?: string;
+}
+const { stelle } = Astro.props;
+const stellen = [
+  ...config.stellen.map((s) => ({ wert: s.titel, label: s.titel })),
+  { wert: t('form.initiativ'), label: t('form.initiativ') },
+];
+const erfahrung = [
+  { wert: '', label: t('form.bitteWaehlen') },
+  { wert: t('form.erfahrung.ausbildung'), label: t('form.erfahrung.ausbildung') },
+  { wert: t('form.erfahrung.bis3'), label: t('form.erfahrung.bis3') },
+  { wert: t('form.erfahrung.bis10'), label: t('form.erfahrung.bis10') },
+  { wert: t('form.erfahrung.mehr'), label: t('form.erfahrung.mehr') },
+];
+---
+
+<Formular name="bewerbung" knopf={t('aktion.bewerben')} erfolgTitel={t('form.bewerbung.erfolg')} erfolgText={t('form.bewerbung.erfolgText')}>
+  <Feld id="b-name" name="name" label={t('form.name')} pflicht autocomplete="name" />
+  <Feld id="b-email" name="email" label={t('form.email')} typ="email" pflicht autocomplete="email" />
+  <Feld id="b-tel" name="telefon" label={t('form.telefon')} typ="tel" pflicht autocomplete="tel" />
+  <Feld id="b-stelle" name="stelle" label={t('form.stelle')} typ="select" optionen={stellen} wert={stelle} />
+  <Feld id="b-erfahrung" name="erfahrung" label={t('form.erfahrung')} typ="select" optionen={erfahrung} class="voll" />
+  <Feld id="b-nachricht" name="nachricht" label={t('form.bewerbung.nachricht')} typ="textarea" class="voll" />
+</Formular>

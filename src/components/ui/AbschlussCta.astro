@@ -1,0 +1,17 @@
+---
+/** Abschluss jeder Unterseite: CTA im Layout der Startseite (Preset-abhängig). */
+import { preset } from '../../lib/config';
+import CtaBand from '../sections/cta/Band.astro';
+import CtaKarte from '../sections/cta/Karte.astro';
+
+interface Props {
+  titel?: string;
+  intro?: string;
+}
+const { titel, intro } = Astro.props;
+const s = { typ: 'cta' as const, layout: preset.layouts.cta, aktiv: true, titel, intro };
+---
+
+<section class:list={['sektion', 's-cta', preset.layouts.cta === 'band' && 'sektion-voll']}>
+  {preset.layouts.cta === 'band' ? <CtaBand s={s as any} /> : <CtaKarte s={s as any} />}
+</section>

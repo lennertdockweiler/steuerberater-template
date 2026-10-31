@@ -1,0 +1,297 @@
+---
+/**
+ * Hero (a): Typo-Statement mit sich aufbauender Balkengrafik und Summenstrich.
+ * Die Headline ist das LCP-Element: Sie startet SICHTBAR (Wörter steigen per
+ * CSS-Keyframes auf, kein opacity:0), damit der LCP nicht leidet.
+ */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t } from '../../../lib/config';
+import { terminPfad, pfad } from '../../../lib/routes';
+import Button from '../../ui/Button.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'hero' }>;
+}
+const { s } = Astro.props;
+const titel = s.titel ?? config.betrieb.slogan;
+const woerter = titel.split(/\s+/);
+const werte = s.grafikWerte ?? [32, 40, 37, 48, 45, 56, 52, 63, 60, 70, 68, 82];
+const monate = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+// Linie über den Balkenspitzen (SVG-Koordinaten 0–120 × 0–100)
+const punkte = werte.map((w, i) => `${i * 10 + 5},${100 - w}`).join(' ');
+const max = Math.max(...werte);
+const kicker = s.kicker ?? t('hero.kicker');
+---
+
+<section class="hero-st" aria-labelledby="hero-titel">
+  <div class="hero-raster wrap" aria-hidden="true">
+    {Array.from({ length: 12 }, () => <span />)}
+  </div>
+  <div class="wrap hero-innen">
+    <p class="hero-kicker">{kicker}</p>
+    <h1 id="hero-titel" class="display hero-titel">
+      {
+        woerter.map((w, i) => (
+          <>
+            <span class="w" style={`--i:${i}`}>{w}</span>{' '}
+          </>
+        ))
+      }
+    </h1>
+
+    <div class="hero-unten">
+      <div class="hero-text">
+        {s.unterzeile && <p class="lead hero-lead">{s.unterzeile}</p>}
+        <div class="hero-ctas">
+          <Button href={s.ctaPrimaer?.href ?? terminPfad()} magnet>{s.ctaPrimaer?.label ?? t('aktion.termin')}</Button>
+          <Button href={s.ctaSekundaer?.href ?? pfad('leistungen')} variante="sekundaer">
+            {s.ctaSekundaer?.label ?? t('hero.ctaSekundaer')}
+          </Button>
+        </div>
+      </div>
+
+      <figure class="hero-grafik" aria-label={t('hero.grafikLabel')}>
+        <div class="balken" aria-hidden="true">
+          {
+            werte.map((w, i) => (
+              <span class:list={['balken-wert', w === max && 'balken-max']} style={`--h:${w}%;--i:${i}`}>
+                <span class="balken-monat">{monate[i]}</span>
+              </span>
+            ))
+          }
+          <svg class="balken-linie" viewBox="0 0 120 100" preserveAspectRatio="none" aria-hidden="true">
+            <polyline points={punkte} />
+          </svg>
+        </div>
+        <span class="hero-summe" aria-hidden="true"></span>
+        {
+          s.fakten && (
+            <dl class="hero-fakten">
+              {s.fakten.map((f, i) => (
+                <div style={`--i:${i}`}>
+                  <dt>{f.label}</dt>
+                  <dd class="ziffern">{f.wert}</dd>
+                </div>
+              ))}
+            </dl>
+          )
+        }
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-st {
+    position: relative;
+    padding-top: calc(var(--header-h) + clamp(1.75rem, 0.5rem + 3.6vw, 4.25rem));
+    padding-bottom: clamp(3.5rem, 2rem + 5vw, 7rem);
+    overflow: clip;
+  }
+  /* Feines 12-Spalten-Raster als Hintergrund */
+  .hero-raster {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: var(--gutter);
+    pointer-events: none;
+  }
+  .hero-raster span {
+    border-left: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
+    transform-origin: top;
+    animation: raster-ein 1.4s var(--ease-out) both;
+  }
+  .hero-raster span:nth-child(n + 5) {
+    display: none;
+  }
+  .hero-raster span:last-child {
+    border-right: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
+  }
+  @keyframes raster-ein {
+    from {
+      transform: scaleY(0);
+    }
+  }
+  .hero-innen {
+    position: relative;
+  }
+  .hero-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: clamp(1rem, 0.75rem + 0.8vw, 1.6rem);
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--brand-ink);
+  }
+  .hero-kicker::before {
+    content: '';
+    width: 2rem;
+    height: 5px;
+    border-block: 1.5px solid currentColor;
+  }
+  .hero-titel {
+    max-width: 15ch;
+  }
+  .w {
+    display: inline-block;
+    animation: wort-auf 1.1s var(--ease-out) both;
+    animation-delay: calc(80ms + var(--i) * 55ms);
+  }
+  @keyframes wort-auf {
+    from {
+      transform: translateY(0.3em);
+      opacity: 0.32;
+    }
+  }
+  .hero-unten {
+    display: grid;
+    gap: clamp(2.5rem, 2rem + 3vw, 4rem);
+    margin-top: clamp(1.75rem, 1rem + 2vw, 2.75rem);
+  }
+  .hero-text {
+    display: grid;
+    gap: 1.75rem;
+    align-content: start;
+    animation: hero-fade 900ms var(--ease-out) 450ms both;
+  }
+  @keyframes hero-fade {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+  .hero-lead {
+    max-width: 40ch;
+  }
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  /* ── Balkengrafik ── */
+  .hero-grafik {
+    margin: 0;
+    align-self: end;
+  }
+  .balken {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    align-items: end;
+    gap: clamp(4px, 1vw, 10px);
+    height: clamp(9rem, 6rem + 12vw, 15rem);
+    padding-bottom: 1.6rem;
+  }
+  .balken-wert {
+    position: relative;
+    height: var(--h);
+    background: color-mix(in oklab, var(--brand) 16%, var(--bg));
+    border-top: 2px solid var(--brand);
+    border-radius: 1px;
+    transform-origin: bottom;
+    animation: balken-wachsen 1.1s var(--ease-out) both;
+    animation-delay: calc(500ms + var(--i) * 70ms);
+  }
+  .balken-max {
+    background: var(--accent);
+    border-top-color: color-mix(in oklab, var(--accent) 60%, var(--ink));
+  }
+  @keyframes balken-wachsen {
+    from {
+      transform: scaleY(0);
+    }
+  }
+  .balken-monat {
+    position: absolute;
+    left: 50%;
+    bottom: -1.6rem;
+    translate: -50% 0;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-muted);
+  }
+  .balken-linie {
+    position: absolute;
+    inset: 0 0 1.6rem;
+    width: 100%;
+    height: calc(100% - 1.6rem);
+    overflow: visible;
+    pointer-events: none;
+  }
+  .balken-linie {
+    clip-path: inset(0 100% 0 0);
+    animation: linie-ziehen 1.6s var(--ease-in-out) 1.3s forwards;
+  }
+  .balken-linie polyline {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+  }
+  @keyframes linie-ziehen {
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  .hero-summe {
+    display: block;
+    height: 6px;
+    margin-top: 0.4rem;
+    border-block: 1.5px solid var(--ink);
+    transform-origin: left;
+    animation: summe-ziehen 1.2s var(--ease-in-out) 1.1s both;
+  }
+  @keyframes summe-ziehen {
+    from {
+      transform: scaleX(0);
+    }
+  }
+  .hero-fakten {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 1.25rem 0 0;
+  }
+  .hero-fakten div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.2rem;
+    animation: hero-fade 800ms var(--ease-out) both;
+    animation-delay: calc(1.5s + var(--i) * 90ms);
+  }
+  .hero-fakten dd {
+    margin: 0;
+    font-family: var(--ff-display);
+    font-size: var(--step-2);
+    font-weight: var(--hl-weight);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .hero-fakten dt {
+    font-size: 0.8rem;
+    line-height: 1.35;
+    color: var(--ink-muted);
+  }
+  @media (min-width: 48rem) {
+    .hero-raster {
+      grid-template-columns: repeat(12, 1fr);
+    }
+    .hero-raster span:nth-child(n + 5) {
+      display: block;
+    }
+  }
+  @media (min-width: 64rem) {
+    .hero-unten {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      column-gap: calc(var(--gutter) * 2 + 8%);
+      align-items: end;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .balken-linie {
+      clip-path: none;
+    }
+  }
+</style>

@@ -1,0 +1,70 @@
+---
+/**
+ * Zwei-Klick-Lösung: Externe Inhalte (Karte, Buchungskalender, Video) werden erst
+ * nach aktiver Zustimmung geladen. Vorher besteht keine Verbindung zum Anbieter.
+ */
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  src: string;
+  titel: string;
+  hinweis: string;
+  knopf: string;
+  hoehe?: string;
+  icon?: string;
+}
+const { src, titel, hinweis, knopf, hoehe = '28rem', icon = 'shield-check' } = Astro.props;
+---
+
+<div class="zk" data-zwei-klick={src} data-titel={titel} style={`--hoehe:${hoehe}`}>
+  <div class="zk-vorschau" data-vorschau>
+    <slot />
+    <div class="zk-overlay">
+      <Icon name={icon} size={28} strich={1.5} />
+      <p>{hinweis}</p>
+      <button type="button" class="btn btn-klein" data-laden>
+        <span class="btn-label">{knopf}</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .zk {
+    position: relative;
+    height: var(--hoehe);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    background: var(--surface-2);
+  }
+  .zk-vorschau {
+    position: absolute;
+    inset: 0;
+  }
+  .zk-overlay {
+    position: absolute;
+    inset: auto 1rem 1rem 1rem;
+    display: grid;
+    gap: 0.75rem;
+    justify-items: start;
+    max-width: 30rem;
+    padding: 1.25rem;
+    border-radius: var(--r-md);
+    background: color-mix(in oklab, var(--bg) 94%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-size: 0.9rem;
+    box-shadow: 0 16px 40px -20px rgb(0 0 0 / 0.35);
+  }
+  .zk-overlay :global(svg) {
+    color: var(--brand-ink);
+  }
+  .zk :global(.zk-frame) {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  :global(.no-js) .zk-overlay button {
+    display: none;
+  }
+</style>

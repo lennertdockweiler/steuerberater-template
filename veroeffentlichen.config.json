@@ -1,0 +1,13 @@
+{
+  "//": "Einstellungen für `npm run publish`. Die fertigen Demo-Seiten landen im ÖFFENTLICHEN Repo (GitHub Pages), der Template-Code bleibt privat.",
+  "repo": "lennertdockweiler/website-entwuerfe",
+  "branch": "main",
+  "url": "https://lennertdockweiler.github.io/website-entwuerfe",
+  "//pfade": "Variante → Adresse beim Kunden. Nicht aufgeführte Varianten werden unter ihrem Ordnernamen veröffentlicht.",
+  "pfade": {
+    "demo": "hartmann-vogel",
+    "demo-2": "steuerbuero-albrecht"
+  },
+  "//ausschliessen": "Varianten, die NICHT veröffentlicht werden sollen",
+  "ausschliessen": []
+}

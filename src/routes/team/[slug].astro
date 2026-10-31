@@ -1,0 +1,304 @@
+---
+/**
+ * Profilseite eines Berufsträgers. Das Porträt trägt denselben
+ * view-transition-name wie auf der Teamkarte (Shared-Element-Transition).
+ */
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import AbschlussCta from '../../components/ui/AbschlussCta.astro';
+import Foto from '../../components/ui/Foto.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Button from '../../components/ui/Button.astro';
+import Summenstrich from '../../components/ui/Summenstrich.astro';
+import { getImage } from 'astro:assets';
+import { config, t } from '../../lib/config';
+import { ladeBild } from '../../lib/bilder';
+import { terminPfad } from '../../lib/routes';
+import { telHref } from '../../lib/format';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema, personSchema, absolut } from '../../lib/seo';
+import type { Berufstraeger } from '../../../variants/_schema';
+
+export function getStaticPaths() {
+  return config.berufstraeger.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+const { p } = Astro.props as { p: Berufstraeger };
+const pfad = [
+  { label: t('seite.team.titel'), href: '/team/' },
+  { label: p.name, href: `/team/${p.slug}/` },
+];
+const img = await ladeBild(p.foto.datei);
+const bildUrl = img ? absolut((await getImage({ src: img, width: 800, format: 'jpg' })).src, Astro.site) : undefined;
+const kollegen = config.berufstraeger.filter((x) => x.slug !== p.slug);
+---
+
+<Base
+  titel={seitenTitel(null, `${p.name}, ${p.titel[0]}`)}
+  beschreibung={seitenBeschreibung(null, p.kurzbio ?? `${p.name}, ${p.titel.join(', ')}. ${p.schwerpunkte.join(', ')}.`)}
+  ogTyp="profile"
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site), personSchema(p, Astro.site, bildUrl)]}
+>
+  <article class="profil">
+    <div class="wrap">
+      <div class="profil-kopf">
+        <Breadcrumbs teile={pfad} />
+      </div>
+      <div class="profil-raster">
+        <div class="profil-bild">
+          <Foto bild={p.foto} ratio="4 / 5" sizes="(min-width: 64rem) 40vw, 92vw" priority vtName={`portrait-${p.slug}`} class="profil-rahmen" />
+        </div>
+        <div class="profil-text">
+          {p.rolle && <p class="kicker">{p.rolle}</p>}
+          <h1 class="h1 profil-name">{p.name}</h1>
+          <p class="profil-titel">{p.titel.join(', ')}</p>
+          {p.zitat && <blockquote class="profil-zitat"><p>{`„${p.zitat}“`}</p></blockquote>}
+          {p.kurzbio && <p class="profil-bio">{p.kurzbio}</p>}
+
+          <dl class="profil-fakten">
+            <div>
+              <dt>{t('seite.team.bestellt')}</dt>
+              <dd class="ziffern">{p.bestelltSeit}</dd>
+            </div>
+            <div>
+              <dt>{t('seite.team.sprachen')}</dt>
+              <dd>{p.sprachen.join(', ')}</dd>
+            </div>
+          </dl>
+
+          {
+            p.schwerpunkte.length > 0 && (
+              <div class="profil-schwerpunkte">
+                <p class="profil-label">{t('seite.team.schwerpunkte')}</p>
+                <ul role="list">
+                  {p.schwerpunkte.map((s) => (
+                    <li>{s}</li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+
+          <div class="profil-kontakt">
+            <p class="profil-label">{t('seite.team.kontakt')}</p>
+            <a href={telHref(p.telefon ?? config.betrieb.telefon)}>
+              <Icon name="phone" size={18} />
+              {p.telefon ?? config.betrieb.telefon}
+            </a>
+            <a href={`mailto:${p.email}`}>
+              <Icon name="mail" size={18} />
+              {p.email}
+            </a>
+            <Button href={terminPfad()} icon="calendar-check">{t('aktion.termin')}</Button>
+          </div>
+        </div>
+      </div>
+
+      {
+        p.vita.length > 0 && (
+          <section class="profil-vita" aria-labelledby="vita">
+            <h2 class="h3" id="vita">
+              {t('seite.team.werdegang')}
+            </h2>
+            <Summenstrich fein />
+            <ol role="list" data-anim-kinder>
+              {p.vita.map((v) => (
+                <li>
+                  <span class="datum vita-jahr">{v.jahr}</span>
+                  <span>{v.text}</span>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )
+      }
+
+      {
+        kollegen.length > 0 && (
+          <nav class="profil-weitere" aria-label={t('seite.team.berufstraeger')}>
+            {kollegen.map((k) => (
+              <a href={`/team/${k.slug}/`}>
+                <span>{k.name}</span>
+                <span class="gedaempft">{k.titel[0]}</span>
+                <Icon name="arrow-right" size={20} />
+              </a>
+            ))}
+          </nav>
+        )
+      }
+    </div>
+  </article>
+  <AbschlussCta />
+</Base>
+
+<style>
+  .profil {
+    padding-top: calc(var(--header-h) + clamp(1.25rem, 0.5rem + 2.5vw, 3rem));
+    padding-bottom: var(--space-section);
+  }
+  .profil-raster {
+    display: grid;
+    gap: 2.5rem;
+    margin-top: 2rem;
+  }
+  .profil-bild :global(.profil-rahmen) {
+    border-radius: var(--r-xl);
+  }
+  :global([data-preset='warm']) .profil-bild :global(.profil-rahmen) {
+    border-radius: 999px 999px var(--r-xl) var(--r-xl);
+  }
+  .profil-text {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+    justify-items: start;
+  }
+  .profil-text .kicker {
+    margin-bottom: 0;
+  }
+  .profil-name {
+    animation: profil-auf 900ms var(--ease-out) both;
+  }
+  @keyframes profil-auf {
+    from {
+      transform: translateY(0.25em);
+      opacity: 0.35;
+    }
+  }
+  .profil-titel {
+    font-size: var(--step-1);
+    color: var(--ink-muted);
+  }
+  .profil-zitat {
+    margin: 0.5rem 0;
+    padding-left: 1.25rem;
+    border-left: 3px solid var(--brand);
+    font-family: var(--ff-display);
+    font-size: var(--step-2);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
+  .profil-bio {
+    max-width: var(--measure);
+  }
+  .profil-fakten {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 3rem;
+    margin: 0.5rem 0 0;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    width: 100%;
+  }
+  .profil-fakten dt,
+  .profil-label {
+    font-size: var(--step--1);
+    font-weight: 650;
+    color: var(--brand-ink);
+  }
+  .profil-fakten dd {
+    margin: 0.2rem 0 0;
+    font-weight: 600;
+  }
+  .profil-schwerpunkte ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.6rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .profil-schwerpunkte li {
+    padding: 0.35rem 0.9rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .profil-kontakt {
+    display: grid;
+    gap: 0.25rem;
+    justify-items: start;
+    margin-top: 0.5rem;
+  }
+  .profil-kontakt a:not(.btn) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 2.75rem;
+    text-decoration: none;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+  .profil-kontakt a:not(.btn):hover {
+    text-decoration: underline;
+  }
+  .profil-kontakt :global(.btn) {
+    margin-top: 0.75rem;
+  }
+  .profil-vita {
+    display: grid;
+    gap: 1rem;
+    margin-top: var(--space-section);
+    max-width: 48rem;
+    color: var(--brand-ink);
+  }
+  .profil-vita h2 {
+    color: var(--ink);
+  }
+  .profil-vita ol {
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--ink);
+  }
+  .profil-vita li {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .vita-jahr {
+    font-weight: 700;
+    color: var(--brand-ink);
+  }
+  .profil-weitere {
+    display: grid;
+    margin-top: var(--space-block);
+    border-top: 1px solid var(--line-strong);
+  }
+  .profil-weitere a {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.2rem 1rem;
+    align-items: center;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--line-strong);
+    text-decoration: none;
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-2);
+    letter-spacing: var(--hl-tracking);
+  }
+  .profil-weitere a .gedaempft {
+    grid-row: 2;
+    font-family: var(--ff-body);
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  .profil-weitere a :global(svg) {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+  }
+  @media (min-width: 64rem) {
+    .profil-raster {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      column-gap: calc(var(--gutter) * 3);
+    }
+    .profil-bild {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+      align-self: start;
+    }
+  }
+</style>

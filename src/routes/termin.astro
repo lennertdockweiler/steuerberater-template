@@ -1,0 +1,206 @@
+---
+/**
+ * Terminbuchung. Modus „demo“: simulierter Slot-Picker (Preact-Island).
+ * Modus „extern“: Link oder Klick-zum-Laden-Einbettung des Buchungsdienstes.
+ */
+import Base from '../layouts/Base.astro';
+import SeitenKopf from '../components/ui/SeitenKopf.astro';
+import Terminbuchung from '../components/islands/Terminbuchung';
+import ZweiKlick from '../components/interactive/ZweiKlick.astro';
+import Button from '../components/ui/Button.astro';
+import Icon from '../components/ui/Icon.astro';
+import { config, t } from '../lib/config';
+import { iconSvg } from '../lib/icons';
+import { telHref } from '../lib/format';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema } from '../lib/seo';
+
+const b = config.buchung;
+const ds = t('form.datenschutz', { link: '%LINK%' }).split('%LINK%');
+const texte = {
+  fortschritt: t('buchung.fortschritt'),
+  schritt1: t('buchung.schritt1'),
+  schritt2: t('buchung.schritt2'),
+  schritt3: t('buchung.schritt3'),
+  schritt4: t('buchung.schritt4'),
+  frage1: t('buchung.frage1'),
+  frage2: t('buchung.frage2'),
+  frage3: t('buchung.frage3'),
+  frage4: t('buchung.frage4'),
+  keineSlots: t('buchung.keineSlots'),
+  freieTermine: t('buchung.freieTermine'),
+  keineTermine: t('buchung.keineTermine'),
+  monatVor: t('buchung.monatVor'),
+  monatZurueck: t('buchung.monatZurueck'),
+  minuten: t('buchung.minuten'),
+  uhr: t('buchung.uhr'),
+  aendern: t('buchung.aendern'),
+  bestaetigt: t('buchung.bestaetigt'),
+  bestaetigtText: t('buchung.bestaetigtText'),
+  ics: t('buchung.ics'),
+  zurueck: t('aktion.zurueck'),
+  absenden: t('buchung.absenden'),
+  sendet: t('form.sendet'),
+  label_name: t('form.name'),
+  label_email: t('form.email'),
+  label_telefon: t('form.telefonOptional'),
+  label_anliegen: t('form.anliegen'),
+  fehlerPflicht: t('form.fehler.pflicht'),
+  fehlerEmail: t('form.fehler.email'),
+  fehlerTelefon: t('form.fehler.telefon'),
+  fehlerSenden: t('form.fehler.senden'),
+  honigtopf: t('form.honigtopf'),
+  datenschutzVor: ds[0],
+  datenschutzLink: t('form.datenschutzLink'),
+  datenschutzNach: ds[1],
+  demoHinweis: t('form.demoHinweis'),
+};
+const pfad = [{ label: t('seite.termin.titel'), href: '/termin/' }];
+const host = new URL(Astro.site ?? 'http://localhost').host;
+---
+
+<Base
+  titel={seitenTitel('termin', t('seite.termin.titel'))}
+  beschreibung={seitenBeschreibung('termin', t('seite.termin.intro'))}
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site)]}
+>
+  <SeitenKopf titel={t('seite.termin.titel')} intro={t('seite.termin.intro')} pfad={pfad} />
+  <section class="sektion">
+    <div class="wrap tm">
+      <div class="tm-haupt">
+        {
+          b.modus === 'demo' ? (
+            <>
+              <Terminbuchung
+                client:load
+                arten={b.beratungsarten.map((a) => ({ ...a, icon: iconSvg(a.icon, 24) }))}
+                arbeitszeiten={b.arbeitszeiten ?? config.betrieb.oeffnungszeiten.regulaer}
+                slotDauer={b.slotDauer}
+                vorlaufTage={b.vorlaufTage}
+                horizontTage={b.horizontTage}
+                land={config.betrieb.adresse.bundesland}
+                geschlossen={config.betrieb.oeffnungszeiten.sonder.filter((x) => x.geschlossen).map((x) => x.datum)}
+                endpoint={config.integrationen.formularEndpoint}
+                texte={texte}
+                kanzlei={{ name: config.betrieb.name, adresse: `${config.betrieb.adresse.strasse}, ${config.betrieb.adresse.plz} ${config.betrieb.adresse.ort}`, host }}
+                icons={{
+                  zurueck: iconSvg('arrow-left', 18, 2),
+                  weiter: iconSvg('send', 18, 2),
+                  links: iconSvg('chevron-left', 20, 2),
+                  rechts: iconSvg('chevron-right', 20, 2),
+                  kalender: iconSvg('calendar-plus', 20, 2),
+                }}
+              />
+              <noscript>
+                <p class="lead">
+                  {t('buchung.ohneJs')} <a href={telHref(config.betrieb.telefon)}>{config.betrieb.telefon}</a>
+                </p>
+              </noscript>
+            </>
+          ) : b.einbettung && b.url ? (
+            <ZweiKlick src={b.url} titel={t('seite.termin.titel')} hinweis={t('buchung.externHinweis', { anbieter: b.anbieterName ?? b.url })} knopf={t('buchung.externLaden')} hoehe="44rem" />
+          ) : (
+            <div class="tm-extern">
+              <p class="lead">{t('buchung.externHinweis', { anbieter: b.anbieterName ?? '' })}</p>
+              <Button href={b.url}>{t('buchung.extern')}</Button>
+            </div>
+          )
+        }
+      </div>
+      <aside class="tm-seite">
+        <p class="tm-label">{t('buchung.lieberAnrufen')}</p>
+        <a href={telHref(config.betrieb.telefon)} class="tm-tel ziffern">
+          <Icon name="phone" size={22} />
+          {config.betrieb.telefon}
+        </a>
+        <a href={`mailto:${config.betrieb.email}`} class="tm-mail">
+          <Icon name="mail" size={20} />
+          {config.betrieb.email}
+        </a>
+        <ul role="list" class="tm-arten">
+          {
+            b.beratungsarten.map((a) => (
+              <li>
+                <Icon name={a.icon} size={20} />
+                <span>
+                  <strong>{a.label}</strong>
+                  {a.beschreibung}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .tm {
+    display: grid;
+    gap: 3rem;
+  }
+  .tm-seite {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+    padding: 1.5rem;
+    border-radius: var(--r-lg);
+    background: var(--surface);
+  }
+  .tm-label {
+    font-size: var(--step--1);
+    font-weight: 650;
+    color: var(--brand-ink);
+  }
+  .tm-tel,
+  .tm-mail {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 2.75rem;
+    text-decoration: none;
+    font-weight: 650;
+    overflow-wrap: anywhere;
+  }
+  .tm-tel {
+    font-size: var(--step-2);
+    font-family: var(--ff-display);
+  }
+  .tm-arten {
+    display: grid;
+    gap: 1rem;
+    margin: 1rem 0 0;
+    padding: 1rem 0 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+  }
+  .tm-arten li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
+  }
+  .tm-arten :global(svg) {
+    color: var(--brand-ink);
+  }
+  .tm-arten strong {
+    display: block;
+    color: var(--ink);
+  }
+  .tm-extern {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+  }
+  @media (min-width: 64rem) {
+    .tm {
+      grid-template-columns: 8fr 4fr;
+      column-gap: calc(var(--gutter) * 3);
+    }
+    .tm-seite {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+</style>

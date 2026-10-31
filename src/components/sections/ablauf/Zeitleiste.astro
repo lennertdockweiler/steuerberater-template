@@ -1,0 +1,97 @@
+---
+/** Ablauf als ruhige Zeitleiste (ohne Pinning), mit Icon je Schritt. */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t } from '../../../lib/config';
+import SektionKopf from '../../ui/SektionKopf.astro';
+import Icon from '../../ui/Icon.astro';
+import Summenstrich from '../../ui/Summenstrich.astro';
+
+interface Props {
+  s: AktiveSektion;
+}
+const { s } = Astro.props;
+const ablauf = config.ablauf;
+if (!ablauf) return;
+const ICONS: Record<string, string> = {
+  foto: 'camera',
+  upload: 'cloud-upload',
+  buchen: 'notebook-pen',
+  auswertung: 'chart-line',
+  gespraech: 'messages-square',
+  portal: 'lock-keyhole',
+};
+---
+
+<div class="wrap">
+  <SektionKopf kicker={s.kicker} titel={s.titel ?? ablauf.titel ?? t('ablauf.titel')} intro={s.intro ?? ablauf.intro ?? t('ablauf.intro')} />
+  <Summenstrich class="zl-strich" />
+  <ol class="zl" role="list" data-anim-kinder>
+    {
+      ablauf.schritte.map((x, i) => (
+        <li class="zl-schritt">
+          <div class="zl-kopf">
+            <span class="zl-icon">
+              <Icon name={ICONS[x.motiv] ?? 'circle'} size={26} strich={1.5} />
+            </span>
+            <span class="zl-nr ziffern">{String(i + 1).padStart(2, '0')}</span>
+          </div>
+          <h3 class="h4">{x.titel}</h3>
+          <p class="gedaempft">{x.text}</p>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<style>
+  :global(.zl-strich) {
+    color: var(--brand-ink);
+    margin-bottom: 2rem;
+  }
+  .zl {
+    display: grid;
+    gap: 2.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: schritt;
+  }
+  .zl-schritt {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+  }
+  .zl-kopf {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+  .zl-icon {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: var(--r-lg);
+    background: var(--brand-soft);
+    color: var(--brand-ink);
+  }
+  .zl-nr {
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-3);
+    line-height: 1;
+    color: color-mix(in oklab, var(--ink) 18%, transparent);
+  }
+  @media (min-width: 48rem) {
+    .zl {
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: calc(var(--gutter) * 2);
+    }
+  }
+  @media (min-width: 64rem) {
+    .zl {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,156 @@
+---
+/**
+ * „So einfach arbeiten wir zusammen“: Die Smartphone-Bühne bleibt per
+ * position: sticky stehen, während die Schritte vorbeiscrollen. ScrollTrigger
+ * schaltet nur den aktiven Zustand um (data-aktiv), die Illustration reagiert per CSS.
+ */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t } from '../../../lib/config';
+import SektionKopf from '../../ui/SektionKopf.astro';
+import AblaufTelefon from '../../ui/AblaufTelefon.astro';
+
+interface Props {
+  s: AktiveSektion;
+}
+const { s } = Astro.props;
+const ablauf = config.ablauf;
+if (!ablauf) return;
+---
+
+<div class="wrap ab" data-pin-story>
+  <SektionKopf kicker={s.kicker} titel={s.titel ?? ablauf.titel ?? t('ablauf.titel')} intro={s.intro ?? ablauf.intro ?? t('ablauf.intro')} />
+  <div class="ab-raster" data-pin-bereich>
+    <div class="ab-buehne" data-buehne>
+      <AblaufTelefon motive={ablauf.schritte.map((x) => x.motiv)} />
+    </div>
+    <ol class="ab-schritte" role="list">
+      <span class="ab-linie" aria-hidden="true"><span data-fortschritt></span></span>
+      {
+        ablauf.schritte.map((x, i) => (
+          <li class="ab-schritt" data-schritt>
+            <span class="ab-nr ziffern" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="h3">{x.titel}</h3>
+            <p class="gedaempft">{x.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</div>
+
+<style>
+  .ab-raster {
+    position: relative;
+    display: grid;
+    gap: 2rem;
+  }
+  .ab-buehne {
+    position: sticky;
+    top: calc(var(--header-h) + 0.5rem);
+    z-index: 1;
+    height: min(50svh, 26rem);
+    display: grid;
+    place-items: center;
+    padding-block: 0.75rem;
+    background: linear-gradient(var(--bg) 85%, transparent);
+  }
+  :global(.flaeche) .ab-buehne {
+    background: linear-gradient(var(--surface) 85%, transparent);
+  }
+  .ab-buehne :global(.tel) {
+    height: 100%;
+    width: auto;
+  }
+  .ab-schritte {
+    position: relative;
+    margin: 0;
+    padding: 0 0 0 1.75rem;
+    list-style: none;
+  }
+  .ab-linie {
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    bottom: 0;
+    width: 2px;
+    background: var(--line);
+  }
+  .ab-linie span {
+    position: absolute;
+    inset: 0;
+    background: var(--brand);
+    transform-origin: top;
+    transform: scaleY(0);
+  }
+  :global(.no-js) .ab-linie span {
+    transform: none;
+  }
+  .ab-schritt {
+    position: relative;
+    display: grid;
+    gap: 0.6rem;
+    align-content: center;
+    min-height: 42svh;
+    padding-block: 2rem;
+  }
+  /* Inaktive Schritte treten zurück, bleiben aber AA-lesbar (gedämpfte Textfarbe statt Transparenz) */
+  .ab-schritt .h3 {
+    color: var(--ink-muted);
+    transition: color 500ms var(--ease-out);
+  }
+  .ab-schritt[data-ist-aktiv] .h3,
+  :global(.no-js) .ab-schritt .h3 {
+    color: var(--ink);
+  }
+  .ab-schritt::before {
+    content: '';
+    position: absolute;
+    left: calc(-1.75rem - 5px);
+    top: calc(50% - 6px);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--line-strong);
+    transition:
+      background-color 300ms,
+      border-color 300ms,
+      transform 400ms var(--ease-soft);
+  }
+  .ab-schritt[data-ist-aktiv]::before {
+    background: var(--brand);
+    border-color: var(--brand);
+    transform: scale(1.3);
+  }
+  .ab-nr {
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-1);
+    color: var(--brand-ink);
+  }
+  .ab-schritt p {
+    max-width: 40ch;
+  }
+  @media (min-width: 64rem) {
+    .ab-raster {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      column-gap: calc(var(--gutter) * 3);
+    }
+    .ab-buehne {
+      top: calc(50svh - min(36svh, 18rem));
+      height: min(72svh, 36rem);
+      background: none;
+    }
+    .ab-schritt {
+      min-height: 56svh;
+    }
+    .ab-schritt .h3 {
+      font-size: var(--step-3);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ab-schritt .h3 {
+      color: var(--ink);
+    }
+  }
+</style>

@@ -1,0 +1,652 @@
+/*
+ * Designsystem. Farben kommen zur Laufzeit als CSS Custom Properties aus
+ * src/lib/theme.ts (Inline-<style> im <head>), Schriften aus der Astro Fonts API.
+ * Tailwind nutzt dieselben Tokens über @theme inline.
+ */
+@import 'tailwindcss';
+
+@custom-variant js (&:where(.js, .js *));
+@custom-variant fine (@media (pointer: fine));
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-soft: var(--brand-soft);
+  --color-on-brand: var(--on-brand);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-inverse: var(--inverse);
+  --color-on-inverse: var(--on-inverse);
+  --color-on-inverse-muted: var(--on-inverse-muted);
+  --font-display: var(--ff-display);
+  --font-body: var(--ff-body);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
+  --radius-btn: var(--r-btn);
+}
+
+/* ── Skalen ──────────────────────────────────────────────────────────────── */
+:root {
+  --df: 1; /* Display-Faktor aus dem Preset */
+  --step--1: clamp(0.84rem, 0.81rem + 0.12vw, 0.92rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --step-1: clamp(1.16rem, 1.08rem + 0.4vw, 1.4rem);
+  --step-2: clamp(1.4rem, 1.22rem + 0.8vw, 1.9rem);
+  --step-3: calc(clamp(1.85rem, 1.42rem + 1.9vw, 3rem) * var(--df));
+  --step-4: calc(clamp(2.3rem, 1.55rem + 3.4vw, 4.5rem) * var(--df));
+  --step-5: calc(clamp(2.6rem, 1.25rem + 5.5vw, 6.6rem) * var(--df));
+
+  --space-section: clamp(4.5rem, 3rem + 7vw, 9.5rem);
+  --space-block: clamp(2.25rem, 1.6rem + 2.6vw, 4rem);
+  --gutter: clamp(1rem, 0.6rem + 1.6vw, 2rem);
+  --pad-x: clamp(1.15rem, 0.6rem + 2.6vw, 3rem);
+  --wrap: 86rem;
+  --measure: 66ch;
+  --header-h: 4.5rem;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-soft: cubic-bezier(0.34, 1.32, 0.64, 1);
+  --dur-1: 160ms;
+  --dur-2: 320ms;
+  --dur-3: 700ms;
+
+  --hl-weight: 680;
+  --hl-tracking: -0.03em;
+  --hl-leading: 1.03;
+  --text-size: 1.0625rem;
+}
+
+/* ── Basis ───────────────────────────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+    color-scheme: light;
+    background: var(--bg);
+  }
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: clip;
+  }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--ff-body), system-ui, sans-serif;
+    font-size: var(--step-0);
+    line-height: 1.62;
+    font-kerning: normal;
+    font-optical-sizing: auto;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphenate-limit-chars: 8 4 4;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--ff-display), var(--ff-body), sans-serif;
+    font-weight: var(--hl-weight);
+    letter-spacing: var(--hl-tracking);
+    line-height: var(--hl-leading);
+    text-wrap: balance;
+    margin: 0;
+    /* Lange Komposita („Einkommensteuererklärung“) dürfen getrennt werden,
+       kurze Wörter nicht – sonst laufen Überschriften auf 360 px über. */
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphenate-limit-chars: 12 5 5;
+    overflow-wrap: break-word;
+  }
+  p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+  a {
+    color: inherit;
+    text-decoration-thickness: 0.07em;
+    text-underline-offset: 0.18em;
+  }
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+  img {
+    height: auto;
+  }
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+  button {
+    cursor: pointer;
+  }
+  ::selection {
+    background: var(--brand);
+    color: var(--on-brand);
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  .invers :focus-visible {
+    outline-color: var(--brand-on-inverse);
+  }
+  [hidden] {
+    display: none !important;
+  }
+  table {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ── Layout ──────────────────────────────────────────────────────────────── */
+@layer components {
+  .wrap {
+    width: 100%;
+    max-width: calc(var(--wrap) + 2 * var(--pad-x));
+    margin-inline: auto;
+    padding-inline: var(--pad-x);
+  }
+  .wrap-schmal {
+    width: 100%;
+    max-width: calc(48rem + 2 * var(--pad-x));
+    margin-inline: auto;
+    padding-inline: var(--pad-x);
+  }
+  .sektion {
+    padding-block: var(--space-section);
+    position: relative;
+  }
+  .sektion-voll {
+    padding-block: 0;
+  }
+  /* Direkt nach dem Seitenkopf (der schon mit Summenstrich endet) genügt ein kleiner Abstand */
+  .sk + .sektion:not(.flaeche, .invers, .sektion-voll) {
+    padding-top: clamp(1.5rem, 1rem + 2vw, 3rem);
+  }
+  /* Zwei normale Sektionen hintereinander: nur ein Abstand */
+  .sektion:not(.flaeche, .invers, .sektion-voll) + .sektion:not(.flaeche, .invers, .sektion-voll) {
+    padding-top: 0;
+  }
+  .flaeche {
+    background: var(--surface);
+  }
+  .invers {
+    background: var(--inverse);
+    color: var(--on-inverse);
+    --ink: var(--on-inverse);
+    --ink-muted: var(--on-inverse-muted);
+    --line: var(--inverse-line);
+    --line-strong: var(--on-inverse-muted);
+    --brand-ink: var(--brand-on-inverse);
+    --accent-ink: var(--accent-on-inverse);
+    --surface: var(--inverse-2);
+    --focus: var(--brand-on-inverse);
+  }
+  .raster-12 {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gutter);
+  }
+
+  /* ── Typografie ────────────────────────────────────────────────────────── */
+  .display {
+    font-size: var(--step-5);
+    line-height: calc(var(--hl-leading) - 0.06);
+    letter-spacing: calc(var(--hl-tracking) - 0.012em);
+  }
+  .h1 {
+    font-size: var(--step-4);
+  }
+  .h2 {
+    font-size: var(--step-3);
+  }
+  .h3 {
+    font-size: var(--step-2);
+    line-height: 1.15;
+    letter-spacing: calc(var(--hl-tracking) * 0.6);
+  }
+  .h4 {
+    font-size: var(--step-1);
+    line-height: 1.25;
+    letter-spacing: calc(var(--hl-tracking) * 0.4);
+  }
+  .lead {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink-muted);
+    max-width: 44ch;
+  }
+  .klein {
+    font-size: var(--step--1);
+    line-height: 1.5;
+  }
+  .gedaempft {
+    color: var(--ink-muted);
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--brand-ink);
+    margin-bottom: 1.1rem;
+  }
+  .kicker::before {
+    content: '';
+    width: 1.6em;
+    height: 0.36em;
+    border-block: 1px solid currentColor;
+  }
+  /* Tabellarische Ziffern für Kennzahlen und Beträge (nicht für Daten/Uhrzeiten:
+     in manchen Schriften werden dort sonst Punkt und Doppelpunkt gesperrt) */
+  .ziffern {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  .datum {
+    font-variant-numeric: lining-nums proportional-nums;
+  }
+  .masslinie {
+    max-width: var(--measure);
+  }
+  .fliesstext > * + * {
+    margin-top: 1em;
+  }
+  .fliesstext {
+    max-width: var(--measure);
+  }
+
+  /* ── Summenstrich: doppelte Linie wie unter Summen in der Buchhaltung ──── */
+  .summenstrich {
+    display: block;
+    height: 6px;
+    border-top: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform-origin: left center;
+  }
+  .summenstrich-fein {
+    height: 4px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+  }
+
+  /* ── Links ─────────────────────────────────────────────────────────────── */
+  .link {
+    position: relative;
+    color: var(--brand-ink);
+    text-decoration: none;
+    font-weight: 600;
+    background-image: linear-gradient(currentColor, currentColor), linear-gradient(currentColor, currentColor);
+    background-size: 100% 1px, 0% 1px;
+    background-position: 0 100%, 0 calc(100% - 3px);
+    background-repeat: no-repeat;
+    padding-bottom: 5px;
+    transition: background-size var(--dur-2) var(--ease-out);
+  }
+  .link:hover {
+    background-size: 100% 1px, 100% 1px;
+  }
+  .fliesstext a,
+  .prose a {
+    color: var(--brand-ink);
+    font-weight: 550;
+  }
+
+  /* ── Buttons ───────────────────────────────────────────────────────────── */
+  .btn {
+    --btn-bg: var(--brand);
+    --btn-fg: var(--on-brand);
+    --btn-bd: var(--brand-edge);
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65em;
+    min-height: 3rem;
+    padding: 0.7em 1.35em;
+    border: 1px solid var(--btn-bd);
+    border-radius: var(--r-btn);
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    font-weight: 620;
+    font-size: var(--step-0);
+    line-height: 1.15;
+    letter-spacing: -0.005em;
+    text-decoration: none;
+    text-align: center;
+    text-wrap: balance;
+    max-width: 100%;
+    isolation: isolate;
+    overflow: hidden;
+    transition:
+      background-color var(--dur-2) var(--ease-out),
+      color var(--dur-2) var(--ease-out),
+      border-color var(--dur-2) var(--ease-out),
+      transform var(--dur-1) var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn:hover {
+    --btn-bg: var(--brand-hover);
+  }
+  .btn:active {
+    transform: scale(0.975);
+  }
+  .btn .btn-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 1.15em;
+    height: 1.15em;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .btn:hover .btn-icon {
+    transform: translateX(3px);
+  }
+  .btn-sekundaer {
+    --btn-bg: transparent;
+    --btn-fg: var(--ink);
+    --btn-bd: var(--line-strong);
+  }
+  .btn-sekundaer:hover {
+    --btn-bg: var(--ink);
+    --btn-fg: var(--bg);
+    --btn-bd: var(--ink);
+  }
+  .invers .btn-sekundaer:hover {
+    --btn-fg: var(--inverse);
+  }
+  .btn-hell {
+    --btn-bg: var(--on-inverse);
+    --btn-fg: var(--inverse);
+    --btn-bd: var(--on-inverse);
+  }
+  .btn-hell:hover {
+    --btn-bg: var(--brand-on-inverse);
+    --btn-bd: var(--brand-on-inverse);
+  }
+  .btn-klein {
+    min-height: 2.75rem;
+    padding: 0.5em 1em;
+    font-size: var(--step--1);
+  }
+  .btn[aria-disabled='true'],
+  .btn:disabled {
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .btn[data-zustand='laedt'] .btn-label {
+    opacity: 0.6;
+  }
+
+  /* ── Chips, Badges ─────────────────────────────────────────────────────── */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    min-height: 2.75rem;
+    padding: 0.4em 1em;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-btn);
+    background: transparent;
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--ink);
+    transition:
+      background-color var(--dur-2) var(--ease-out),
+      color var(--dur-2) var(--ease-out),
+      border-color var(--dur-2) var(--ease-out);
+  }
+  .chip:hover {
+    border-color: var(--ink);
+  }
+  .chip[aria-pressed='true'],
+  .chip[aria-selected='true'],
+  .chip[aria-current='true'] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    padding: 0.2em 0.65em;
+    border-radius: var(--r-sm);
+    background: var(--brand-soft);
+    color: var(--brand-ink);
+    font-size: 0.78rem;
+    font-weight: 650;
+    line-height: 1.4;
+  }
+  .invers .badge {
+    background: var(--inverse-2);
+    color: var(--on-inverse);
+  }
+
+  /* ── Formularfelder ────────────────────────────────────────────────────── */
+  .feld {
+    display: grid;
+    gap: 0.45rem;
+  }
+  .feld label,
+  .feld .label {
+    font-weight: 600;
+    font-size: var(--step--1);
+  }
+  .eingabe {
+    width: 100%;
+    min-height: 3.25rem;
+    padding: 0.8rem 1rem;
+    font-size: max(16px, 1rem);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-md);
+    background: var(--bg);
+    color: var(--ink);
+    transition:
+      border-color var(--dur-1),
+      box-shadow var(--dur-2) var(--ease-out);
+  }
+  textarea.eingabe {
+    min-height: 8rem;
+    resize: vertical;
+  }
+  .eingabe:hover {
+    border-color: var(--ink-muted);
+  }
+  .eingabe:focus-visible {
+    outline: none;
+    border-color: var(--brand-ink);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand) 28%, transparent);
+  }
+  .eingabe[aria-invalid='true'] {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 1px var(--danger);
+  }
+  .feld-fehler {
+    display: flex;
+    gap: 0.4em;
+    align-items: flex-start;
+    color: var(--danger);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+  .feld-fehler:empty {
+    display: none;
+  }
+  .honigtopf {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* ── Bildrahmen mit Tonung + Korn (gleicht gemischte Fotoqualität aus) ─── */
+  .rahmen {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--r-xl);
+    background: var(--surface-2);
+    isolation: isolate;
+  }
+  .rahmen img,
+  .rahmen picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--fokus, 50% 50%);
+  }
+  @media (max-width: 47.99rem) {
+    .rahmen img {
+      object-position: var(--fokus-m, var(--fokus, 50% 50%));
+    }
+  }
+  [data-tonung='kuehl'] .rahmen img {
+    filter: saturate(0.82) contrast(1.03);
+  }
+  [data-tonung='warm'] .rahmen img {
+    filter: saturate(0.9) sepia(0.08) contrast(1.02);
+  }
+  [data-tonung='marke'] .rahmen::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--brand);
+    mix-blend-mode: color;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+  [data-grain='true'] .rahmen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.16;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ── Sichtbar nur für Screenreader ─────────────────────────────────────── */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* ── Animations-Ausgangszustände: NUR wenn JS läuft und Bewegung erlaubt ─── */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-anim='reveal-up'],
+  .js [data-anim='reveal-fade'],
+  .js [data-anim-kinder] > * {
+    opacity: 0;
+  }
+  .js [data-anim='rule'] {
+    transform: scaleX(0);
+  }
+  .js [data-anim='bild'] {
+    clip-path: inset(12% 8% 12% 8%);
+  }
+  /* Sicherheitsnetz: Falls Animationen nicht starten, nach 3 s alles zeigen */
+  .js.anim-aus [data-anim],
+  .js.anim-aus [data-anim-kinder] > * {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+}
+
+/* ── Reduzierte Bewegung ─────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Preset-Feinheiten ───────────────────────────────────────────────────── */
+[data-preset='klassisch'] h1,
+[data-preset='klassisch'] h2,
+[data-preset='klassisch'] .display {
+  font-optical-sizing: auto;
+}
+[data-preset='klassisch'] .kicker::before {
+  border-color: var(--accent);
+}
+[data-preset='klassisch'] .summenstrich {
+  color: var(--accent);
+}
+[data-preset='warm'] .kicker::before {
+  width: 0.55em;
+  height: 0.55em;
+  border: 0;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ── Druck ───────────────────────────────────────────────────────────────── */
+@media print {
+  :root {
+    --bg: #fff;
+    --ink: #000;
+  }
+  header[data-header],
+  footer,
+  .mobile-leiste,
+  .demo-badge,
+  [data-nicht-drucken] {
+    display: none !important;
+  }
+  body {
+    font-size: 11pt;
+  }
+  a {
+    text-decoration: none;
+  }
+}

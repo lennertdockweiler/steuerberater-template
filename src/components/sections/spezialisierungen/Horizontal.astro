@@ -1,0 +1,135 @@
+---
+/**
+ * Branchen als Horizontal-Galerie: Desktop gepinnt mit Scroll-Scrub,
+ * mobil natives Swipe mit scroll-snap.
+ */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t, titelOder } from '../../../lib/config';
+import { aktiv } from '../../../lib/routes';
+import SektionKopf from '../../ui/SektionKopf.astro';
+import Foto from '../../ui/Foto.astro';
+import Icon from '../../ui/Icon.astro';
+
+interface Props {
+  s: AktiveSektion;
+}
+const { s } = Astro.props;
+if (!config.spezialisierungen.length) return;
+const ziel = (slug: string) => (aktiv('spezialisierungen') ? `/spezialisierungen/${slug}/` : '/kontakt/');
+---
+
+<div class="hz" data-horizontal>
+  <div class="hz-innen">
+    <div class="wrap">
+      <SektionKopf kicker={s.kicker} titel={titelOder(s.titel, 'spezialisierungen.titel')} intro={s.intro ?? t('spezialisierungen.intro')} />
+    </div>
+    <ul class="hz-spur" data-spur role="list">
+      {
+        config.spezialisierungen.map((sp, i) => (
+          <li class="hz-item">
+            <a href={ziel(sp.slug)} class="hz-karte">
+              <Foto bild={sp.bild} ratio="4 / 5" sizes="(min-width: 64rem) 30vw, 80vw" class="hz-bild" />
+              <span class="hz-meta">
+                <span class="hz-nr ziffern" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <Icon name={sp.icon} size={20} />
+              </span>
+              <span class="hz-titel">{sp.titel}</span>
+              <span class="hz-text">{sp.kurztext}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>
+
+<style>
+  .hz {
+    overflow: clip;
+  }
+  .hz:not([data-gepinnt]) .hz-innen {
+    padding-block: var(--space-section);
+  }
+  .hz-spur {
+    display: flex;
+    gap: var(--gutter);
+    margin: 0;
+    padding: 0 var(--pad-x) 1rem;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--pad-x);
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  .hz-spur::-webkit-scrollbar {
+    display: none;
+  }
+  .hz-item {
+    flex: 0 0 min(80vw, 22rem);
+    scroll-snap-align: start;
+    will-change: transform;
+  }
+  .hz-karte {
+    display: grid;
+    gap: 0.75rem;
+    text-decoration: none;
+  }
+  .hz-karte :global(.hz-bild) {
+    border-radius: var(--r-lg);
+  }
+  .hz-karte :global(.hz-bild img) {
+    transition: transform 900ms var(--ease-out);
+  }
+  .hz-karte:hover :global(.hz-bild img) {
+    transform: scale(1.05);
+  }
+  .hz-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line-strong);
+    color: var(--brand-ink);
+  }
+  .hz-nr {
+    font-weight: 650;
+    font-size: 0.9rem;
+  }
+  .hz-titel {
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-2);
+    letter-spacing: var(--hl-tracking);
+    line-height: 1.1;
+  }
+  .hz-text {
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+  }
+  @media (min-width: 64rem) {
+    .hz-item {
+      flex-basis: clamp(20rem, 28vw, 26rem);
+    }
+    /* Gepinnt (per JS): Spur scrollt nicht selbst, GSAP verschiebt die Karten */
+    .hz[data-gepinnt] {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+    }
+    .hz[data-gepinnt] .hz-innen {
+      width: 100%;
+      padding-block: calc(var(--header-h) + 1rem) 2rem;
+    }
+    .hz[data-gepinnt] .hz-spur {
+      overflow: visible;
+      padding-left: max(var(--pad-x), calc((100vw - var(--wrap)) / 2));
+    }
+    .hz[data-gepinnt] :global(.skopf) {
+      margin-bottom: 2.5rem;
+    }
+    .hz-item:nth-child(even) {
+      margin-top: 3rem;
+    }
+  }
+</style>

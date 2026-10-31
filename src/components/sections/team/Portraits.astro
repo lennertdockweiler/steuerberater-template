@@ -1,0 +1,121 @@
+---
+/** Team mit großem Porträt des/der ersten Berufsträgers/in und persönlichem Satz. */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t, titelOder } from '../../../lib/config';
+import { aktiv } from '../../../lib/routes';
+import Foto from '../../ui/Foto.astro';
+import MitarbeiterKarte from '../../ui/MitarbeiterKarte.astro';
+import TeamKarte from '../../ui/TeamKarte.astro';
+import Button from '../../ui/Button.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'team' }>;
+  vt?: boolean;
+}
+const { s, vt = true } = Astro.props;
+const [haupt, ...weitere] = config.berufstraeger;
+---
+
+<div class="wrap">
+  <div class="tp">
+    <div class="tp-bild" data-anim="bild">
+      <Foto bild={haupt.foto} ratio="4 / 5" sizes="(min-width: 64rem) 40vw, 92vw" vtName={vt ? `portrait-${haupt.slug}` : undefined} class="tp-rahmen" />
+    </div>
+    <div class="tp-text">
+      {s.kicker && <p class="kicker">{s.kicker}</p>}
+      <h2 class="h2" data-anim="zeilen">{titelOder(s.titel, 'team.titel')}</h2>
+      {haupt.zitat && <blockquote class="tp-zitat" data-anim="reveal-up"><p>{`„${haupt.zitat}“`}</p></blockquote>}
+      <p class="tp-name" data-anim="reveal-up">
+        <strong>{haupt.name}</strong>
+        <span>{haupt.titel.join(', ')}</span>
+      </p>
+      {haupt.kurzbio && <p class="gedaempft masslinie" data-anim="reveal-up">{haupt.kurzbio}</p>}
+      {aktiv('team') && <div data-anim="reveal-up"><Button href={`/team/${haupt.slug}/`} variante="sekundaer">{t('aktion.zumProfil')}</Button></div>}
+    </div>
+  </div>
+  {
+    weitere.length > 0 && (
+      <div class="tp-weitere" data-anim-kinder>
+        {weitere.map((p) => (
+          <TeamKarte p={p} vt={vt} />
+        ))}
+      </div>
+    )
+  }
+  {
+    s.mitTeam && config.team.length > 0 && (
+      <div class="tp-team" data-anim-kinder>
+        {config.team.map((m) => (
+          <MitarbeiterKarte m={m} rund />
+        ))}
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .tp {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  .tp-bild :global(.tp-rahmen) {
+    border-radius: var(--r-xl);
+  }
+  :global([data-preset='warm']) .tp-bild :global(.tp-rahmen) {
+    border-radius: 999px 999px var(--r-xl) var(--r-xl);
+  }
+  .tp-text {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+  }
+  .tp-text .kicker {
+    margin-bottom: 0;
+  }
+  .tp-zitat {
+    margin: 0;
+    font-family: var(--ff-display);
+    font-size: var(--step-2);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
+  .tp-name {
+    display: grid;
+    gap: 0.1rem;
+  }
+  .tp-name span {
+    color: var(--ink-muted);
+    font-size: 0.92rem;
+  }
+  .tp-weitere {
+    display: grid;
+    gap: 2rem var(--gutter);
+    margin-top: 4rem;
+  }
+  .tp-team {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem var(--gutter);
+    margin-top: clamp(3rem, 2rem + 3vw, 5rem);
+  }
+  @media (min-width: 48rem) {
+    .tp-weitere {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .tp-team {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 64rem) {
+    .tp {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      column-gap: calc(var(--gutter) * 3);
+    }
+    .tp-team {
+      grid-template-columns: repeat(4, 1fr);
+      max-width: 60rem;
+      margin-left: auto;
+    }
+  }
+</style>

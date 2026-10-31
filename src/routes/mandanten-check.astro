@@ -1,0 +1,81 @@
+---
+/** Mandanten-Check: Daten werden serverseitig aufbereitet und an die Preact-Island übergeben. */
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import SeitenKopf from '../components/ui/SeitenKopf.astro';
+import MandantenCheck from '../components/islands/MandantenCheck';
+import { config, t, leistungBySlug, leistungPfad, berufstraegerBySlug } from '../lib/config';
+import { aktiv, terminPfad } from '../lib/routes';
+import { ladeBild } from '../lib/bilder';
+import { iconSvg } from '../lib/icons';
+import { telHref } from '../lib/format';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema } from '../lib/seo';
+
+const mc = config.mandantenCheck!;
+const fragen = mc.fragen.map((f) => ({
+  ...f,
+  optionen: f.optionen.map((o) => ({ ...o, icon: o.icon ? iconSvg(o.icon, 22) : undefined })),
+}));
+const ergebnisse = await Promise.all(
+  mc.ergebnisse.map(async (e) => {
+    const p = berufstraegerBySlug(e.ansprechpartner);
+    const img = p ? await ladeBild(p.foto.datei) : null;
+    const foto = img ? (await getImage({ src: img, width: 192, height: 192, format: 'webp' })).src : undefined;
+    return {
+      id: e.id,
+      typ: e.typ,
+      titel: e.titel,
+      text: e.text,
+      leistungen: e.leistungen
+        .map((slug) => leistungBySlug(slug))
+        .filter((l) => !!l)
+        .map((l) => ({ titel: l!.titel, kurztext: l!.kurztext, href: aktiv('leistungen') ? leistungPfad(l!) : '/kontakt/', icon: iconSvg(l!.icon, 22) })),
+      person: p ? { name: p.name, titel: p.titel.join(', '), foto, href: aktiv('team') ? `/team/${p.slug}/` : undefined } : undefined,
+    };
+  }),
+);
+const texte = {
+  weiter: t('aktion.weiter'),
+  zurueck: t('aktion.zurueck'),
+  fortschritt: t('check.fortschritt'),
+  ergebnis: t('check.ergebnis'),
+  ergebnisLabel: t('check.ergebnisLabel'),
+  empfohlen: t('check.empfohlen'),
+  person: t('seite.leistung.ansprechpartner'),
+  termin: t('aktion.termin'),
+  neu: t('check.neu'),
+  auswahl: t('check.auswahl'),
+};
+const pfad = [{ label: t('seite.check.titel'), href: '/mandanten-check/' }];
+---
+
+<Base
+  titel={seitenTitel('mandantenCheck', t('seite.check.titel'))}
+  beschreibung={seitenBeschreibung('mandantenCheck', mc.intro ?? t('check.intro'))}
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site)]}
+>
+  <SeitenKopf titel={mc.titel ?? t('check.titel')} intro={mc.intro ?? t('check.intro')} pfad={pfad} />
+  <section class="sektion">
+    <div class="wrap-schmal">
+      <MandantenCheck client:load fragen={fragen} ergebnisse={ergebnisse} texte={texte} terminHref={terminPfad()} pfeil={iconSvg('arrow-right', 18, 2)} />
+      <noscript>
+        <p class="lead check-ohne-js">
+          {t('check.ohneJs')} <a href={telHref(config.betrieb.telefon)}>{config.betrieb.telefon}</a>
+        </p>
+      </noscript>
+      <p class="check-datenschutz">{t('check.datenschutz')}</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .check-ohne-js {
+    margin-top: 2rem;
+  }
+  .check-datenschutz {
+    margin-top: 3rem;
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    max-width: 60ch;
+  }
+</style>

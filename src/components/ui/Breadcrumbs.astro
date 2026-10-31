@@ -1,0 +1,55 @@
+---
+import { t } from '../../lib/config';
+import Icon from './Icon.astro';
+
+interface Props {
+  teile: { label: string; href: string }[];
+}
+const { teile } = Astro.props;
+---
+
+<nav class="bc" aria-label={t('nav.brotkrumen')}>
+  <ol role="list">
+    <li><a href="/">{t('nav.start')}</a></li>
+    {
+      teile.map((teil, i) => (
+        <li>
+          <Icon name="chevron-right" size={14} strich={2} />
+          {i === teile.length - 1 ? <span aria-current="page">{teil.label}</span> : <a href={teil.href}>{teil.label}</a>}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .bc ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.5rem;
+    margin: 0;
+    padding: 0;
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+  }
+  .bc li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .bc a {
+    text-decoration: none;
+    min-height: 1.75rem;
+    display: inline-flex;
+    align-items: center;
+  }
+  .bc a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+  .bc [aria-current] {
+    color: var(--ink);
+    font-weight: 600;
+  }
+</style>

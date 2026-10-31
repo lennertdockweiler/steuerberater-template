@@ -1,0 +1,149 @@
+---
+/** Wissensbereich: clientseitige Suche, Kategorie-Filter, Artikelraster. */
+import Base from '../../layouts/Base.astro';
+import SeitenKopf from '../../components/ui/SeitenKopf.astro';
+import ArtikelKarte from '../../components/ui/ArtikelKarte.astro';
+import Icon from '../../components/ui/Icon.astro';
+import FristenWidget from '../../components/ui/FristenWidget.astro';
+import Button from '../../components/ui/Button.astro';
+import { t } from '../../lib/config';
+import { aktiv } from '../../lib/routes';
+import { alleArtikel } from '../../lib/wissen';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema } from '../../lib/seo';
+
+const artikel = await alleArtikel();
+const kategorien = [...new Set(artikel.map((a) => a.data.kategorie))];
+const pfad = [{ label: t('seite.wissen.titel'), href: '/wissen/' }];
+---
+
+<Base
+  titel={seitenTitel('wissen', t('seite.wissen.titel'))}
+  beschreibung={seitenBeschreibung('wissen', `${t('wissen.intro')} ${artikel.slice(0, 3).map((a) => a.data.titel).join(', ')}.`)}
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site)]}
+>
+  <SeitenKopf titel={t('seite.wissen.titel')} intro={t('wissen.intro')} pfad={pfad} />
+
+  <section class="sektion wi" data-suche>
+    <div class="wrap">
+      <form class="wi-filter" role="search" aria-label={t('seite.wissen.suche')}>
+        <label class="wi-suche">
+          <span class="sr-only">{t('seite.wissen.suche')}</span>
+          <Icon name="search" size={20} />
+          <input type="search" class="eingabe" placeholder={t('seite.wissen.suche')} autocomplete="off" />
+        </label>
+        <div class="wi-chips" role="group" aria-label={t('seite.wissen.kategorien')}>
+          <button type="button" class="chip" aria-pressed="true" data-kategorie-filter="alle">{t('seite.wissen.alle')}</button>
+          {kategorien.map((k) => <button type="button" class="chip" aria-pressed="false" data-kategorie-filter={k}>{k}</button>)}
+        </div>
+      </form>
+      <p class="wi-treffer gedaempft" data-treffer data-vorlage={t('seite.wissen.treffer')} aria-live="polite">
+        {t('seite.wissen.treffer', { anzahl: artikel.length })}
+      </p>
+      <ul class="wi-liste" role="list">
+        {
+          artikel.map((a, i) => (
+            <li data-suchtext={`${a.data.titel} ${a.data.beschreibung} ${a.data.kategorie} ${a.body ?? ''}`.slice(0, 4000)} data-kategorie={a.data.kategorie}>
+              <ArtikelKarte a={a} gross={i === 0} vt />
+            </li>
+          ))
+        }
+      </ul>
+      <p class="wi-leer lead" data-keine-treffer hidden>{t('seite.wissen.keineTreffer')}</p>
+    </div>
+  </section>
+
+  {
+    aktiv('steuertermine') && (
+      <section class="sektion flaeche" aria-labelledby="wi-fristen">
+        <div class="wrap wi-fristen">
+          <div>
+            <h2 class="h2" id="wi-fristen" data-anim="zeilen">
+              {t('fristen.titel')}
+            </h2>
+            <Button href="/wissen/steuertermine/" variante="sekundaer" icon="calendar-days">
+              {t('aktion.alleFristen')}
+            </Button>
+          </div>
+          <FristenWidget anzahl={3} layout="kompakt" filter={false} />
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .wi-filter {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .wi-suche {
+    position: relative;
+    display: block;
+    max-width: 34rem;
+  }
+  .wi-suche :global(svg) {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    translate: 0 -50%;
+    color: var(--ink-muted);
+    pointer-events: none;
+  }
+  .wi-suche input {
+    padding-left: 3rem;
+  }
+  :global(.no-js) .wi-filter {
+    display: none;
+  }
+  .wi-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .wi-treffer {
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+  }
+  .wi-liste {
+    display: grid;
+    gap: 3rem var(--gutter);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .wi-liste li[hidden] {
+    display: none;
+  }
+  .wi-fristen {
+    display: grid;
+    gap: 2rem;
+  }
+  .wi-fristen > div:first-child {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+    align-content: start;
+  }
+  @media (min-width: 48rem) {
+    .wi-liste {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .wi-liste li:first-child {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 64rem) {
+    .wi-liste {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .wi-liste li:first-child {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+    .wi-fristen {
+      grid-template-columns: 4fr 8fr;
+      column-gap: calc(var(--gutter) * 3);
+    }
+  }
+</style>

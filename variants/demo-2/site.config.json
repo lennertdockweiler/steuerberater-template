@@ -1,0 +1,1398 @@
+{
+  "$schema": "../site.config.schema.json",
+  "meta": {
+    "slug": "demo-2",
+    "sprache": "de",
+    "anrede": "sie",
+    "domain": "https://www.steuerbuero-albrecht.example",
+    "noindex": true,
+    "titelVorlage": "Steuerbüro Albrecht, Lüneburg"
+  },
+  "betrieb": {
+    "name": "Steuerbüro Lena Albrecht",
+    "kurzname": "Steuerbüro Albrecht",
+    "rechtsform": "Einzelkanzlei",
+    "inhaber": [
+      "Lena Albrecht"
+    ],
+    "slogan": "Steuerberatung in Lüneburg für Privatpersonen, Vermieter, Höfe und kleine Betriebe. Persönlich und verlässlich.",
+    "gruendungsjahr": 2015,
+    "adresse": {
+      "strasse": "Wallstraße 7",
+      "plz": "21335",
+      "ort": "Lüneburg",
+      "bundesland": "NI"
+    },
+    "geo": {
+      "lat": 53.2468,
+      "lng": 10.4095
+    },
+    "einzugsgebiet": [
+      "Lüneburg",
+      "Adendorf",
+      "Bardowick",
+      "Reppenstedt",
+      "Amelinghausen",
+      "Lüneburger Heide"
+    ],
+    "telefon": "04131 721845",
+    "email": "post@steuerbuero-albrecht.de",
+    "oeffnungszeiten": {
+      "regulaer": [
+        {
+          "tage": [
+            "mo",
+            "di",
+            "mi",
+            "do"
+          ],
+          "von": "08:00",
+          "bis": "12:30"
+        },
+        {
+          "tage": [
+            "mo",
+            "di",
+            "do"
+          ],
+          "von": "14:00",
+          "bis": "17:00"
+        },
+        {
+          "tage": [
+            "fr"
+          ],
+          "von": "08:00",
+          "bis": "12:00"
+        }
+      ],
+      "sonder": [
+        {
+          "datum": "2026-12-24",
+          "geschlossen": true,
+          "hinweis": "Heiligabend"
+        },
+        {
+          "datum": "2026-12-31",
+          "geschlossen": true,
+          "hinweis": "Silvester"
+        }
+      ],
+      "hinweis": "Hofbesuche und Abendtermine nach Absprache."
+    },
+    "socialLinks": [],
+    "bewertungen": {
+      "quelle": "Google",
+      "schnitt": 5,
+      "anzahl": 41,
+      "echt": false,
+      "echtheitsHinweis": "Die gezeigten Stimmen sind Beispiele für diese Demo. In der Live-Version veröffentlichen wir nur Stimmen von Mandantinnen und Mandanten, die schriftlich eingewilligt haben. Bewertungen auf externen Plattformen prüfen wir nicht auf Echtheit.",
+      "eintraege": [
+        {
+          "name": "Heinrich und Gisela W.",
+          "kontext": "Rentner, Adendorf",
+          "text": "Frau Albrecht hat uns am Küchentisch erklärt, warum wir plötzlich eine Steuererklärung abgeben müssen. Seitdem kümmert sie sich darum, und wir schlafen ruhiger.",
+          "einwilligungLiegtVor": true,
+          "beispiel": true
+        },
+        {
+          "name": "Familie Meyer-Thieß",
+          "kontext": "Milchviehbetrieb bei Amelinghausen",
+          "text": "Bei der Hofübergabe an unseren Sohn hat sie alles mit Notar und Landwirtschaftskammer abgestimmt. Wir mussten nur zu den Terminen kommen.",
+          "einwilligungLiegtVor": true,
+          "beispiel": true
+        },
+        {
+          "name": "Svenja K.",
+          "kontext": "zwei Ferienwohnungen in der Altstadt",
+          "text": "Umsatzsteuer, Gewerbe oder nicht, Kurtaxe: Ich hatte nur Fragezeichen. Jetzt habe ich eine Liste, die ich jedes Jahr abarbeite.",
+          "einwilligungLiegtVor": true,
+          "beispiel": true
+        },
+        {
+          "name": "Tim R.",
+          "kontext": "Tischlerei, drei Mitarbeitende",
+          "text": "Lohn, Buchhaltung, Jahresabschluss aus einer Hand, und wenn ich anrufe, weiß Frau Peters sofort, worum es geht.",
+          "einwilligungLiegtVor": true,
+          "beispiel": true
+        }
+      ]
+    }
+  },
+  "branding": {
+    "farben": {
+      "primaer": "#7A3B69",
+      "akzent": "#5C6B35",
+      "neutralTon": "#8A7A78"
+    },
+    "stilPreset": "warm",
+    "wortmarke": {
+      "zeile1": "Lena Albrecht",
+      "zeile2": "Steuerbüro in Lüneburg"
+    },
+    "animationsIntensitaet": "standard"
+  },
+  "sektionen": [
+    {
+      "typ": "hero",
+      "layout": "split",
+      "titel": "Steuern mit einer Beraterin, die Sie kennen.",
+      "unterzeile": "Ich berate Privatpersonen, Vermieter, landwirtschaftliche Betriebe und kleine Unternehmen in Lüneburg und Umgebung. Im Büro, am Telefon oder bei Ihnen auf dem Hof.",
+      "bild": {
+        "datei": "team/lena-albrecht.jpg",
+        "alt": "Lena Albrecht, Steuerberaterin, lächelnd auf einem Sofa in ihrem Büro",
+        "fokus": "55% 30%"
+      },
+      "ctaPrimaer": {
+        "label": "Kennenlerntermin vereinbaren",
+        "href": "/termin/"
+      },
+      "ctaSekundaer": {
+        "label": "Was ich für Sie tun kann",
+        "href": "/leistungen/"
+      },
+      "fakten": [
+        {
+          "wert": "seit 2013",
+          "label": "Steuerberaterin"
+        },
+        {
+          "wert": "4",
+          "label": "Menschen im Team"
+        },
+        {
+          "wert": "40 km",
+          "label": "Hofbesuche im Umkreis"
+        }
+      ]
+    },
+    {
+      "typ": "kanzlei",
+      "layout": "bild",
+      "kicker": "Über mich",
+      "titel": "Ein Steuerbüro, in dem man sich noch kennt",
+      "intro": "Bevor ich mich 2015 selbstständig gemacht habe, war ich neun Jahre in der Finanzverwaltung. Ich weiß, wie Finanzämter denken, und übersetze das in eine Sprache, die man versteht.",
+      "text": [
+        "Mein Büro liegt mitten in der Lüneburger Altstadt, ebenerdig und mit Parkplätzen am Haus. Viele Mandanten betreue ich seit Jahren, manche schon in der zweiten Generation.",
+        "Digital arbeiten wir, wo es Ihnen Wege spart. Wer seine Unterlagen lieber persönlich vorbeibringt, ist genauso willkommen."
+      ],
+      "bild": {
+        "datei": "kanzlei/buero.jpg",
+        "alt": "Heller Besprechungsraum mit grünen Sesseln und großen Fenstern",
+        "fokus": "50% 50%"
+      },
+      "zitat": {
+        "text": "Gute Steuerberatung heißt für mich: Sie verstehen, was wir tun, und warum.",
+        "name": "Lena Albrecht"
+      }
+    },
+    {
+      "typ": "leistungen",
+      "layout": "liste",
+      "titel": "Wobei ich Sie unterstütze",
+      "intro": "Von der Steuererklärung bis zur Hofübergabe: Ich übernehme, was Zeit kostet, und erkläre Ihnen, was es für Sie bedeutet."
+    },
+    {
+      "typ": "stimmen",
+      "layout": "zitat",
+      "titel": "Was Mandantinnen und Mandanten sagen"
+    },
+    {
+      "typ": "ablauf",
+      "layout": "zeitleiste"
+    },
+    {
+      "typ": "zielgruppen",
+      "layout": "zeilen",
+      "titel": "Für wen ich arbeite",
+      "intro": "Meine Mandantinnen und Mandanten kommen aus ganz unterschiedlichen Lebenslagen. Wählen Sie Ihre, ich zeige Ihnen, wie ich helfen kann."
+    },
+    {
+      "typ": "fristen",
+      "layout": "kompakt",
+      "hintergrund": "flaeche"
+    },
+    {
+      "typ": "spezialisierungen",
+      "layout": "raster",
+      "titel": "Typisch für die Region",
+      "intro": "Rund um Lüneburg begegnen mir immer wieder dieselben Fragen. In diesen Bereichen kenne ich mich besonders gut aus."
+    },
+    {
+      "typ": "team",
+      "layout": "portraits",
+      "titel": "Das Team im Steuerbüro"
+    },
+    {
+      "typ": "check",
+      "layout": "karte"
+    },
+    {
+      "typ": "kennzahlen",
+      "layout": "band",
+      "titel": "Das Steuerbüro in Zahlen"
+    },
+    {
+      "typ": "faq",
+      "layout": "zweispaltig",
+      "titel": "Häufige Fragen"
+    },
+    {
+      "typ": "wissen",
+      "layout": "karten",
+      "titel": "Aktuelles aus dem Steuerbüro",
+      "intro": "Was sich steuerlich ändert, kurz und verständlich erklärt."
+    },
+    {
+      "typ": "karriere",
+      "layout": "band"
+    },
+    {
+      "typ": "vertrauen",
+      "layout": "reihe"
+    },
+    {
+      "typ": "cta",
+      "layout": "karte",
+      "titel": "Lernen wir uns kennen.",
+      "intro": "Im ersten Gespräch hören wir zu und klären, ob wir zueinander passen. Bei mir im Büro, am Telefon oder, wenn Sie einen Hof bewirtschaften, gern bei Ihnen vor Ort."
+    }
+  ],
+  "seiten": {
+    "leistungen": true,
+    "spezialisierungen": true,
+    "digitaleKanzlei": true,
+    "team": true,
+    "karriere": true,
+    "wissen": true,
+    "steuertermine": true,
+    "mandantenCheck": true,
+    "termin": true,
+    "kontakt": true,
+    "rechner": true,
+    "unterlagen": true
+  },
+  "seo": {
+    "seiten": {
+      "start": {
+        "titel": "Steuerberaterin in Lüneburg | Steuerbüro Albrecht",
+        "beschreibung": "Steuerbüro Lena Albrecht in Lüneburg: Steuererklärungen, Vermietung, Landwirtschaft und kleine Betriebe. Persönlich, auf Wunsch auch auf Ihrem Hof."
+      }
+    }
+  },
+  "rechtliches": {
+    "bildnachweise": [
+      "Fotos: Unsplash (unsplash.com), Unsplash-Lizenz. Abgebildete Personen sind Modelle."
+    ],
+    "vertretungsberechtigt": [
+      "Lena Albrecht, Steuerberaterin"
+    ],
+    "ustId": "DE 294 618 357",
+    "inhaltlichVerantwortlich": {
+      "name": "Lena Albrecht",
+      "adresse": "Wallstraße 7, 21335 Lüneburg"
+    },
+    "hosting": {
+      "anbieter": "Netlify, Inc.",
+      "adresse": "512 2nd Street, Suite 200, San Francisco, CA 94107, USA",
+      "datenschutzUrl": "https://www.netlify.com/privacy/"
+    }
+  },
+  "integrationen": {
+    "formularEndpoint": "",
+    "karte": {
+      "aktiv": true,
+      "anbieter": "osm"
+    },
+    "analytics": {
+      "aktiv": false
+    }
+  },
+  "demo": {
+    "banner": {
+      "aktiv": true
+    },
+    "agentur": {
+      "name": "Studio Nordlicht Webdesign",
+      "telefon": "0251 000000",
+      "email": "hallo@studio-nordlicht.example",
+      "website": "https://studio-nordlicht.example"
+    },
+    "pitchSeite": true
+  },
+  "kanzleiForm": "Einzelkanzlei",
+  "berufstraeger": [
+    {
+      "slug": "lena-albrecht",
+      "name": "Lena Albrecht",
+      "titel": [
+        "Steuerberaterin",
+        "Diplom-Finanzwirtin (FH)"
+      ],
+      "rolle": "Inhaberin",
+      "bestelltSeit": 2013,
+      "schwerpunkte": [
+        "Landwirtschaft",
+        "Vermietung und Verpachtung",
+        "Einkommensteuer",
+        "Hofübergaben"
+      ],
+      "sprachen": [
+        "Deutsch",
+        "Englisch",
+        "Plattdeutsch"
+      ],
+      "foto": {
+        "datei": "team/lena-albrecht.jpg",
+        "alt": "Lena Albrecht, Steuerberaterin",
+        "fokus": "55% 30%"
+      },
+      "vita": [
+        {
+          "jahr": "2003",
+          "text": "Studium an der Hochschule für Finanzen in Hann. Münden"
+        },
+        {
+          "jahr": "2006",
+          "text": "Betriebsprüferin im Finanzamt Lüneburg"
+        },
+        {
+          "jahr": "2013",
+          "text": "Bestellung zur Steuerberaterin"
+        },
+        {
+          "jahr": "2015",
+          "text": "Eröffnung des eigenen Steuerbüros in der Lüneburger Altstadt"
+        },
+        {
+          "jahr": "2022",
+          "text": "Zertifikatslehrgang Landwirtschaftliche Buchstelle"
+        }
+      ],
+      "email": "albrecht@steuerbuero-albrecht.de",
+      "telefon": "04131 721845",
+      "zitat": "Ich war lange auf der anderen Seite des Schreibtischs. Heute erkläre ich, was das Finanzamt wissen will.",
+      "kurzbio": "Lena Albrecht war neun Jahre in der niedersächsischen Finanzverwaltung tätig, zuletzt als Betriebsprüferin. Seit 2015 führt sie ihr eigenes Steuerbüro in Lüneburg und betreut vor allem Privatpersonen, Vermieter und landwirtschaftliche Familienbetriebe."
+    }
+  ],
+  "team": [
+    {
+      "name": "Sabine Meyer",
+      "rolle": "Steuerfachangestellte, Privatmandate",
+      "seit": 2015,
+      "foto": {
+        "datei": "team/sabine-meyer.jpg",
+        "alt": "Sabine Meyer",
+        "fokus": "50% 30%"
+      }
+    },
+    {
+      "name": "Hanna Peters",
+      "rolle": "Steuerfachangestellte, Lohn und Buchhaltung",
+      "seit": 2019,
+      "foto": {
+        "datei": "team/hanna-peters.jpg",
+        "alt": "Hanna Peters",
+        "fokus": "50% 35%"
+      }
+    },
+    {
+      "name": "Jonas Kruse",
+      "rolle": "Auszubildender zum Steuerfachangestellten",
+      "seit": 2025,
+      "foto": {
+        "datei": "team/jonas-kruse.jpg",
+        "alt": "Jonas Kruse",
+        "fokus": "50% 30%"
+      }
+    }
+  ],
+  "zielgruppen": [
+    {
+      "slug": "privatpersonen",
+      "titel": "Privatpersonen",
+      "ichBin": "Ich bin angestellt oder in Rente",
+      "kurztext": "Einkommensteuer für Angestellte, Rentner und Familien, ohne Formularfrust.",
+      "text": [
+        "Ob Lohnsteuerbescheinigung, Rentenbezugsmitteilung oder Handwerkerrechnung: Sie bringen Ihre Unterlagen vorbei oder laden sie hoch, wir erstellen die Erklärung und prüfen den Bescheid.",
+        "Gerade beim Übergang in den Ruhestand ändert sich viel. Wir sagen Ihnen, ob Sie eine Erklärung abgeben müssen und was Sie geltend machen können."
+      ],
+      "icon": "house",
+      "bild": {
+        "datei": "zielgruppen/privat.jpg",
+        "alt": "Helle Küche mit Zitronen auf der Arbeitsplatte",
+        "fokus": "50% 60%"
+      }
+    },
+    {
+      "slug": "vermieter",
+      "titel": "Vermieter",
+      "ichBin": "Ich vermiete Wohnraum",
+      "kurztext": "Wohnungen, Häuser und Ferienwohnungen: Anlage V, Abschreibung, Umsatzsteuer.",
+      "text": [
+        "Mieteinnahmen sind schnell verbucht, die Ausgaben richtig einzuordnen ist die eigentliche Arbeit. Wir trennen Erhaltungsaufwand von Herstellungskosten und behalten die Abschreibung im Blick.",
+        "Für Ferienwohnungen in Lüneburg und der Heide klären wir Umsatzsteuer, Kleinunternehmerregelung und die Frage, ob schon ein Gewerbe vorliegt."
+      ],
+      "icon": "key-round",
+      "bild": {
+        "datei": "branchen/vermieter.jpg",
+        "alt": "Einfamilienhaus mit Holzfassade im Abendlicht",
+        "fokus": "50% 55%"
+      }
+    },
+    {
+      "slug": "landwirtschaft",
+      "titel": "Landwirtschaft",
+      "ichBin": "Ich bewirtschafte einen Hof",
+      "kurztext": "Buchführung, Umsatzsteuer-Pauschalierung und Hofübergabe für Familienbetriebe.",
+      "text": [
+        "Landwirtschaftliche Betriebe haben ihr eigenes Steuerrecht: Wirtschaftsjahr Juli bis Juni, Durchschnittssatzbesteuerung, Nebenbetriebe, Photovoltaik auf dem Stalldach. Wir kennen die Besonderheiten.",
+        "Wenn es um die Übergabe an die nächste Generation geht, planen wir frühzeitig und stimmen uns mit Notar und Landwirtschaftskammer ab."
+      ],
+      "icon": "tractor",
+      "bild": {
+        "datei": "branchen/landwirtschaft.jpg",
+        "alt": "Scheune und Silo auf einem Hof bei Sonnenuntergang",
+        "fokus": "50% 60%"
+      }
+    },
+    {
+      "slug": "betriebe",
+      "titel": "Kleine Betriebe",
+      "ichBin": "Ich führe einen kleinen Betrieb",
+      "kurztext": "Buchhaltung, Lohn und Jahresabschluss für Handwerk, Einzelhandel und Gastronomie.",
+      "text": [
+        "Für kleine Betriebe übernehmen wir die laufende Buchhaltung, die Lohnabrechnung und den Jahresabschluss. Sie haben eine feste Ansprechpartnerin, die Ihren Betrieb kennt.",
+        "Belege können Sie digital übermitteln oder monatlich vorbeibringen, ganz wie es zu Ihrem Alltag passt."
+      ],
+      "icon": "store",
+      "bild": {
+        "datei": "branchen/betriebe.jpg",
+        "alt": "Inhaber eines kleinen Cafés berät einen Kunden an der Theke",
+        "fokus": "55% 45%"
+      }
+    }
+  ],
+  "leistungen": [
+    {
+      "slug": "einkommensteuererklaerung",
+      "zielgruppe": [
+        "privatpersonen",
+        "vermieter"
+      ],
+      "titel": "Einkommensteuererklärung",
+      "kurztext": "Wir erstellen Ihre Erklärung und prüfen den Bescheid, Jahr für Jahr.",
+      "text": [
+        "Sie bringen Ihre Unterlagen vorbei, schicken sie per Post oder laden sie im Portal hoch. Unsere Checkliste zeigt vorher, was wir brauchen.",
+        "Wir erstellen die Erklärung, übermitteln sie elektronisch und prüfen den Bescheid. Weicht er ab, legen wir Einspruch ein."
+      ],
+      "punkte": [
+        "Einkommensteuererklärung mit allen Anlagen",
+        "Prüfung des Steuerbescheids",
+        "Einspruch bei Abweichungen",
+        "Anpassung der Vorauszahlungen"
+      ],
+      "icon": "file-text",
+      "faq": [
+        {
+          "frage": "Lohnt sich das für mich?",
+          "antwort": "Das klären wir im ersten Gespräch. Haben Sie nur Arbeitslohn und keine Besonderheiten, sagen wir Ihnen ehrlich, wenn ein Lohnsteuerhilfeverein günstiger ist."
+        }
+      ]
+    },
+    {
+      "slug": "rente-und-steuern",
+      "zielgruppe": [
+        "privatpersonen"
+      ],
+      "titel": "Steuern im Ruhestand",
+      "kurztext": "Muss ich eine Erklärung abgeben? Wir prüfen es und übernehmen sie für Sie.",
+      "text": [
+        "Mit jeder Rentenerhöhung rutschen mehr Rentnerinnen und Rentner in die Steuerpflicht. Wir prüfen, ob Sie eine Erklärung abgeben müssen, und erstellen sie für Sie.",
+        "Krankheitskosten, Pflege, Handwerkerrechnungen oder Spenden: Wir achten darauf, dass nichts verloren geht. Auf Wunsch besuchen wir Sie zu Hause."
+      ],
+      "punkte": [
+        "Prüfung der Erklärungspflicht",
+        "Einkommensteuererklärung für Rentner",
+        "Pflege- und Krankheitskosten",
+        "Hausbesuch nach Absprache"
+      ],
+      "icon": "armchair"
+    },
+    {
+      "slug": "vermietung",
+      "zielgruppe": [
+        "vermieter"
+      ],
+      "titel": "Vermietung und Verpachtung",
+      "kurztext": "Anlage V, Abschreibung und die richtige Einordnung von Renovierungen.",
+      "text": [
+        "Wir erstellen die Anlage V für jedes Objekt und prüfen bei größeren Ausgaben, ob sie sofort abziehbar sind oder abgeschrieben werden müssen.",
+        "Vor einem Kauf, einer Sanierung oder einem Verkauf rechnen wir die steuerlichen Folgen mit Ihnen durch."
+      ],
+      "punkte": [
+        "Anlage V je Objekt",
+        "Abschreibung und Kaufpreisaufteilung",
+        "Erhaltungsaufwand und anschaffungsnahe Kosten",
+        "Verpachtung von Flächen"
+      ],
+      "icon": "house-plus"
+    },
+    {
+      "slug": "ferienwohnungen",
+      "zielgruppe": [
+        "vermieter"
+      ],
+      "titel": "Ferienwohnungen und Gästezimmer",
+      "kurztext": "Umsatzsteuer, Kleinunternehmerregelung und die Grenze zum Gewerbe.",
+      "text": [
+        "Kurzzeitvermietung ist umsatzsteuerlich anders zu behandeln als eine Dauermiete. Wir prüfen, ob die Kleinunternehmerregelung greift, und kümmern uns um die Voranmeldungen.",
+        "Bieten Sie Frühstück oder weitere Leistungen an, kann ein Gewerbe vorliegen. Das klären wir, bevor das Finanzamt fragt."
+      ],
+      "punkte": [
+        "Umsatzsteuer bei Kurzzeitvermietung",
+        "Kleinunternehmerregelung",
+        "Abgrenzung zum Gewerbebetrieb",
+        "Einnahmen-Überschuss-Rechnung"
+      ],
+      "icon": "bed-double"
+    },
+    {
+      "slug": "landwirtschaftliche-buchfuehrung",
+      "zielgruppe": [
+        "landwirtschaft"
+      ],
+      "titel": "Landwirtschaftliche Buchführung",
+      "kurztext": "Buchführung und Jahresabschluss nach dem Wirtschaftsjahr Ihres Hofes.",
+      "text": [
+        "Wir übernehmen die Buchführung für landwirtschaftliche Betriebe, erstellen den Jahresabschluss zum 30. Juni und die Steuererklärungen.",
+        "Nebenbetriebe wie Direktvermarktung, Pferdepension oder Photovoltaik ordnen wir richtig zu, damit es keine bösen Überraschungen gibt."
+      ],
+      "punkte": [
+        "Buchführung und Jahresabschluss",
+        "Umsatzsteuer: Pauschalierung oder Regelbesteuerung",
+        "Direktvermarktung und Nebenbetriebe",
+        "Photovoltaik und Biogas"
+      ],
+      "icon": "wheat"
+    },
+    {
+      "slug": "hofuebergabe",
+      "zielgruppe": [
+        "landwirtschaft",
+        "privatpersonen"
+      ],
+      "titel": "Hofübergabe",
+      "kurztext": "Den Hof an die nächste Generation übergeben, steuerlich gut vorbereitet.",
+      "text": [
+        "Eine Hofübergabe berührt Einkommensteuer, Schenkungsteuer, Grunderwerbsteuer und die Altersversorgung der abgebenden Generation. Wir planen Schritt für Schritt.",
+        "Gemeinsam mit Notar und Landwirtschaftskammer sorgen wir dafür, dass die Übergabe für alle Beteiligten tragfähig ist."
+      ],
+      "punkte": [
+        "Übergabevertrag und Altenteil",
+        "Schenkungsteuer und Freibeträge",
+        "Weichende Erben",
+        "Abstimmung mit Notar und Kammer"
+      ],
+      "icon": "handshake"
+    },
+    {
+      "slug": "buchhaltung-kleinbetriebe",
+      "zielgruppe": [
+        "betriebe"
+      ],
+      "titel": "Buchhaltung für kleine Betriebe",
+      "kurztext": "Laufende Buchhaltung und Umsatzsteuer, digital oder mit Belegordner.",
+      "text": [
+        "Wir übernehmen die laufende Buchhaltung und die Umsatzsteuer-Voranmeldungen. Belege können Sie per App hochladen oder einmal im Monat vorbeibringen.",
+        "Jeden Monat erhalten Sie eine kurze Auswertung, auf Wunsch besprechen wir sie gemeinsam."
+      ],
+      "punkte": [
+        "Laufende Buchhaltung",
+        "Umsatzsteuer-Voranmeldungen",
+        "Monatliche Auswertung",
+        "Kassenführung für Gastronomie und Handel"
+      ],
+      "icon": "receipt-text"
+    },
+    {
+      "slug": "lohn-und-minijobs",
+      "zielgruppe": [
+        "betriebe",
+        "landwirtschaft"
+      ],
+      "titel": "Lohn und Minijobs",
+      "kurztext": "Lohnabrechnung auch für Aushilfen und Saisonkräfte.",
+      "text": [
+        "Wir rechnen Löhne für Festangestellte, Minijobber und Saisonkräfte ab und übernehmen alle Meldungen an Krankenkassen und Finanzamt.",
+        "Gerade in der Erntezeit oder im Weihnachtsgeschäft wechseln Aushilfen häufig. Wir behalten die Grenzen im Blick."
+      ],
+      "punkte": [
+        "Lohn- und Gehaltsabrechnung",
+        "Minijobs und kurzfristige Beschäftigung",
+        "Saisonarbeitskräfte",
+        "Meldungen an Sozialversicherung und Finanzamt"
+      ],
+      "icon": "wallet-cards"
+    },
+    {
+      "slug": "jahresabschluss",
+      "zielgruppe": [
+        "betriebe"
+      ],
+      "titel": "Jahresabschluss und Gewinnermittlung",
+      "kurztext": "Einnahmen-Überschuss-Rechnung oder Bilanz, mit Gespräch über die Zahlen.",
+      "text": [
+        "Wir erstellen Ihre Gewinnermittlung, als Einnahmen-Überschuss-Rechnung oder Bilanz, und die betrieblichen Steuererklärungen.",
+        "Danach setzen wir uns zusammen und sprechen darüber, was die Zahlen für das kommende Jahr bedeuten."
+      ],
+      "punkte": [
+        "Einnahmen-Überschuss-Rechnung oder Bilanz",
+        "Betriebliche Steuererklärungen",
+        "Abschlussgespräch",
+        "Planung der Vorauszahlungen"
+      ],
+      "icon": "file-check-2"
+    }
+  ],
+  "spezialisierungen": [
+    {
+      "slug": "landwirtschaft",
+      "titel": "Landwirtschaft",
+      "kurztext": "Familienbetriebe zwischen Lüneburg und Uelzen: Ackerbau, Milchvieh, Pferdehaltung.",
+      "text": [
+        "Rund um Lüneburg prägen Familienbetriebe die Landwirtschaft. Wir betreuen Ackerbau- und Milchviehbetriebe, Pferdepensionen und Höfe mit Direktvermarktung.",
+        "Die Besonderheiten des landwirtschaftlichen Steuerrechts sind unser Alltag: abweichendes Wirtschaftsjahr, Durchschnittssatzbesteuerung, Flächenverpachtung und Hofübergaben."
+      ],
+      "punkte": [
+        "Durchschnittssatzbesteuerung nach § 24 UStG",
+        "Abweichendes Wirtschaftsjahr",
+        "Pferdepensionen und Reitbetriebe",
+        "Hofübergabe und Altenteil"
+      ],
+      "icon": "tractor",
+      "bild": {
+        "datei": "region/felder.jpg",
+        "alt": "Weite Getreidefelder bei Sonnenuntergang",
+        "fokus": "50% 60%"
+      }
+    },
+    {
+      "slug": "ferienvermietung",
+      "titel": "Ferienwohnungen in der Heide",
+      "kurztext": "Kurzzeitvermietung in Lüneburg und der Lüneburger Heide.",
+      "text": [
+        "Viele unserer Mandanten vermieten Ferienwohnungen oder Gästezimmer in der Altstadt oder in der Heide. Dabei stellen sich andere Fragen als bei einer klassischen Vermietung.",
+        "Wir klären Umsatzsteuer, Kleinunternehmerregelung und die Abgrenzung zum Gewerbe und erstellen die Gewinnermittlung."
+      ],
+      "punkte": [
+        "Umsatzsteuer bei Kurzzeitvermietung",
+        "Gewerbe oder Vermögensverwaltung",
+        "Einrichtung und Abschreibung",
+        "Vermittlungsplattformen"
+      ],
+      "icon": "bed-double",
+      "bild": {
+        "datei": "branchen/vermieter.jpg",
+        "alt": "Einfamilienhaus mit Holzfassade im Abendlicht",
+        "fokus": "50% 55%"
+      }
+    },
+    {
+      "slug": "handwerk-handel",
+      "titel": "Handwerk und Einzelhandel",
+      "kurztext": "Kleine Betriebe mit Werkstatt, Laden oder Café.",
+      "text": [
+        "Handwerksbetriebe, Läden und Cafés in Lüneburg betreuen wir mit allem, was dazugehört: Buchhaltung, Lohn, Kassenführung und Jahresabschluss.",
+        "Sie haben eine feste Ansprechpartnerin, die Ihren Betrieb kennt und ansprechbar ist, wenn es eilt."
+      ],
+      "punkte": [
+        "Kassenführung und Kassen-Nachschau",
+        "Lohn für Aushilfen",
+        "Investitionen und Abschreibungen",
+        "Gewinnermittlung"
+      ],
+      "icon": "hammer",
+      "bild": {
+        "datei": "branchen/betriebe.jpg",
+        "alt": "Inhaber eines kleinen Cafés berät einen Kunden an der Theke",
+        "fokus": "55% 45%"
+      }
+    }
+  ],
+  "mitgliedschaften": [
+    {
+      "name": "Steuerberaterverband Niedersachsen Sachsen-Anhalt e. V."
+    },
+    {
+      "name": "DATEV eG"
+    }
+  ],
+  "software": [
+    {
+      "name": "DATEV",
+      "beschreibung": "Kanzleisoftware mit Rechenzentrum in Deutschland"
+    },
+    {
+      "name": "DATEV Unternehmen online",
+      "beschreibung": "Belege und Auswertungen im Portal"
+    },
+    {
+      "name": "Telefon und Briefkasten",
+      "beschreibung": "Für alle, die es lieber analog mögen"
+    }
+  ],
+  "portalLink": {
+    "url": "https://duo.datev.de",
+    "label": "Belege hochladen",
+    "anbieter": "DATEV Unternehmen online"
+  },
+  "mandantenCheck": {
+    "titel": "Passt mein Anliegen zum Steuerbüro?",
+    "intro": "Vier kurze Fragen. Danach wissen Sie, wie wir Sie unterstützen können, oder ob eine andere Stelle besser passt.",
+    "fragen": [
+      {
+        "id": "situation",
+        "frage": "Was beschreibt Sie am besten?",
+        "optionen": [
+          {
+            "id": "privat",
+            "label": "Angestellt oder in Rente",
+            "icon": "house",
+            "gewichte": {
+              "privat": 3,
+              "einfach": 1
+            },
+            "anliegen": "Privatperson"
+          },
+          {
+            "id": "vermieter",
+            "label": "Ich vermiete Wohnraum",
+            "beschreibung": "Wohnung, Haus oder Ferienwohnung",
+            "icon": "key-round",
+            "gewichte": {
+              "vermieter": 4
+            },
+            "anliegen": "Vermietung"
+          },
+          {
+            "id": "hof",
+            "label": "Ich bewirtschafte einen Hof",
+            "icon": "tractor",
+            "gewichte": {
+              "landwirtschaft": 5
+            },
+            "anliegen": "Landwirtschaft"
+          },
+          {
+            "id": "betrieb",
+            "label": "Ich führe einen kleinen Betrieb",
+            "beschreibung": "Handwerk, Laden, Café, Dienstleistung",
+            "icon": "store",
+            "gewichte": {
+              "betrieb": 4
+            },
+            "anliegen": "Kleiner Betrieb"
+          }
+        ]
+      },
+      {
+        "id": "besonderheit",
+        "frage": "Gibt es gerade etwas Besonderes?",
+        "optionen": [
+          {
+            "id": "rente",
+            "label": "Ich bin oder gehe in Rente",
+            "icon": "armchair",
+            "gewichte": {
+              "privat": 2
+            },
+            "anliegen": "Ruhestand"
+          },
+          {
+            "id": "uebergabe",
+            "label": "Eine Übergabe oder Erbschaft steht an",
+            "icon": "handshake",
+            "gewichte": {
+              "landwirtschaft": 2,
+              "privat": 1
+            },
+            "anliegen": "Übergabe oder Erbschaft"
+          },
+          {
+            "id": "neu",
+            "label": "Ich habe etwas Neues angefangen",
+            "beschreibung": "Vermietung, Betrieb oder Nebenerwerb",
+            "icon": "sprout",
+            "gewichte": {
+              "vermieter": 1,
+              "betrieb": 1
+            },
+            "anliegen": "Neue Tätigkeit"
+          },
+          {
+            "id": "nichts",
+            "label": "Nichts davon",
+            "icon": "minus",
+            "gewichte": {
+              "einfach": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "umfang",
+        "frage": "Wie viele Unterlagen kommen im Jahr zusammen?",
+        "optionen": [
+          {
+            "id": "wenig",
+            "label": "Ein paar Bescheinigungen",
+            "beschreibung": "Lohnsteuer- oder Rentenbescheinigung",
+            "gewichte": {
+              "einfach": 2
+            },
+            "anliegen": "wenige Unterlagen"
+          },
+          {
+            "id": "ordner",
+            "label": "Ein Ordner",
+            "gewichte": {
+              "privat": 1,
+              "vermieter": 1
+            },
+            "anliegen": "ein Ordner Unterlagen"
+          },
+          {
+            "id": "laufend",
+            "label": "Laufend Belege und Rechnungen",
+            "gewichte": {
+              "betrieb": 2,
+              "landwirtschaft": 1
+            },
+            "anliegen": "laufende Buchhaltung"
+          }
+        ]
+      },
+      {
+        "id": "zusammenarbeit",
+        "frage": "Wie möchten Sie mit uns zusammenarbeiten?",
+        "optionen": [
+          {
+            "id": "persoenlich",
+            "label": "Persönlich im Büro",
+            "icon": "messages-square",
+            "gewichte": {
+              "privat": 1,
+              "landwirtschaft": 1
+            },
+            "anliegen": "persönliche Termine"
+          },
+          {
+            "id": "vorort",
+            "label": "Bei mir zu Hause oder auf dem Hof",
+            "icon": "map-pin",
+            "gewichte": {
+              "landwirtschaft": 1,
+              "privat": 1
+            },
+            "anliegen": "Termin vor Ort"
+          },
+          {
+            "id": "digital",
+            "label": "Digital, per Portal und Telefon",
+            "icon": "smartphone",
+            "gewichte": {
+              "betrieb": 1,
+              "vermieter": 1
+            },
+            "anliegen": "digitale Zusammenarbeit"
+          }
+        ]
+      }
+    ],
+    "ergebnisse": [
+      {
+        "id": "privat",
+        "typ": "passend",
+        "titel": "Ihre Steuererklärung, persönlich betreut",
+        "text": "Wir übernehmen Ihre Einkommensteuererklärung, prüfen den Bescheid und denken mit, gerade beim Übergang in den Ruhestand oder bei einer Erbschaft. Im ersten Gespräch sehen wir uns Ihre Unterlagen gemeinsam an.",
+        "leistungen": [
+          "einkommensteuererklaerung",
+          "rente-und-steuern",
+          "hofuebergabe"
+        ],
+        "ansprechpartner": "lena-albrecht"
+      },
+      {
+        "id": "vermieter",
+        "typ": "passend",
+        "titel": "Vermietung ohne Fragezeichen",
+        "text": "Ob Dauermiete oder Ferienwohnung: Wir ordnen Ihre Ausgaben richtig zu, kümmern uns um die Umsatzsteuer und sagen Ihnen, worauf Sie im nächsten Jahr achten sollten.",
+        "leistungen": [
+          "vermietung",
+          "ferienwohnungen",
+          "einkommensteuererklaerung"
+        ],
+        "ansprechpartner": "lena-albrecht"
+      },
+      {
+        "id": "landwirtschaft",
+        "typ": "passend",
+        "titel": "Steuerberatung für Ihren Hof",
+        "text": "Buchführung, Umsatzsteuer und die Übergabe an die nächste Generation: Wir kennen die Besonderheiten landwirtschaftlicher Betriebe und kommen auf Wunsch zu Ihnen auf den Hof.",
+        "leistungen": [
+          "landwirtschaftliche-buchfuehrung",
+          "hofuebergabe",
+          "lohn-und-minijobs"
+        ],
+        "ansprechpartner": "lena-albrecht"
+      },
+      {
+        "id": "betrieb",
+        "typ": "passend",
+        "titel": "Alles aus einer Hand für Ihren Betrieb",
+        "text": "Buchhaltung, Lohn und Jahresabschluss von einer festen Ansprechpartnerin. Belege digital oder im Ordner, wie es zu Ihrem Alltag passt.",
+        "leistungen": [
+          "buchhaltung-kleinbetriebe",
+          "lohn-und-minijobs",
+          "jahresabschluss"
+        ],
+        "ansprechpartner": "lena-albrecht"
+      },
+      {
+        "id": "einfach",
+        "typ": "hinweis",
+        "titel": "Vielleicht brauchen Sie gar kein Steuerbüro",
+        "text": "Wenn Sie nur Arbeitslohn oder eine Rente beziehen und keine Besonderheiten haben, ist ein Lohnsteuerhilfeverein oft die günstigere Lösung. Sind Sie unsicher, rufen Sie gern kurz an. Wir sagen Ihnen ehrlich, was zu Ihnen passt.",
+        "leistungen": [
+          "einkommensteuererklaerung"
+        ]
+      }
+    ]
+  },
+  "buchung": {
+    "modus": "demo",
+    "beratungsarten": [
+      {
+        "id": "vor-ort",
+        "label": "Im Büro",
+        "beschreibung": "In der Wallstraße, ebenerdig, Parkplätze am Haus",
+        "icon": "building-2",
+        "dauer": 60
+      },
+      {
+        "id": "hofbesuch",
+        "label": "Bei Ihnen",
+        "beschreibung": "Zu Hause oder auf dem Hof, im Umkreis von 40 km",
+        "icon": "car",
+        "dauer": 90
+      },
+      {
+        "id": "telefon",
+        "label": "Telefon",
+        "beschreibung": "Ich rufe Sie zur vereinbarten Zeit an",
+        "icon": "phone",
+        "dauer": 30
+      }
+    ],
+    "arbeitszeiten": [
+      {
+        "tage": [
+          "mo",
+          "di",
+          "mi",
+          "do"
+        ],
+        "von": "08:30",
+        "bis": "12:30"
+      },
+      {
+        "tage": [
+          "mo",
+          "di",
+          "do"
+        ],
+        "von": "14:00",
+        "bis": "17:00"
+      },
+      {
+        "tage": [
+          "fr"
+        ],
+        "von": "08:30",
+        "bis": "12:00"
+      }
+    ],
+    "slotDauer": 30,
+    "vorlaufTage": 2,
+    "horizontTage": 35
+  },
+  "fristen": [
+    {
+      "datum": "2026-12-31",
+      "titel": "Letzter Zahlungstag für Spenden und Handwerkerrechnungen mit Wirkung für 2026",
+      "zielgruppe": "privat",
+      "verschieben": false
+    },
+    {
+      "datum": "2027-02-28",
+      "titel": "Steuererklärungen 2025 mit steuerlicher Beratung",
+      "zielgruppe": "alle",
+      "hinweis": "verlängerte Abgabefrist für beratene Steuerpflichtige"
+    },
+    {
+      "datum": "2027-07-31",
+      "titel": "Steuererklärungen 2026 ohne steuerliche Beratung",
+      "zielgruppe": "privat"
+    }
+  ],
+  "stellen": [
+    {
+      "slug": "steuerfachangestellte-teilzeit",
+      "titel": "Steuerfachangestellte (m/w/d) in Teilzeit",
+      "art": "Teilzeit",
+      "arbeitsort": "vor Ort",
+      "beginn": "ab Januar 2027",
+      "stunden": "20 bis 30 Stunden, vormittags",
+      "kurztext": "Sie betreuen Privatmandate und kleine Betriebe in einem kleinen Team mit festen, familienfreundlichen Arbeitszeiten.",
+      "aufgaben": [
+        "Einkommensteuererklärungen für Privatpersonen und Vermieter",
+        "Buchhaltung für kleine Betriebe",
+        "Persönlicher Kontakt mit Mandantinnen und Mandanten im Büro und am Telefon"
+      ],
+      "profil": [
+        "Abgeschlossene Ausbildung als Steuerfachangestellte oder vergleichbar",
+        "Erfahrung mit DATEV",
+        "Freundlicher Umgang mit Menschen, auch wenn es mal eilig ist"
+      ],
+      "wirBieten": [
+        "Feste Arbeitszeiten am Vormittag, frei planbare Ferienzeiten",
+        "Kleines Team, kurze Wege, eine Chefin, die mitarbeitet",
+        "Zuschuss zum Deutschlandticket oder Dienstrad"
+      ],
+      "gehalt": {
+        "min": 2300,
+        "max": 2900,
+        "einheit": "MONTH"
+      },
+      "veroeffentlicht": "2026-10-01",
+      "gueltigBis": "2027-01-31",
+      "ansprechpartner": "lena-albrecht"
+    },
+    {
+      "slug": "ausbildung-2027",
+      "titel": "Ausbildung zur/zum Steuerfachangestellten 2027",
+      "art": "Ausbildung",
+      "arbeitsort": "vor Ort",
+      "beginn": "1. August 2027",
+      "kurztext": "Drei Jahre Ausbildung in einem kleinen Steuerbüro, in dem Sie vom ersten Tag an echte Mandate kennenlernen.",
+      "aufgaben": [
+        "Mitarbeit an Steuererklärungen und Buchhaltung",
+        "Berufsschule in Lüneburg",
+        "Eigene kleine Mandate im dritten Jahr"
+      ],
+      "profil": [
+        "Realschulabschluss, Fachabitur oder Abitur",
+        "Freude an Zahlen und an Menschen"
+      ],
+      "wirBieten": [
+        "Persönliche Betreuung durch die Inhaberin",
+        "Prüfungsvorbereitung wird bezahlt",
+        "Gute Übernahmechancen"
+      ],
+      "gehalt": {
+        "min": 1050,
+        "max": 1250,
+        "einheit": "MONTH"
+      },
+      "veroeffentlicht": "2026-09-15",
+      "gueltigBis": "2027-05-31",
+      "ansprechpartner": "lena-albrecht"
+    }
+  ],
+  "benefits": [
+    {
+      "titel": "Feste Zeiten",
+      "text": "Vormittags arbeiten, nachmittags frei: Teilzeit, die zur Familie passt.",
+      "icon": "clock-3"
+    },
+    {
+      "titel": "Kleines Team",
+      "text": "Vier Menschen, kurze Wege, und Entscheidungen fallen am Küchentisch.",
+      "icon": "users"
+    },
+    {
+      "titel": "Weiterbildung",
+      "text": "Fortbildungen bezahlen wir und rechnen sie als Arbeitszeit an.",
+      "icon": "graduation-cap"
+    },
+    {
+      "titel": "Altstadt",
+      "text": "Büro mitten in Lüneburg, Bäcker und Wochenmarkt um die Ecke.",
+      "icon": "map-pin"
+    }
+  ],
+  "karriere": {
+    "titel": "Mitarbeiten in einem Steuerbüro, in dem man sich kennt",
+    "intro": "Wir sind ein kleines Team in der Lüneburger Altstadt. Bei uns gibt es keine Großraumbüros und keine wechselnden Zuständigkeiten, dafür feste Zeiten und Mandanten, die man mit Namen kennt.",
+    "kultur": [
+      "Jede von uns betreut ihre Mandanten selbst, vom ersten Gespräch bis zum Bescheid. Wenn es fachlich knifflig wird, setzen wir uns zusammen.",
+      "Familie geht vor: Ferienzeiten werden frühzeitig abgestimmt, und wenn ein Kind krank ist, finden wir eine Lösung."
+    ],
+    "bewerbungsSchritte": [
+      {
+        "titel": "Kurz melden",
+        "text": "Formular ausfüllen oder anrufen. Lebenslauf genügt."
+      },
+      {
+        "titel": "Kennenlernen",
+        "text": "Ein Gespräch bei uns im Büro, bei einem Kaffee."
+      },
+      {
+        "titel": "Schnuppertag",
+        "text": "Wenn Sie möchten, arbeiten Sie einen Vormittag mit."
+      }
+    ],
+    "bild": {
+      "datei": "kanzlei/karriere.jpg",
+      "alt": "Kleines Team arbeitet an einem großen Tisch in einem hellen Büro"
+    },
+    "zitat": {
+      "text": "Ich wollte nach der Elternzeit nicht in eine große Kanzlei zurück. Hier passt die Arbeit zu meinem Alltag.",
+      "name": "Hanna Peters",
+      "rolle": "Steuerfachangestellte seit 2019"
+    }
+  },
+  "digitaleKanzlei": {
+    "titel": "Digital, wo es Ihnen Wege spart",
+    "intro": "Sie entscheiden, wie wir zusammenarbeiten: Belege per App, Unterlagen im Briefkasten oder ein Termin am Küchentisch. Alles ist möglich, nichts ist Pflicht.",
+    "bausteine": [
+      {
+        "titel": "Belege per App",
+        "text": "Mit DATEV Upload mobil fotografieren Sie Belege und schicken sie verschlüsselt zu uns.",
+        "icon": "scan-line"
+      },
+      {
+        "titel": "Unterlagen vorbeibringen",
+        "text": "Unser Briefkasten in der Wallstraße ist rund um die Uhr erreichbar.",
+        "icon": "mailbox"
+      },
+      {
+        "titel": "Telefon statt Warteschleife",
+        "text": "Sie rufen an, und Ihre Ansprechpartnerin geht ran oder ruft am selben Tag zurück.",
+        "icon": "phone"
+      },
+      {
+        "titel": "Bescheide im Portal",
+        "text": "Steuerbescheide und Auswertungen finden Sie auf Wunsch im Portal statt per Post.",
+        "icon": "lock-keyhole"
+      }
+    ],
+    "sicherheit": [
+      {
+        "titel": "Verschwiegenheit",
+        "text": "Als Steuerberaterin bin ich gesetzlich zur Verschwiegenheit verpflichtet, ebenso mein Team."
+      },
+      {
+        "titel": "Rechenzentrum in Deutschland",
+        "text": "Digitale Unterlagen liegen im DATEV-Rechenzentrum in Nürnberg."
+      }
+    ],
+    "bild": {
+      "datei": "kanzlei/buero.jpg",
+      "alt": "Heller Besprechungsraum mit grünen Sesseln"
+    }
+  },
+  "unterlagen": {
+    "intro": "Bringen Sie Ihre Unterlagen vorbei, werfen Sie sie in unseren Briefkasten oder laden Sie sie im Portal hoch. Die Checklisten helfen beim Zusammenstellen.",
+    "checklisten": [
+      {
+        "id": "rente",
+        "titel": "Steuererklärung im Ruhestand",
+        "zielgruppe": "privat",
+        "punkte": [
+          {
+            "text": "Rentenbezugsmitteilungen bzw. Rentenanpassungsmitteilung"
+          },
+          {
+            "text": "Bescheinigungen über Betriebsrenten oder Pensionen"
+          },
+          {
+            "text": "Beiträge zur Kranken- und Pflegeversicherung"
+          },
+          {
+            "text": "Krankheits- und Pflegekosten mit Zahlungsnachweis"
+          },
+          {
+            "text": "Rechnungen für Handwerker und haushaltsnahe Dienstleistungen"
+          },
+          {
+            "text": "Spendenbescheinigungen"
+          },
+          {
+            "text": "Steuerbescheid des Vorjahres"
+          }
+        ]
+      },
+      {
+        "id": "vermietung",
+        "titel": "Vermietung und Ferienwohnung",
+        "zielgruppe": "privat",
+        "punkte": [
+          {
+            "text": "Mieteinnahmen je Objekt (bei Ferienwohnungen: Buchungsübersicht)"
+          },
+          {
+            "text": "Nebenkosten- und Hausgeldabrechnung"
+          },
+          {
+            "text": "Zinsbescheinigung für Darlehen"
+          },
+          {
+            "text": "Rechnungen für Reparaturen und Einrichtung"
+          },
+          {
+            "text": "Grundsteuerbescheid, Versicherungen"
+          },
+          {
+            "text": "Abrechnungen von Buchungsplattformen",
+            "hinweis": "nur bei Ferienwohnungen"
+          }
+        ]
+      },
+      {
+        "id": "landwirtschaft",
+        "titel": "Landwirtschaftlicher Betrieb",
+        "zielgruppe": "unternehmen",
+        "punkte": [
+          {
+            "text": "Kontoauszüge aller betrieblichen Konten (Juli bis Juni)"
+          },
+          {
+            "text": "Ein- und Verkaufsrechnungen, Milch- und Getreideabrechnungen"
+          },
+          {
+            "text": "Bescheide über Agrarförderung"
+          },
+          {
+            "text": "Pachtverträge und Pachtzahlungen"
+          },
+          {
+            "text": "Inventur von Vieh, Vorräten und Feldinventar zum 30. Juni"
+          },
+          {
+            "text": "Rechnungen für Maschinen und Gebäude"
+          }
+        ]
+      },
+      {
+        "id": "betrieb",
+        "titel": "Jahresabschluss für kleine Betriebe",
+        "zielgruppe": "unternehmen",
+        "punkte": [
+          {
+            "text": "Kontoauszüge Januar bis Dezember"
+          },
+          {
+            "text": "Ein- und Ausgangsrechnungen"
+          },
+          {
+            "text": "Kassenbuch bzw. Kassenberichte"
+          },
+          {
+            "text": "Fahrtenbuch oder Angaben zur Privatnutzung"
+          },
+          {
+            "text": "Rechnungen für Anschaffungen über 800 € netto"
+          }
+        ]
+      }
+    ]
+  },
+  "kennzahlen": [
+    {
+      "wert": 13,
+      "label": "Jahre als Steuerberaterin"
+    },
+    {
+      "wert": 260,
+      "label": "Mandantinnen und Mandanten aus der Region"
+    },
+    {
+      "wert": 4,
+      "label": "Menschen im Team"
+    },
+    {
+      "wert": 40,
+      "suffix": "km",
+      "label": "Umkreis für Hof- und Hausbesuche"
+    }
+  ],
+  "ablauf": {
+    "titel": "So arbeiten wir zusammen",
+    "intro": "Vom ersten Gespräch bis zum geprüften Bescheid, in vier ruhigen Schritten.",
+    "schritte": [
+      {
+        "titel": "Kennenlernen",
+        "text": "Wir sprechen über Ihre Situation, im Büro, am Telefon oder bei Ihnen zu Hause.",
+        "motiv": "gespraech"
+      },
+      {
+        "titel": "Unterlagen sammeln",
+        "text": "Mit unserer Checkliste wissen Sie genau, was wir brauchen. Vorbeibringen oder hochladen.",
+        "motiv": "portal"
+      },
+      {
+        "titel": "Wir erledigen den Rest",
+        "text": "Wir erstellen Erklärung oder Abschluss und melden uns, wenn etwas fehlt.",
+        "motiv": "buchen"
+      },
+      {
+        "titel": "Bescheid geprüft",
+        "text": "Wir prüfen den Bescheid des Finanzamts und erklären Ihnen das Ergebnis.",
+        "motiv": "auswertung"
+      }
+    ]
+  },
+  "faq": [
+    {
+      "frage": "Was kostet eine Steuererklärung bei Ihnen?",
+      "antwort": "Die Vergütung richtet sich nach der Steuerberatervergütungsverordnung und hängt vor allem von Ihren Einkünften und dem Umfang ab. Vorab nennen wir Ihnen eine Spanne, damit Sie planen können."
+    },
+    {
+      "frage": "Kommen Sie auch zu mir nach Hause?",
+      "antwort": "Ja. Für Mandanten, denen der Weg schwerfällt, und für landwirtschaftliche Betriebe kommen wir im Umkreis von etwa 40 Kilometern zu Ihnen."
+    },
+    {
+      "frage": "Muss ich alles digital machen?",
+      "antwort": "Nein. Sie können Unterlagen vorbeibringen, in den Briefkasten werfen oder per Post schicken. Die App ist ein Angebot, keine Pflicht."
+    },
+    {
+      "frage": "Ich bin Rentner. Muss ich eine Erklärung abgeben?",
+      "antwort": "Das hängt von der Höhe Ihrer Rente und weiteren Einkünften ab. Das klären wir gern in einem kurzen Telefonat und sagen Ihnen, ob eine Erklärung nötig ist."
+    },
+    {
+      "frage": "Nehmen Sie neue Mandanten an?",
+      "antwort": "Ja, solange wir jedem Mandat gerecht werden können. Im ersten Gespräch klären wir gemeinsam, ob wir die richtige Unterstützung für Ihr Anliegen sind."
+    },
+    {
+      "frage": "Sprechen Sie Plattdeutsch?",
+      "antwort": "Ja, wenn Sie möchten, gern. Steuerdeutsch übersetzen wir in beide Richtungen."
+    }
+  ],
+  "kammer": {
+    "name": "Steuerberaterkammer Niedersachsen",
+    "adresse": "Adenauerallee 20, 30175 Hannover",
+    "website": "https://www.stbk-niedersachsen.de"
+  },
+  "berufshaftpflicht": {
+    "versicherer": "Allianz Versicherungs-AG",
+    "adresse": "Königinstraße 28, 80802 München",
+    "geltungsbereich": "Bundesrepublik Deutschland und Mitgliedstaaten der Europäischen Union"
+  },
+  "texte": {
+    "seite.leistung.ansprechpartner": "Ihre Ansprechpartnerin",
+    "team.titel": "Menschen, die Sie kennen",
+    "aktion.termin": "Kennenlerntermin vereinbaren"
+  }
+}

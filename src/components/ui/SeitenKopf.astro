@@ -1,0 +1,113 @@
+---
+/**
+ * Kopf einer Unterseite: Brotkrumen, Kicker, H1 (CSS-Reveal, LCP-sicher),
+ * Einleitung, Summenstrich und optional ein Bild oder Inhalt rechts (Slot "seite").
+ */
+import type { Bild } from '../../../variants/_schema';
+import Breadcrumbs from './Breadcrumbs.astro';
+import Foto from './Foto.astro';
+
+interface Props {
+  titel: string;
+  intro?: string;
+  kicker?: string;
+  pfad?: { label: string; href: string }[];
+  bild?: Bild;
+  vtName?: string;
+  bildRatio?: string;
+}
+const { titel, intro, kicker, pfad = [], bild, vtName, bildRatio = '4 / 3' } = Astro.props;
+const hatSeite = !!bild || Astro.slots.has('seite');
+---
+
+<header class:list={['sk', hatSeite && 'sk-mit-seite']}>
+  <div class="wrap">
+    {pfad.length > 0 && <Breadcrumbs teile={pfad} />}
+    <div class="sk-raster">
+      <div class="sk-text">
+        {kicker && <p class="kicker">{kicker}</p>}
+        <h1 class="h1 sk-titel">{titel}</h1>
+        {intro && <p class="lead sk-intro">{intro}</p>}
+        <slot />
+      </div>
+      {
+        hatSeite && (
+          <div class="sk-seite">
+            {bild ? <Foto bild={bild} ratio={bildRatio} sizes="(min-width: 64rem) 42vw, 92vw" priority vtName={vtName} class="sk-bild" /> : <slot name="seite" />}
+          </div>
+        )
+      }
+    </div>
+    <span class="summenstrich sk-strich" aria-hidden="true"></span>
+  </div>
+</header>
+
+<style>
+  .sk {
+    padding-top: calc(var(--header-h) + clamp(1.25rem, 0.5rem + 2.5vw, 3rem));
+    padding-bottom: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+  }
+  .sk-raster {
+    display: grid;
+    gap: 2rem;
+    margin-top: clamp(1.5rem, 1rem + 2.5vw, 3.5rem);
+  }
+  .sk-text {
+    display: grid;
+    gap: 1.25rem;
+    align-content: end;
+    justify-items: start;
+  }
+  .sk-text .kicker {
+    margin-bottom: 0;
+  }
+  .sk-titel {
+    max-width: 20ch;
+    animation: sk-auf 1s var(--ease-out) both;
+  }
+  .sk-intro {
+    max-width: 52ch;
+    animation: sk-fade 900ms var(--ease-out) 250ms both;
+  }
+  @keyframes sk-auf {
+    from {
+      transform: translateY(0.25em);
+      opacity: 0.35;
+    }
+  }
+  @keyframes sk-fade {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+  .sk-seite :global(.sk-bild) {
+    border-radius: var(--r-xl);
+    animation: sk-bild 1.4s var(--ease-out) both;
+  }
+  @keyframes sk-bild {
+    from {
+      clip-path: inset(4% 4% 4% 4% round var(--r-xl));
+    }
+    to {
+      clip-path: inset(0 0 0 0 round var(--r-xl));
+    }
+  }
+  .sk-strich {
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+    color: var(--ink);
+    animation: sk-strich 1.2s var(--ease-in-out) 300ms both;
+  }
+  @keyframes sk-strich {
+    from {
+      transform: scaleX(0);
+    }
+  }
+  @media (min-width: 64rem) {
+    .sk-mit-seite .sk-raster {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      column-gap: calc(var(--gutter) * 2);
+      align-items: end;
+    }
+  }
+</style>

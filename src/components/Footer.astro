@@ -1,0 +1,257 @@
+---
+import { config, t } from '../lib/config';
+import { aktiv, PFADE, serviceNavigation } from '../lib/routes';
+import { telHref } from '../lib/format';
+import { zeitenZeilen } from '../lib/oeffnungszeiten';
+import Logo from './ui/Logo.astro';
+import Summenstrich from './ui/Summenstrich.astro';
+
+const b = config.betrieb;
+const kanzleiLinks = [
+  aktiv('team') && { label: t('nav.team'), href: PFADE.team },
+  aktiv('digitaleKanzlei') && { label: t('nav.digitaleKanzlei'), href: PFADE.digitaleKanzlei },
+  aktiv('spezialisierungen') && { label: t('nav.spezialisierungen'), href: PFADE.spezialisierungen },
+  aktiv('karriere') && { label: t('nav.karriere'), href: PFADE.karriere },
+  aktiv('wissen') && { label: t('nav.wissen'), href: PFADE.wissen },
+  aktiv('kontakt') && { label: t('nav.kontakt'), href: PFADE.kontakt },
+].filter(Boolean) as { label: string; href: string }[];
+const service = serviceNavigation();
+const zeiten = zeitenZeilen(b.oeffnungszeiten.regulaer);
+const jahr = new Date().getFullYear();
+const SOCIAL: Record<string, string> = { linkedin: 'LinkedIn', xing: 'XING', instagram: 'Instagram', facebook: 'Facebook', youtube: 'YouTube', mastodon: 'Mastodon' };
+---
+
+<footer class="fuss invers">
+  <div class="wrap">
+    <div class="fuss-oben">
+      <div class="fuss-marke">
+        <a href="/" class="fuss-logo"><Logo hell gross /><span class="sr-only">{t('nav.zurStartseite')}</span></a>
+        <p class="fuss-slogan">{b.slogan}</p>
+      </div>
+      <address class="fuss-nap">
+        <p class="fuss-name">{b.name}</p>
+        <p>{b.adresse.strasse}<br />{b.adresse.plz} {b.adresse.ort}</p>
+        <p class="fuss-kontakt">
+          <a href={telHref(b.telefon)} class="ziffern">{b.telefon}</a>
+          <a href={`mailto:${b.email}`}>{b.email}</a>
+        </p>
+      </address>
+      <div class="fuss-zeiten">
+        <p class="fuss-titel">{t('seite.kontakt.oeffnungszeiten')}</p>
+        <dl>
+          {
+            zeiten.map((z) => (
+              <div>
+                <dt>{z.tage}</dt>
+                <dd class="datum">{z.zeiten}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        {b.oeffnungszeiten.hinweis && <p class="fuss-hinweis">{b.oeffnungszeiten.hinweis}</p>}
+      </div>
+    </div>
+
+    <Summenstrich class="fuss-strich" />
+
+    <div class="fuss-nav">
+      {
+        aktiv('leistungen') && (
+          <nav aria-label={t('nav.leistungen')}>
+            <p class="fuss-titel">{t('nav.leistungen')}</p>
+            <ul role="list">
+              {config.zielgruppen.map((z) => (
+                <li>
+                  <a href={`/leistungen/${z.slug}/`}>{z.titel}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+      <nav aria-label={t('nav.kanzlei')}>
+        <p class="fuss-titel">{t('nav.kanzlei')}</p>
+        <ul role="list">
+          {
+            kanzleiLinks.map((l) => (
+              <li>
+                <a href={l.href}>{l.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      {
+        service.length > 0 && (
+          <nav aria-label={t('nav.service')}>
+            <p class="fuss-titel">{t('nav.service')}</p>
+            <ul role="list">
+              {service.map((s) => (
+                <li>
+                  <a href={s.href}>{s.label}</a>
+                </li>
+              ))}
+              {config.portalLink && (
+                <li>
+                  <a href={config.portalLink.url} target="_blank" rel="noopener">
+                    {config.portalLink.label}
+                  </a>
+                </li>
+              )}
+            </ul>
+          </nav>
+        )
+      }
+      {
+        b.socialLinks.length > 0 && (
+          <nav aria-label={t('footer.sozial')}>
+            <p class="fuss-titel">{t('footer.profile')}</p>
+            <ul role="list">
+              {b.socialLinks.map((s) => (
+                <li>
+                  <a href={s.url} target="_blank" rel="noopener me">
+                    {SOCIAL[s.netzwerk]}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+    </div>
+
+    <div class="fuss-unten">
+      <p>© {jahr} {b.name}</p>
+      <p>{t('footer.kammer', { kammer: config.kammer.name })}</p>
+      {!config.integrationen.analytics.aktiv && <p>{t('footer.cookies')}</p>}
+      <nav aria-label={t('footer.rechtliches')} class="fuss-recht">
+        <a href={PFADE.impressum}>{t('footer.impressum')}</a>
+        <a href={PFADE.datenschutz}>{t('footer.datenschutz')}</a>
+        {config.rechtliches.agbUrl && <a href={config.rechtliches.agbUrl}>{t('footer.agb')}</a>}
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .fuss {
+    border-top: 1px solid var(--inverse-line);
+    padding-block: clamp(3.5rem, 2.5rem + 5vw, 6.5rem) 2rem;
+    font-size: 0.95rem;
+  }
+  .fuss a {
+    color: var(--on-inverse);
+    text-decoration: none;
+  }
+  .fuss a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+  }
+  .fuss-oben {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .fuss-logo {
+    display: inline-flex;
+  }
+  .fuss-slogan {
+    margin-top: 1.25rem;
+    max-width: 30ch;
+    font-size: var(--step-1);
+    line-height: 1.4;
+    color: var(--on-inverse-muted);
+  }
+  .fuss-nap {
+    font-style: normal;
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+  }
+  .fuss-name {
+    font-weight: 650;
+  }
+  .fuss-kontakt {
+    display: grid;
+    gap: 0.1rem;
+  }
+  .fuss-kontakt a {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    font-weight: 600;
+    font-size: var(--step-1);
+    width: fit-content;
+  }
+  .fuss-titel {
+    margin-bottom: 0.9rem;
+    font-size: var(--step--1);
+    font-weight: 650;
+    color: var(--on-inverse-muted);
+  }
+  dl {
+    margin: 0;
+    display: grid;
+    gap: 0.35rem;
+  }
+  dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--inverse-line);
+  }
+  dd {
+    margin: 0;
+  }
+  .fuss-hinweis {
+    margin-top: 0.75rem;
+    font-size: var(--step--1);
+    color: var(--on-inverse-muted);
+  }
+  :global(.fuss-strich) {
+    margin-block: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+    color: var(--brand-on-inverse);
+  }
+  .fuss-nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+    gap: 2rem;
+  }
+  .fuss-nav ul {
+    margin: 0;
+    padding: 0;
+    display: grid;
+  }
+  .fuss-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+  }
+  .fuss-unten {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+    margin-top: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--inverse-line);
+    font-size: var(--step--1);
+    color: var(--on-inverse-muted);
+  }
+  .fuss-recht {
+    display: flex;
+    gap: 1.5rem;
+    margin-left: auto;
+  }
+  .fuss-recht a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-weight: 600;
+  }
+  @media (min-width: 48rem) {
+    .fuss-oben {
+      grid-template-columns: 1.3fr 1fr 1fr;
+      gap: 3rem;
+    }
+  }
+</style>

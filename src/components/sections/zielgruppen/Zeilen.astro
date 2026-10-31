@@ -1,0 +1,105 @@
+---
+/** Zielgruppen als große typografische Zeilen; beim Hover füllt sich die Zeile. */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t, titelOder } from '../../../lib/config';
+import { aktiv } from '../../../lib/routes';
+import SektionKopf from '../../ui/SektionKopf.astro';
+import Icon from '../../ui/Icon.astro';
+
+interface Props {
+  s: AktiveSektion;
+}
+const { s } = Astro.props;
+const ziel = (slug: string) => (aktiv('leistungen') ? `/leistungen/${slug}/` : '/kontakt/');
+---
+
+<div class="wrap">
+  <SektionKopf kicker={s.kicker} titel={titelOder(s.titel, 'zielgruppen.titel')} intro={s.intro ?? t('zielgruppen.intro')} />
+  <ul class="zz-liste" role="list" data-anim-kinder>
+    {
+      config.zielgruppen.map((z) => (
+        <li>
+          <a href={ziel(z.slug)} class="zz-zeile">
+            <span class="zz-ich">{z.ichBin}</span>
+            <span class="zz-text">{z.kurztext}</span>
+            <span class="zz-pfeil" aria-hidden="true">
+              <Icon name="arrow-right" size={24} />
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .zz-liste {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line-strong);
+  }
+  .zz-zeile {
+    position: relative;
+    display: grid;
+    gap: 0.5rem 2rem;
+    padding: clamp(1.25rem, 1rem + 1.2vw, 2.25rem) 0;
+    border-bottom: 1px solid var(--line-strong);
+    text-decoration: none;
+    isolation: isolate;
+  }
+  .zz-zeile::before {
+    content: '';
+    position: absolute;
+    inset: 0 calc(var(--pad-x) * -0.5);
+    z-index: -1;
+    background: var(--brand-soft);
+    border-radius: var(--r-md);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 500ms var(--ease-out);
+  }
+  .zz-zeile:hover::before,
+  .zz-zeile:focus-visible::before {
+    transform: scaleY(1);
+  }
+  .zz-ich {
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-3);
+    letter-spacing: var(--hl-tracking);
+    line-height: 1.05;
+    transition: transform 500ms var(--ease-out);
+  }
+  .zz-zeile:hover .zz-ich {
+    transform: translateX(0.4rem);
+  }
+  .zz-text {
+    color: var(--ink-muted);
+    max-width: 42ch;
+  }
+  .zz-pfeil {
+    display: none;
+  }
+  @media (min-width: 48rem) {
+    .zz-zeile {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto;
+      align-items: center;
+    }
+    .zz-pfeil {
+      display: grid;
+      place-items: center;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      border: 1px solid var(--line-strong);
+      transition:
+        transform 400ms var(--ease-out),
+        background-color 300ms;
+    }
+    .zz-zeile:hover .zz-pfeil {
+      transform: rotate(-45deg);
+      background: var(--bg);
+    }
+  }
+</style>

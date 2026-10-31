@@ -1,0 +1,195 @@
+---
+/**
+ * Hero (b): Split mit Porträt. Das Bild ist meist das LCP-Element: Es startet
+ * sichtbar mit leicht eingezogener Maske und skaliert ruhig auf (CSS, ohne JS).
+ */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, design, t } from '../../../lib/config';
+import { terminPfad, pfad } from '../../../lib/routes';
+import Button from '../../ui/Button.astro';
+import Foto from '../../ui/Foto.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'hero' }>;
+}
+const { s } = Astro.props;
+const person = config.berufstraeger[0];
+const bild = s.bild ?? person.foto;
+const titel = s.titel ?? config.betrieb.slogan;
+const kicker = s.kicker ?? t('hero.kickerSplit');
+const woerter = titel.split(/\s+/);
+---
+
+<section class="hero-sp" aria-labelledby="hero-titel">
+  <div class="wrap hero-sp-raster">
+    <div class="hero-sp-text">
+      <p class="kicker">{kicker}</p>
+      <h1 id="hero-titel" class="display hero-sp-titel">
+        {
+          woerter.map((w, i) => (
+            <>
+              <span class="w" style={`--i:${i}`}>{w}</span>{' '}
+            </>
+          ))
+        }
+      </h1>
+      {s.unterzeile && <p class="lead">{s.unterzeile}</p>}
+      <div class="hero-sp-ctas">
+        <Button href={s.ctaPrimaer?.href ?? terminPfad()} magnet>{s.ctaPrimaer?.label ?? t('aktion.termin')}</Button>
+        <Button href={s.ctaSekundaer?.href ?? pfad('leistungen')} variante="sekundaer">
+          {s.ctaSekundaer?.label ?? t('hero.ctaSekundaer')}
+        </Button>
+      </div>
+      {
+        s.fakten && (
+          <dl class="hero-sp-fakten">
+            {s.fakten.map((f) => (
+              <div>
+                <dt>{f.label}</dt>
+                <dd class="ziffern">{f.wert}</dd>
+              </div>
+            ))}
+          </dl>
+        )
+      }
+    </div>
+    <div class="hero-sp-bild">
+      <Foto
+        bild={bild}
+        ratio="4 / 5"
+        sizes="(min-width: 64rem) 44vw, 92vw"
+        priority
+        class:list={['hero-sp-rahmen', `form-${design.presetKey}`]}
+      />
+      <p class="hero-sp-person">
+        <strong>{person.name}</strong>
+        <span>{person.titel.join(', ')}</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-sp {
+    padding-top: calc(var(--header-h) + clamp(1.5rem, 0.5rem + 4vw, 4.5rem));
+    padding-bottom: clamp(3.5rem, 2rem + 5vw, 7rem);
+    overflow: clip;
+  }
+  .hero-sp-raster {
+    display: grid;
+    gap: clamp(2.5rem, 2rem + 3vw, 4rem);
+    align-items: center;
+  }
+  .hero-sp-text {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+  }
+  .hero-sp-text .kicker {
+    margin-bottom: 0;
+  }
+  .hero-sp-titel {
+    font-size: calc(var(--step-5) * 0.86);
+    max-width: 14ch;
+  }
+  .w {
+    display: inline-block;
+    animation: wort-auf 1.1s var(--ease-out) both;
+    animation-delay: calc(80ms + var(--i) * 55ms);
+  }
+  @keyframes wort-auf {
+    from {
+      transform: translateY(0.3em);
+      opacity: 0.32;
+    }
+  }
+  .hero-sp-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .hero-sp-fakten {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2.5rem;
+    margin: 0.75rem 0 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+  .hero-sp-fakten div {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .hero-sp-fakten dd {
+    margin: 0;
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-2);
+    line-height: 1.05;
+  }
+  .hero-sp-fakten dt {
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+  }
+  .hero-sp-bild {
+    position: relative;
+  }
+  .hero-sp-bild :global(.hero-sp-rahmen) {
+    animation: bild-auf 1.5s var(--ease-out) both;
+  }
+  .hero-sp-bild :global(.hero-sp-rahmen img) {
+    animation: bild-skala 2.2s var(--ease-out) both;
+  }
+  /* Warm: Bogenfenster */
+  .hero-sp-bild :global(.form-warm) {
+    border-radius: 999px 999px var(--r-xl) var(--r-xl);
+  }
+  @keyframes bild-auf {
+    from {
+      clip-path: inset(5% 5% 5% 5% round var(--r-xl));
+    }
+    to {
+      clip-path: inset(0 0 0 0 round 0);
+    }
+  }
+  @keyframes bild-skala {
+    from {
+      transform: scale(1.08);
+    }
+  }
+  .hero-sp-person {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    display: grid;
+    gap: 0.1rem;
+    max-width: calc(100% - 2rem);
+    padding: 0.85rem 1.1rem;
+    border-radius: var(--r-lg);
+    background: color-mix(in oklab, var(--bg) 90%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-size: 0.85rem;
+    line-height: 1.35;
+    animation: person-ein 900ms var(--ease-out) 900ms both;
+  }
+  .hero-sp-person span {
+    color: var(--ink-muted);
+  }
+  @keyframes person-ein {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+  @media (min-width: 64rem) {
+    .hero-sp-raster {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+      column-gap: calc(var(--gutter) * 3);
+    }
+    .hero-sp-person {
+      left: -2.5rem;
+      bottom: 2.5rem;
+    }
+  }
+</style>

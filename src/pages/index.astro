@@ -1,0 +1,30 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Sektion from '../components/sections/Sektion.astro';
+import { config, sektionen } from '../lib/config';
+import { ladeBild, breitenFuer, BILD_QUALITAET } from '../lib/bilder';
+import { seitenTitel, seitenBeschreibung, faqSchema } from '../lib/seo';
+
+const hero = sektionen.find((s) => s.typ === 'hero') as Extract<(typeof sektionen)[number], { typ: 'hero' }> | undefined;
+
+// LCP-Bild (Hero „split“) vorladen: identische Parameter wie in <Foto>
+let preload: { srcset: string; sizes: string } | null = null;
+if (hero?.layout === 'split') {
+  const img = await ladeBild((hero.bild ?? config.berufstraeger[0].foto).datei);
+  if (img) {
+    const sizes = '(min-width: 64rem) 44vw, 92vw';
+    const r = await getImage({ src: img, format: 'avif', widths: breitenFuer(img), sizes, quality: BILD_QUALITAET });
+    preload = { srcset: r.srcSet.attribute, sizes };
+  }
+}
+
+const faq = sektionen.find((s) => s.typ === 'faq') as Extract<(typeof sektionen)[number], { typ: 'faq' }> | undefined;
+const fragen = faq ? (faq.fragen ?? config.faq) : [];
+const beschreibung = seitenBeschreibung('start', `${config.betrieb.name}: ${config.betrieb.slogan}`);
+---
+
+<Base titel={seitenTitel('start', config.betrieb.kurzname)} beschreibung={beschreibung} ueberHero={!!hero} preload={preload} jsonLd={fragen.length ? [faqSchema(fragen)] : []}>
+  {!hero && <h1 class="sr-only">{`${config.betrieb.name}: ${config.betrieb.slogan}`}</h1>}
+  {sektionen.map((s) => <Sektion s={s} />)}
+</Base>

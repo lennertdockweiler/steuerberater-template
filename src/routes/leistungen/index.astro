@@ -1,0 +1,80 @@
+---
+import Base from '../../layouts/Base.astro';
+import SeitenKopf from '../../components/ui/SeitenKopf.astro';
+import LeistungsKarten from '../../components/ui/LeistungsKarten.astro';
+import AbschlussCta from '../../components/ui/AbschlussCta.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Button from '../../components/ui/Button.astro';
+import { config, t } from '../../lib/config';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema } from '../../lib/seo';
+
+const titel = t('seite.leistungen.titel');
+const pfad = [{ label: titel, href: '/leistungen/' }];
+---
+
+<Base
+  titel={seitenTitel('leistungen', t('seite.leistungen.seo'))}
+  beschreibung={seitenBeschreibung('leistungen', `${config.betrieb.kurzname}: ${config.leistungen.map((l) => l.titel).slice(0, 6).join(', ')} und mehr. Steuerberatung in ${config.betrieb.adresse.ort}.`)}
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site)]}
+>
+  <SeitenKopf titel={titel} intro={t('seite.leistungen.intro')} pfad={pfad} />
+  {
+    config.zielgruppen.map((z, i) => {
+      const liste = config.leistungen.filter((l) => l.zielgruppe.includes(z.slug));
+      if (!liste.length) return null;
+      return (
+        <section class:list={['sektion', i % 2 === 1 && 'flaeche']} aria-labelledby={`zg-${z.slug}`}>
+          <div class="wrap lz">
+            <div class="lz-kopf">
+              <span class="lz-icon">
+                <Icon name={z.icon} size={28} strich={1.5} />
+              </span>
+              <h2 class="h2" id={`zg-${z.slug}`} data-anim="zeilen">
+                {z.titel}
+              </h2>
+              <p class="gedaempft">{z.kurztext}</p>
+              <Button href={`/leistungen/${z.slug}/`} variante="sekundaer" klein>
+                {t('leistungen.mehrFuer', { zielgruppe: z.titel })}
+              </Button>
+            </div>
+            <LeistungsKarten liste={liste} />
+          </div>
+        </section>
+      );
+    })
+  }
+  <AbschlussCta />
+</Base>
+
+<style>
+  .lz {
+    display: grid;
+    gap: 2rem;
+  }
+  .lz-kopf {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    justify-items: start;
+  }
+  .lz-icon {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: var(--r-lg);
+    background: var(--ink);
+    color: var(--bg);
+  }
+  @media (min-width: 64rem) {
+    .lz {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      column-gap: calc(var(--gutter) * 2);
+    }
+    .lz-kopf {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+      align-self: start;
+    }
+  }
+</style>

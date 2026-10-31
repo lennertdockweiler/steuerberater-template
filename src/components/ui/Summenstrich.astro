@@ -1,0 +1,11 @@
+---
+/** Doppelte Linie wie unter Summen in der Buchhaltung; zieht sich beim Scrollen auf. */
+interface Props {
+  fein?: boolean;
+  animiert?: boolean;
+  class?: string;
+}
+const { fein = false, animiert = true, class: klasse } = Astro.props;
+---
+
+<span class:list={['summenstrich', fein && 'summenstrich-fein', klasse]} data-anim={animiert ? 'rule' : undefined} aria-hidden="true"></span>

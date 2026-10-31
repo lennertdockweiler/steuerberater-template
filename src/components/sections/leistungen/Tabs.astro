@@ -1,0 +1,184 @@
+---
+/**
+ * Leistungen als Tabs nach Zielgruppe (ARIA-Tabs, Pfeiltasten, Roving Tabindex).
+ * Ohne JS sind alle Panels untereinander sichtbar.
+ */
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t, titelOder, leistungPfad } from '../../../lib/config';
+import { aktiv } from '../../../lib/routes';
+import SektionKopf from '../../ui/SektionKopf.astro';
+import Icon from '../../ui/Icon.astro';
+import Button from '../../ui/Button.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'leistungen' }>;
+}
+const { s } = Astro.props;
+const auswahl = s.auswahl ? config.leistungen.filter((l) => s.auswahl!.includes(l.slug)) : config.leistungen;
+const gruppen = config.zielgruppen
+  .map((z) => ({ z, liste: auswahl.filter((l) => l.zielgruppe.includes(z.slug)) }))
+  .filter((g) => g.liste.length > 0);
+const uid = `lt-${s.id ?? 'leistungen'}`;
+---
+
+<div class="wrap" data-tabs>
+  <SektionKopf kicker={s.kicker} titel={titelOder(s.titel, 'leistungen.titel')} intro={s.intro ?? t('leistungen.intro')} />
+
+  <div class="lt-tabs" role="tablist" aria-label={t('nav.leistungen')}>
+    {
+      gruppen.map(({ z }, i) => (
+        <button
+          type="button"
+          role="tab"
+          class="chip lt-tab"
+          id={`${uid}-tab-${z.slug}`}
+          aria-controls={`${uid}-panel-${z.slug}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+        >
+          <Icon name={z.icon} size={18} />
+          {z.titel}
+        </button>
+      ))
+    }
+  </div>
+
+  {
+    gruppen.map(({ z, liste }) => (
+      <div class="lt-panel" role="tabpanel" id={`${uid}-panel-${z.slug}`} aria-labelledby={`${uid}-tab-${z.slug}`} tabindex="0">
+        <div class="lt-intro">
+          <h3 class="h3">{t('leistungen.fuer', { zielgruppe: z.titel })}</h3>
+          <p class="gedaempft">{z.kurztext}</p>
+          {aktiv('leistungen') && (
+            <Button href={`/leistungen/${z.slug}/`} variante="sekundaer" klein>
+              {t('leistungen.alleFuer', { zielgruppe: z.titel })}
+            </Button>
+          )}
+        </div>
+        <ul class="lt-liste" role="list">
+          {liste.map((l) => (
+            <li>
+              <a href={aktiv('leistungen') ? leistungPfad(l) : '/kontakt/'} class="lt-item">
+                <span class="lt-icon">
+                  <Icon name={l.icon} size={22} />
+                </span>
+                <span class="lt-titel">{l.titel}</span>
+                <span class="lt-text">{l.kurztext}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .lt-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 3px;
+    margin-inline: -3px;
+  }
+  .lt-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .lt-tab {
+    flex: none;
+  }
+  :global(.no-js) .lt-tabs {
+    display: none;
+  }
+  .lt-panel {
+    display: grid;
+    gap: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--ink);
+    animation: panel-ein 500ms var(--ease-out);
+  }
+  .lt-panel + .lt-panel {
+    margin-top: 3rem;
+  }
+  :global(.js) .lt-panel + .lt-panel {
+    margin-top: 0;
+  }
+  @keyframes panel-ein {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+  .lt-panel:focus-visible {
+    outline-offset: 6px;
+  }
+  .lt-intro {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    justify-items: start;
+  }
+  .lt-liste {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .lt-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: 'icon titel' 'icon text';
+    gap: 0.25rem 1rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .lt-item:hover {
+    transform: translateX(6px);
+  }
+  .lt-icon {
+    grid-area: icon;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--r-md);
+    background: var(--brand-soft);
+    color: var(--brand-ink);
+    transition:
+      background-color var(--dur-2),
+      color var(--dur-2);
+  }
+  .lt-item:hover .lt-icon {
+    background: var(--brand);
+    color: var(--on-brand);
+  }
+  .lt-titel {
+    grid-area: titel;
+    font-weight: 680;
+    font-size: var(--step-1);
+    line-height: 1.25;
+  }
+  .lt-text {
+    grid-area: text;
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+  }
+  @media (min-width: 64rem) {
+    .lt-panel {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      column-gap: calc(var(--gutter) * 2);
+    }
+    .lt-liste {
+      grid-template-columns: 1fr 1fr;
+      column-gap: calc(var(--gutter) * 1.5);
+    }
+    .lt-item {
+      border-bottom: 0;
+      border-top: 1px solid var(--line);
+    }
+  }
+</style>

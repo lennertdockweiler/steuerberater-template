@@ -1,0 +1,95 @@
+---
+/**
+ * Optimiertes Foto (AVIF + WebP, srcset) in einem Rahmen mit festem Seitenverhältnis.
+ * Fehlt die Datei, erscheint ein markenfarbiger Platzhalter mit Motivbeschriftung.
+ * Bildausschnitt per bild.fokus / bild.fokusMobil (Art Direction).
+ */
+import { Picture } from 'astro:assets';
+import { ladeBild, breitenFuer, zuschnittHoehe, BILD_QUALITAET } from '../../lib/bilder';
+import type { Bild } from '../../../variants/_schema';
+
+interface Props {
+  bild?: Bild;
+  ratio?: string;
+  sizes?: string;
+  priority?: boolean;
+  anim?: string;
+  vtName?: string;
+  class?: string;
+  innerClass?: string;
+  parallax?: boolean;
+  /** Beim Build auf das Seitenverhältnis zuschneiden (spart Bytes; nur für Motive ohne kritischen Bildrand) */
+  zuschneiden?: boolean;
+}
+const { bild, ratio = '4 / 3', sizes = '(min-width: 64rem) 50vw, 100vw', priority = false, anim, vtName, class: klasse, innerClass, parallax = false, zuschneiden = false } = Astro.props;
+const img = await ladeBild(bild?.datei);
+const breiten = img ? breitenFuer(img) : [];
+const alt = bild?.dekorativ ? '' : (bild?.alt ?? '');
+const stil = [
+  `aspect-ratio:${ratio}`,
+  bild?.fokus && `--fokus:${bild.fokus}`,
+  bild?.fokusMobil && `--fokus-m:${bild.fokusMobil}`,
+  vtName && `view-transition-name:${vtName}`,
+]
+  .filter(Boolean)
+  .join(';');
+---
+
+<div class:list={['rahmen', klasse]} style={stil} data-anim={anim}>
+  {
+    img ? (
+      <Picture
+        src={img}
+        alt={alt}
+        formats={img.format === 'svg' ? ['svg'] : ['avif', 'webp']}
+        fallbackFormat={img.format === 'png' ? 'png' : img.format === 'svg' ? 'svg' : 'jpg'}
+        widths={breiten}
+        sizes={sizes}
+        priority={priority}
+        quality={BILD_QUALITAET}
+        {...(zuschneiden ? { width: img.width, height: zuschnittHoehe(img, ratio) } : {})}
+        class:list={[innerClass, parallax && 'parallax-bild']}
+        data-parallax={parallax ? '' : undefined}
+      />
+    ) : (
+      <div class="platzhalter" role={alt ? 'img' : undefined} aria-label={alt || undefined}>
+        <span class="platzhalter-motiv" aria-hidden="true">{alt || 'Motiv'}</span>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .platzhalter {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    padding: 1rem 1.1rem;
+    background:
+      radial-gradient(120% 90% at 85% 10%, color-mix(in oklab, var(--accent) 45%, transparent), transparent 60%),
+      linear-gradient(150deg, var(--p-300), var(--p-700));
+    color: var(--p-50);
+  }
+  .platzhalter::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.22;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .platzhalter-motiv {
+    position: relative;
+    z-index: 1;
+    max-width: 28ch;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.35;
+    opacity: 0.9;
+  }
+  .parallax-bild :global(img),
+  :global(img.parallax-bild) {
+    scale: 1.12;
+  }
+</style>

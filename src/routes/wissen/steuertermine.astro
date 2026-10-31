@@ -1,0 +1,73 @@
+---
+/** Alle Steuertermine der nächsten 12 Monate, im Browser tagesaktuell berechnet. */
+import Base from '../../layouts/Base.astro';
+import SeitenKopf from '../../components/ui/SeitenKopf.astro';
+import FristenWidget from '../../components/ui/FristenWidget.astro';
+import AbschlussCta from '../../components/ui/AbschlussCta.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { config, t } from '../../lib/config';
+import { LAENDER } from '../../lib/fristen';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema } from '../../lib/seo';
+
+const pfad = [
+  { label: t('seite.wissen.titel'), href: '/wissen/' },
+  { label: t('seite.fristen.titel'), href: '/wissen/steuertermine/' },
+];
+const land = LAENDER[config.betrieb.adresse.bundesland];
+---
+
+<Base
+  titel={seitenTitel('steuertermine', t('seite.fristen.seo', { jahr: new Date().getFullYear() }))}
+  beschreibung={seitenBeschreibung('steuertermine', t('seite.fristen.intro', { bundesland: land }))}
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site)]}
+>
+  <SeitenKopf titel={t('seite.fristen.titel')} intro={t('seite.fristen.intro', { bundesland: land })} pfad={pfad} />
+  <section class="sektion">
+    <div class="wrap fs">
+      <FristenWidget anzahl={60} layout="tabelle" monate={12} />
+      <aside class="fs-info">
+        <Icon name="info" size={22} />
+        <div>
+          <p>{t('seite.fristen.schonfrist')}</p>
+          <p>{t('seite.fristen.hinweis')}</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+  <AbschlussCta />
+</Base>
+
+<style>
+  .fs {
+    display: grid;
+    gap: 3rem;
+  }
+  .fs-info {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-self: start;
+    padding: 1.5rem;
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+  }
+  .fs-info div {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .fs-info :global(svg) {
+    color: var(--brand-ink);
+  }
+  @media (min-width: 64rem) {
+    .fs {
+      grid-template-columns: 8fr 4fr;
+      column-gap: calc(var(--gutter) * 3);
+    }
+    .fs-info {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+</style>

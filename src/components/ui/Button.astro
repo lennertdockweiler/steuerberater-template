@@ -1,0 +1,35 @@
+---
+import Icon from './Icon.astro';
+import { t } from '../../lib/config';
+
+interface Props {
+  href?: string;
+  variante?: 'primaer' | 'sekundaer' | 'hell';
+  klein?: boolean;
+  icon?: string | false;
+  iconLinks?: string;
+  type?: 'button' | 'submit';
+  magnet?: boolean;
+  class?: string;
+  [key: string]: unknown;
+}
+const { href, variante = 'primaer', klein = false, icon = 'arrow-right', iconLinks, type = 'button', magnet = false, class: klasse, ...rest } = Astro.props;
+const extern = href?.startsWith('http');
+const klassen = ['btn', variante === 'sekundaer' && 'btn-sekundaer', variante === 'hell' && 'btn-hell', klein && 'btn-klein', klasse];
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  class:list={klassen}
+  href={href}
+  type={href ? undefined : type}
+  target={extern ? '_blank' : undefined}
+  rel={extern ? 'noopener' : undefined}
+  data-magnet={magnet ? '' : undefined}
+  {...rest}
+>
+  {iconLinks && <span class="btn-icon"><Icon name={iconLinks} size="100%" strich={2} /></span>}
+  <span class="btn-label"><slot /></span>
+  {icon && <span class="btn-icon"><Icon name={extern ? 'arrow-up-right' : icon} size="100%" strich={2} /></span>}
+  {extern && <span class="sr-only">{t('aktion.neuerTab')}</span>}
+</Tag>

@@ -1,0 +1,73 @@
+---
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t, titelOder } from '../../../lib/config';
+import { aktiv } from '../../../lib/routes';
+import SektionKopf from '../../ui/SektionKopf.astro';
+import TeamKarte from '../../ui/TeamKarte.astro';
+import MitarbeiterKarte from '../../ui/MitarbeiterKarte.astro';
+import Button from '../../ui/Button.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'team' }>;
+  vt?: boolean;
+}
+const { s, vt = true } = Astro.props;
+---
+
+<div class="wrap">
+  <SektionKopf kicker={s.kicker} titel={titelOder(s.titel, 'team.titel')} intro={s.intro ?? t('team.intro')}>
+    {aktiv('team') && <Button href="/team/" variante="sekundaer">{t('team.alle')}</Button>}
+  </SektionKopf>
+  <div class="tm-bt" data-anim-kinder>
+    {config.berufstraeger.map((p) => <TeamKarte p={p} vt={vt} />)}
+  </div>
+  {
+    s.mitTeam && config.team.length > 0 && (
+      <div class="tm-team" data-anim-kinder>
+        {config.team.slice(0, 5).map((m) => (
+          <MitarbeiterKarte m={m} />
+        ))}
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .tm-bt {
+    display: grid;
+    gap: 2.5rem var(--gutter);
+  }
+  .tm-team {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem var(--gutter);
+    margin-top: clamp(3rem, 2rem + 3vw, 5rem);
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+  @media (min-width: 48rem) {
+    .tm-bt {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .tm-bt > :global(:nth-child(even)) {
+      margin-top: clamp(2rem, 5vw, 6rem);
+    }
+    .tm-team {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 64rem) {
+    .tm-bt {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+    .tm-bt > :global(*) {
+      grid-column: span 5;
+    }
+    .tm-bt > :global(:nth-child(even)) {
+      grid-column: 7 / span 5;
+    }
+    .tm-team {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+</style>

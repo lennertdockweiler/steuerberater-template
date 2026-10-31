@@ -1,0 +1,546 @@
+---
+/**
+ * Illustration „Smartphone“ für den Ablauf: reine HTML/CSS-Formen (kein Lottie,
+ * keine Bilddateien, kein Text). Jeder Zustand gehört zu einem Motiv aus der Config.
+ * Sichtbar ist der Zustand, dessen Index im data-aktiv des Vorfahren [data-pin-story] steht.
+ */
+interface Props {
+  motive: string[];
+}
+const { motive } = Astro.props;
+---
+
+<div class="tel" aria-hidden="true">
+  <div class="tel-rand">
+    <div class="tel-notch"></div>
+    {
+      motive.map((m, i) => (
+        <div class={`tel-screen sc-${m}`} data-i={i}>
+          {m === 'foto' && (
+            <div class="sc-kamera">
+              <div class="beleg">
+                <i class="b-kopf" />
+                <i />
+                <i />
+                <i class="kurz" />
+                <i />
+                <i class="summe" />
+              </div>
+              <span class="ecke e1" />
+              <span class="ecke e2" />
+              <span class="ecke e3" />
+              <span class="ecke e4" />
+              <span class="scanlinie" />
+              <span class="ausloeser" />
+            </div>
+          )}
+          {m === 'upload' && (
+            <div class="sc-upload">
+              <div class="wolke">
+                <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 14.9A7 7 0 1 1 15.7 8h1.8a4.5 4.5 0 0 1 2.5 8.2" />
+                  <path d="M12 12v9" />
+                  <path d="m16 16-4-4-4 4" />
+                </svg>
+              </div>
+              <div class="mini-beleg">
+                <i />
+                <i />
+                <i />
+              </div>
+              <div class="fortschritt">
+                <span />
+              </div>
+              <div class="schloss">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="11" x="3" y="11" rx="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </div>
+            </div>
+          )}
+          {m === 'buchen' && (
+            <div class="sc-buchen">
+              {[0, 1, 2, 3, 4].map((r) => (
+                <div class="zeile" style={`--r:${r}`}>
+                  <span class="punkt" />
+                  <span class="linien">
+                    <i />
+                    <i class="kurz" />
+                  </span>
+                  <span class="betrag" />
+                  <span class="haken">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+          {m === 'auswertung' && (
+            <div class="sc-auswertung">
+              <div class="kpi">
+                <i class="gross" />
+                <i class="klein" />
+              </div>
+              <div class="mini-balken">
+                {[38, 52, 46, 61, 58, 74, 88].map((h, j) => (
+                  <span style={`--h:${h}%;--j:${j}`} />
+                ))}
+              </div>
+              <div class="doppel" />
+              <div class="legende">
+                <i />
+                <i />
+              </div>
+            </div>
+          )}
+          {m === 'gespraech' && (
+            <div class="sc-gespraech">
+              <div class="video">
+                <span class="kopf" />
+                <span class="koerper" />
+              </div>
+              <div class="blase links">
+                <i />
+                <i class="kurz" />
+              </div>
+              <div class="blase rechts">
+                <i />
+              </div>
+            </div>
+          )}
+          {m === 'portal' && (
+            <div class="sc-portal">
+              {[0, 1, 2, 3].map((r) => (
+                <div class="dok" style={`--r:${r}`}>
+                  <i />
+                  <i class="kurz" />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .tel {
+    width: min(100%, 17.5rem);
+    margin-inline: auto;
+    aspect-ratio: 9 / 18.5;
+  }
+  .tel-rand {
+    position: relative;
+    height: 100%;
+    padding: 0.65rem;
+    border-radius: 2.4rem;
+    background: var(--ink);
+    box-shadow:
+      0 40px 80px -40px color-mix(in oklab, var(--ink) 70%, transparent),
+      inset 0 0 0 1.5px color-mix(in oklab, var(--bg) 25%, transparent);
+  }
+  .tel-notch {
+    position: absolute;
+    top: 1.1rem;
+    left: 50%;
+    z-index: 3;
+    width: 28%;
+    height: 1.1rem;
+    translate: -50% 0;
+    border-radius: 999px;
+    background: var(--ink);
+  }
+  .tel-screen {
+    position: absolute;
+    inset: 0.65rem;
+    border-radius: 1.85rem;
+    overflow: hidden;
+    background: var(--bg);
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+    transition:
+      opacity 500ms var(--ease-out),
+      transform 600ms var(--ease-out);
+  }
+  :global([data-pin-story]:not([data-aktiv])) .tel-screen[data-i='0'],
+  :global([data-pin-story][data-aktiv='0']) .tel-screen[data-i='0'],
+  :global([data-pin-story][data-aktiv='1']) .tel-screen[data-i='1'],
+  :global([data-pin-story][data-aktiv='2']) .tel-screen[data-i='2'],
+  :global([data-pin-story][data-aktiv='3']) .tel-screen[data-i='3'] {
+    opacity: 1;
+    transform: none;
+  }
+  i {
+    display: block;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--line-strong);
+  }
+  i.kurz {
+    width: 60%;
+  }
+
+  /* ── Kamera ── */
+  .sc-kamera {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(170deg, var(--n-800), var(--n-950));
+  }
+  .beleg {
+    display: grid;
+    gap: 0.55rem;
+    width: 58%;
+    padding: 1.1rem 0.9rem 1.5rem;
+    background: #fff;
+    rotate: -4deg;
+    clip-path: polygon(0 0, 100% 0, 100% 94%, 92% 100%, 84% 94%, 76% 100%, 68% 94%, 60% 100%, 52% 94%, 44% 100%, 36% 94%, 28% 100%, 20% 94%, 12% 100%, 4% 94%, 0 100%);
+  }
+  .beleg i {
+    background: #d9dcdc;
+  }
+  .beleg .b-kopf {
+    width: 50%;
+    height: 9px;
+    margin-bottom: 0.4rem;
+    background: #9aa3a3;
+  }
+  .beleg .summe {
+    margin-top: 0.5rem;
+    height: 9px;
+    width: 40%;
+    justify-self: end;
+    background: var(--accent);
+  }
+  .ecke {
+    position: absolute;
+    width: 1.4rem;
+    height: 1.4rem;
+    border: 3px solid var(--brand-on-inverse);
+  }
+  .e1 {
+    top: 22%;
+    left: 14%;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  .e2 {
+    top: 22%;
+    right: 14%;
+    border-left: 0;
+    border-bottom: 0;
+  }
+  .e3 {
+    bottom: 26%;
+    left: 14%;
+    border-right: 0;
+    border-top: 0;
+  }
+  .e4 {
+    bottom: 26%;
+    right: 14%;
+    border-left: 0;
+    border-top: 0;
+  }
+  .scanlinie {
+    position: absolute;
+    left: 16%;
+    right: 16%;
+    top: 24%;
+    height: 2px;
+    background: var(--brand-on-inverse);
+    box-shadow: 0 0 14px 2px var(--brand-on-inverse);
+    animation: scan 2.4s var(--ease-in-out) infinite alternate;
+  }
+  @keyframes scan {
+    to {
+      transform: translateY(14rem);
+    }
+  }
+  .ausloeser {
+    position: absolute;
+    bottom: 1.4rem;
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: inset 0 0 0 4px var(--n-900), inset 0 0 0 30px #fff;
+  }
+
+  /* ── Upload ── */
+  .sc-upload {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 1.5rem;
+    background: var(--brand-softer);
+  }
+  .wolke {
+    color: var(--brand-ink);
+  }
+  .mini-beleg {
+    display: grid;
+    gap: 0.4rem;
+    width: 4.5rem;
+    padding: 0.7rem 0.6rem;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 8px 20px -10px rgb(0 0 0 / 0.3);
+  }
+  :global([data-pin-story][data-aktiv='1']) .mini-beleg {
+    animation: hoch 1.6s var(--ease-in-out) infinite;
+  }
+  @keyframes hoch {
+    0% {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    30% {
+      opacity: 1;
+    }
+    80% {
+      transform: translateY(-46px) scale(0.6);
+      opacity: 0;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  .fortschritt {
+    width: 62%;
+    height: 8px;
+    border-radius: 4px;
+    background: color-mix(in oklab, var(--brand) 18%, var(--bg));
+    overflow: hidden;
+  }
+  .fortschritt span {
+    display: block;
+    height: 100%;
+    background: var(--brand);
+    transform-origin: left;
+    transform: scaleX(0.15);
+  }
+  :global([data-pin-story][data-aktiv='1']) .fortschritt span {
+    animation: laden 1.8s var(--ease-out) forwards;
+  }
+  @keyframes laden {
+    to {
+      transform: scaleX(1);
+    }
+  }
+  .schloss {
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    background: var(--brand);
+    color: var(--on-brand);
+  }
+
+  /* ── Buchen ── */
+  .sc-buchen {
+    position: absolute;
+    inset: 2.6rem 0.9rem 0.9rem;
+    display: grid;
+    align-content: start;
+    gap: 0.6rem;
+  }
+  .zeile {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem;
+    border-radius: 10px;
+    background: var(--surface);
+  }
+  :global([data-pin-story][data-aktiv='2']) .zeile {
+    animation: zeile-ein 600ms var(--ease-out) both;
+    animation-delay: calc(var(--r) * 140ms);
+  }
+  @keyframes zeile-ein {
+    from {
+      opacity: 0;
+      transform: translateX(-16px);
+    }
+  }
+  .punkt {
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    background: var(--brand-soft);
+  }
+  .linien {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .betrag {
+    width: 1.8rem;
+    height: 7px;
+    border-radius: 3px;
+    background: var(--ink-muted);
+  }
+  .haken {
+    display: grid;
+    place-items: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 50%;
+    background: var(--success);
+    color: #fff;
+    transform: scale(0);
+  }
+  :global([data-pin-story][data-aktiv='2']) .haken {
+    animation: haken 400ms var(--ease-soft) both;
+    animation-delay: calc(400ms + var(--r) * 160ms);
+  }
+  @keyframes haken {
+    to {
+      transform: scale(1);
+    }
+  }
+
+  /* ── Auswertung ── */
+  .sc-auswertung {
+    position: absolute;
+    inset: 2.6rem 1rem 1rem;
+    display: grid;
+    align-content: start;
+    gap: 1rem;
+  }
+  .kpi {
+    display: grid;
+    gap: 0.45rem;
+  }
+  .kpi .gross {
+    width: 60%;
+    height: 22px;
+    border-radius: 5px;
+    background: var(--ink);
+  }
+  .kpi .klein {
+    width: 35%;
+    background: var(--success);
+  }
+  .mini-balken {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    align-items: end;
+    gap: 5px;
+    height: 9rem;
+    padding: 0.6rem;
+    border-radius: 12px;
+    background: var(--surface);
+  }
+  .mini-balken span {
+    height: var(--h);
+    border-radius: 3px 3px 0 0;
+    background: var(--brand);
+    transform-origin: bottom;
+  }
+  .mini-balken span:last-child {
+    background: var(--accent);
+  }
+  :global([data-pin-story][data-aktiv='3']) .mini-balken span {
+    animation: wachsen 800ms var(--ease-out) both;
+    animation-delay: calc(var(--j) * 80ms);
+  }
+  @keyframes wachsen {
+    from {
+      transform: scaleY(0);
+    }
+  }
+  .doppel {
+    height: 5px;
+    border-block: 1.5px solid var(--ink);
+  }
+  .legende {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  /* ── Gespräch ── */
+  .sc-gespraech {
+    position: absolute;
+    inset: 2.6rem 0.9rem 0.9rem;
+    display: grid;
+    align-content: start;
+    gap: 0.8rem;
+  }
+  .video {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 14px;
+    background: linear-gradient(160deg, var(--p-200), var(--p-400));
+    overflow: hidden;
+  }
+  .video .kopf {
+    position: absolute;
+    left: 50%;
+    top: 26%;
+    width: 2.6rem;
+    height: 2.6rem;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: var(--p-50);
+  }
+  .video .koerper {
+    position: absolute;
+    left: 50%;
+    bottom: -1.5rem;
+    width: 6rem;
+    height: 4rem;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: var(--p-50);
+  }
+  .blase {
+    display: grid;
+    gap: 0.35rem;
+    max-width: 75%;
+    padding: 0.7rem 0.8rem;
+    border-radius: 14px;
+    background: var(--surface);
+  }
+  .blase.rechts {
+    justify-self: end;
+    background: var(--brand);
+  }
+  .blase.rechts i {
+    width: 5rem;
+    background: color-mix(in oklab, var(--on-brand) 60%, transparent);
+  }
+
+  /* ── Portal ── */
+  .sc-portal {
+    position: absolute;
+    inset: 2.6rem 0.9rem 0.9rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-content: start;
+    gap: 0.6rem;
+  }
+  .dok {
+    display: grid;
+    gap: 0.4rem;
+    aspect-ratio: 3 / 4;
+    padding: 0.8rem 0.6rem;
+    border-radius: 10px;
+    background: var(--surface);
+    align-content: end;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scanlinie,
+    .mini-beleg {
+      animation: none !important;
+    }
+  }
+</style>

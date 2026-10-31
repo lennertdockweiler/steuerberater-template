@@ -1,0 +1,20 @@
+---
+import type { AktiveSektion } from '../../../lib/config';
+import { t, titelOder } from '../../../lib/config';
+import { aktiv } from '../../../lib/routes';
+import SektionKopf from '../../ui/SektionKopf.astro';
+import FristenWidget from '../../ui/FristenWidget.astro';
+import Button from '../../ui/Button.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'fristen' }>;
+}
+const { s } = Astro.props;
+---
+
+<div class="wrap">
+  <SektionKopf kicker={s.kicker} titel={titelOder(s.titel, 'fristen.titel')} intro={s.intro ?? t('fristen.intro')}>
+    {aktiv('steuertermine') && <Button href="/wissen/steuertermine/" variante="sekundaer" icon="calendar-days">{t('aktion.alleFristen')}</Button>}
+  </SektionKopf>
+  <FristenWidget anzahl={s.anzahl} layout="kalender" />
+</div>

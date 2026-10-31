@@ -1,0 +1,73 @@
+---
+/**
+ * Überschriftenblock einer Sektion: optionaler Kicker, H2 (zeilenweiser Reveal),
+ * Einleitung und optionaler Link. `aufbau="split"` setzt Titel und Text nebeneinander.
+ */
+interface Props {
+  kicker?: string;
+  titel: string;
+  intro?: string;
+  aufbau?: 'split' | 'stapel' | 'mitte';
+  ebene?: 'h1' | 'h2';
+  id?: string;
+  class?: string;
+}
+const { kicker, titel, intro, aufbau = 'split', ebene = 'h2', id, class: klasse } = Astro.props;
+const Tag = ebene;
+const hatLink = Astro.slots.has('default');
+---
+
+<div class:list={['skopf', `skopf-${aufbau}`, klasse]}>
+  <div class="skopf-titel">
+    {kicker && <p class="kicker">{kicker}</p>}
+    <Tag class={ebene === 'h1' ? 'h1' : 'h2'} id={id} data-anim="zeilen">{titel}</Tag>
+  </div>
+  {
+    (intro || hatLink) && (
+      <div class="skopf-text">
+        {intro && <p class="lead" data-anim="reveal-up">{intro}</p>}
+        {hatLink && (
+          <div class="skopf-link" data-anim="reveal-up">
+            <slot />
+          </div>
+        )}
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .skopf {
+    display: grid;
+    gap: 1.25rem 2rem;
+    margin-bottom: var(--space-block);
+  }
+  .skopf-titel h2,
+  .skopf-titel h1 {
+    max-width: 18ch;
+  }
+  .skopf-text {
+    display: grid;
+    gap: 1.25rem;
+    align-content: end;
+  }
+  .skopf-mitte {
+    justify-items: center;
+    text-align: center;
+  }
+  .skopf-mitte .skopf-titel h2 {
+    margin-inline: auto;
+  }
+  .skopf-mitte .lead {
+    margin-inline: auto;
+  }
+  @media (min-width: 64rem) {
+    .skopf-split {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      align-items: end;
+    }
+    .skopf-split .skopf-titel h2 {
+      max-width: 20ch;
+    }
+  }
+</style>

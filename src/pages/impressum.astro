@@ -1,0 +1,169 @@
+---
+/** Impressum nach § 5 DDG und DL-InfoV, vollständig aus der Config generiert. */
+import Base from '../layouts/Base.astro';
+import SeitenKopf from '../components/ui/SeitenKopf.astro';
+import { config, istDemo, t } from '../lib/config';
+import { telHref } from '../lib/format';
+import { BERUFSRECHT, BERUFSRECHT_QUELLE } from '../data/berufsrecht';
+import { RECHT_TEXTE as R } from '../data/rechtstexte';
+import { seitenTitel, seitenBeschreibung } from '../lib/seo';
+
+const b = config.betrieb;
+const r = config.rechtliches;
+---
+
+<Base titel={seitenTitel('impressum', R.impressumTitel)} beschreibung={seitenBeschreibung('impressum', `${R.impressumTitel} ${b.name}, ${b.adresse.ort}.`)}>
+  <SeitenKopf titel={R.impressumTitel} pfad={[{ label: R.impressumTitel, href: '/impressum/' }]} />
+  <section class="sektion">
+    <div class="wrap-schmal recht">
+      {istDemo && <p class="recht-demo">{R.demoHinweis}</p>}
+
+      <h2>{R.impressumAngaben}</h2>
+      <p>
+        {b.name}<br />
+        {b.rechtsform !== b.name && <>{b.rechtsform}<br /></>}
+        {b.adresse.strasse}<br />
+        {b.adresse.plz} {b.adresse.ort}
+      </p>
+
+      {
+        (r.vertretungsberechtigt.length > 0 || b.inhaber.length > 0) && (
+          <>
+            <h2>{R.vertreten}</h2>
+            <p>{(r.vertretungsberechtigt.length ? r.vertretungsberechtigt : b.inhaber).join(', ')}</p>
+          </>
+        )
+      }
+
+      <h2>{R.kontakt}</h2>
+      <p>
+        {t('form.telefon')}: <a href={telHref(b.telefon)}>{b.telefon}</a><br />
+        {b.fax && <>Fax: {b.fax}<br /></>}
+        {t('form.email')}: <a href={`mailto:${b.email}`}>{b.email}</a>
+      </p>
+
+      {
+        r.register && (
+          <>
+            <h2>{R.register}</h2>
+            <p>
+              {r.register.art}: {r.register.gericht}, {r.register.nummer}
+            </p>
+          </>
+        )
+      }
+      {
+        r.ustId && (
+          <>
+            <h2>{R.ustId}</h2>
+            <p>{r.ustId}</p>
+          </>
+        )
+      }
+      {
+        r.wirtschaftsId && (
+          <>
+            <h2>{R.wirtschaftsId}</h2>
+            <p>{r.wirtschaftsId}</p>
+          </>
+        )
+      }
+
+      <h2>{R.berufsrecht}</h2>
+      <p>{R.berufsbezeichnung}</p>
+      <ul>
+        {config.berufstraeger.map((p) => <li>{`${p.name}: ${p.titel.join(', ')}`}</li>)}
+      </ul>
+
+      <h3>{R.kammer}</h3>
+      <p>
+        {config.kammer.name}<br />
+        {config.kammer.adresse}<br />
+        <a href={config.kammer.website} rel="noopener" target="_blank">{config.kammer.website.replace(/^https?:\/\//, '')}</a>
+      </p>
+
+      <p>{R.regelungen.replace('{quelle}', BERUFSRECHT_QUELLE.name)}</p>
+      <ul>
+        {
+          BERUFSRECHT.map((x) => (
+            <li>
+              <a href={x.url} rel="noopener" target="_blank">{`${x.name} (${x.kurz})`}</a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <h2>{R.haftpflicht}</h2>
+      <p>
+        {config.berufshaftpflicht.versicherer}<br />
+        {config.berufshaftpflicht.adresse}<br />
+        {R.haftpflichtGeltung}: {config.berufshaftpflicht.geltungsbereich}
+      </p>
+
+      {
+        r.inhaltlichVerantwortlich && (
+          <>
+            <h2>{R.verantwortlich}</h2>
+            <p>
+              {r.inhaltlichVerantwortlich.name}, {r.inhaltlichVerantwortlich.adresse}
+            </p>
+          </>
+        )
+      }
+      {
+        r.verbraucherstreitbeilegung && (
+          <>
+            <h2>{R.streit}</h2>
+            <p>{r.verbraucherstreitbeilegung}</p>
+          </>
+        )
+      }
+      {r.zusatz.map((z) => <p>{z}</p>)}
+      {
+        r.bildnachweise.length > 0 && (
+          <>
+            <h2>{R.bilder}</h2>
+            <ul>
+              {r.bildnachweise.map((x) => (
+                <li>{x}</li>
+              ))}
+            </ul>
+          </>
+        )
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .recht {
+    max-width: 46rem;
+  }
+  .recht h2 {
+    margin: 2.5rem 0 0.75rem;
+    font-size: var(--step-1);
+    letter-spacing: -0.01em;
+  }
+  .recht h3 {
+    margin: 1.5rem 0 0.5rem;
+    font-size: 1rem;
+  }
+  .recht p,
+  .recht ul {
+    margin: 0 0 0.75rem;
+    color: var(--ink);
+  }
+  .recht ul {
+    padding-left: 1.25rem;
+  }
+  .recht a {
+    color: var(--brand-ink);
+    overflow-wrap: anywhere;
+  }
+  .recht-demo {
+    padding: 1rem 1.25rem;
+    border-left: 3px solid var(--accent);
+    background: var(--surface);
+    font-size: 0.92rem;
+  }
+</style>

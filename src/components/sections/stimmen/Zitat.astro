@@ -1,0 +1,126 @@
+---
+/** Eine Stimme groß, mit Vor/Zurück (kein Auto-Wechsel, barrierearm). */
+import type { AktiveSektion } from '../../../lib/config';
+import { sichtbareStimmen, t, titelOder } from '../../../lib/config';
+import Icon from '../../ui/Icon.astro';
+import StimmenHinweis from '../../ui/StimmenHinweis.astro';
+
+interface Props {
+  s: AktiveSektion;
+}
+const { s } = Astro.props;
+if (!sichtbareStimmen.length) return;
+---
+
+<div class="wrap zt" data-zitate>
+  <h2 class="zt-titel h4">{titelOder(s.titel, 'stimmen.titel')}</h2>
+  <div class="zt-buehne" aria-live="polite">
+    {
+      sichtbareStimmen.map((st, i) => (
+        <figure class="zt-item" data-zitat={i} hidden={i > 0 ? true : undefined}>
+          <blockquote>
+            <p>{`„${st.text}“`}</p>
+          </blockquote>
+          <figcaption>
+            <strong>{st.name}</strong>
+            {st.kontext && <span>{st.kontext}</span>}
+            {st.beispiel && <span class="badge">{t('stimmen.beispiel')}</span>}
+          </figcaption>
+        </figure>
+      ))
+    }
+  </div>
+  {
+    sichtbareStimmen.length > 1 && (
+      <div class="zt-steuerung">
+        <button type="button" class="zt-knopf" data-zurueck aria-label={t('stimmen.vorherige')}>
+          <Icon name="arrow-left" size={20} strich={2} />
+        </button>
+        <p class="zt-zaehler ziffern" aria-hidden="true">
+          <span data-aktuell>1</span> / {sichtbareStimmen.length}
+        </p>
+        <button type="button" class="zt-knopf" data-vor aria-label={t('stimmen.naechste')}>
+          <Icon name="arrow-right" size={20} strich={2} />
+        </button>
+      </div>
+    )
+  }
+  <StimmenHinweis />
+</div>
+
+<style>
+  .zt-titel {
+    margin-bottom: 2rem;
+    color: var(--ink-muted);
+    font-weight: 600;
+  }
+  .zt-item {
+    margin: 0;
+    display: grid;
+    gap: 1.75rem;
+    animation: zt-ein 600ms var(--ease-out);
+  }
+  @keyframes zt-ein {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+  blockquote {
+    margin: 0;
+    font-family: var(--ff-display);
+    font-weight: calc(var(--hl-weight) - 150);
+    font-size: clamp(1.6rem, 1.1rem + 2.2vw, 3rem);
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+    max-width: 30ch;
+    text-wrap: balance;
+  }
+  figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.9rem;
+  }
+  figcaption span:not(.badge) {
+    color: var(--ink-muted);
+  }
+  .zt-steuerung {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+  .zt-knopf {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: transparent;
+    transition:
+      background-color 300ms,
+      color 300ms,
+      transform 200ms var(--ease-out);
+  }
+  .zt-knopf:hover {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .zt-knopf:active {
+    transform: scale(0.94);
+  }
+  .zt-zaehler {
+    min-width: 3.5rem;
+    text-align: center;
+    font-weight: 600;
+  }
+  :global(.no-js) .zt-steuerung {
+    display: none;
+  }
+  :global(.no-js) .zt-item[hidden] {
+    display: grid !important;
+    margin-top: 3rem;
+  }
+</style>

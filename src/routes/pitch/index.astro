@@ -1,0 +1,216 @@
+---
+/** Versteckte Pitch-Seite: nicht verlinkt, noindex, nicht in der Sitemap. */
+import Base from '../../layouts/Base.astro';
+import SeitenKopf from '../../components/ui/SeitenKopf.astro';
+import Regler from '../../components/ui/Regler.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Button from '../../components/ui/Button.astro';
+import { config } from '../../lib/config';
+import { PITCH as P } from '../../data/pitch';
+
+const rechner = [
+  { art: 'zeit', ...P.zeit },
+  { art: 'stelle', ...P.stelle },
+];
+---
+
+<Base titel={`Pitch – ${config.betrieb.kurzname}`} beschreibung={P.intro} noindex>
+  <SeitenKopf titel={P.titel} intro={P.intro} kicker={config.betrieb.name}>
+    <Button href="/pitch/layouts/" variante="sekundaer" icon="layout-grid">{P.layoutsLink}</Button>
+  </SeitenKopf>
+
+  {
+    rechner.map((r) => (
+      <section class="sektion pr-sektion">
+        <div class="wrap">
+          <div class="pr" data-pitch-rechner={r.art}>
+            <div class="pr-eingaben">
+              <h2 class="h3">{r.titel}</h2>
+              <p class="gedaempft">{r.text}</p>
+              <form class="pr-form" onsubmit="return false">
+                {r.felder.map((f) => (
+                  <Regler id={`${r.art}-${f.name}`} name={f.name} label={f.label} min={f.min} max={f.max} schritt={'schritt' in f ? (f.schritt as number) : 1} wert={f.wert} einheit={f.einheit} />
+                ))}
+              </form>
+            </div>
+            <dl class="pr-ergebnis" aria-live="polite">
+              {r.ergebnisse.map((e, i) => (
+                <div class:list={[i === r.ergebnisse.length - 1 && 'pr-haupt']}>
+                  <dt>{e.label}</dt>
+                  <dd class="ziffern" data-aus={e.key}>
+                    0
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <section class="sektion flaeche">
+    <div class="wrap">
+      <h2 class="h2 pv-titel">{P.vergleichTitel}</h2>
+      <div class="tkonto" role="table" aria-label={P.vergleichTitel}>
+        <div class="tk-kopf" role="row">
+          <span role="columnheader">{P.vergleichOhne}</span>
+          <span role="columnheader">{P.vergleichMit}</span>
+        </div>
+        {
+          P.vergleich.map(([ohne, mit]) => (
+            <div class="tk-zeile" role="row" data-anim="reveal-up">
+              <span role="cell">{ohne}</span>
+              <span role="cell">{mit}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="sektion">
+    <div class="wrap">
+      <ul class="pa" role="list" data-anim-kinder>
+        {
+          P.argumente.map((a) => (
+            <li>
+              <span class="pa-icon">
+                <Icon name={a.icon} size={24} />
+              </span>
+              <h3 class="h4">{a.titel}</h3>
+              <p class="gedaempft">{a.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .pr-sektion + .pr-sektion {
+    padding-top: 0;
+  }
+  .pr {
+    display: grid;
+    border: 1px solid var(--line);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+  }
+  .pr-eingaben {
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.25rem, 1rem + 2vw, 2.5rem);
+  }
+  .pr-form {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  .pr-ergebnis {
+    display: grid;
+    gap: 1.25rem;
+    align-content: center;
+    margin: 0;
+    padding: clamp(1.25rem, 1rem + 2vw, 2.5rem);
+    background: var(--inverse);
+    color: var(--on-inverse);
+  }
+  .pr-ergebnis div {
+    display: grid;
+    gap: 0.2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--inverse-line);
+  }
+  .pr-ergebnis dt {
+    font-size: 0.9rem;
+    color: var(--on-inverse-muted);
+  }
+  .pr-ergebnis dd {
+    margin: 0;
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-3);
+    line-height: 1.05;
+  }
+  .pr-ergebnis .pr-haupt {
+    border-bottom: 0;
+    padding: 0;
+  }
+  .pr-ergebnis .pr-haupt dd {
+    font-size: clamp(2.6rem, 1.8rem + 3.5vw, 4.6rem);
+    color: var(--brand-on-inverse);
+    letter-spacing: -0.035em;
+  }
+  .pv-titel {
+    margin-bottom: 2rem;
+  }
+  /* T-Konto: links „Soll“ (heute), rechts „Haben“ (mit Website) */
+  .tkonto {
+    display: grid;
+  }
+  .tk-kopf,
+  .tk-zeile {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .tk-kopf {
+    border-bottom: 3px double var(--ink);
+    font-family: var(--ff-display);
+    font-weight: var(--hl-weight);
+    font-size: var(--step-1);
+  }
+  .tk-kopf span,
+  .tk-zeile span {
+    padding: 1rem 1.25rem;
+  }
+  .tk-kopf span:first-child,
+  .tk-zeile span:first-child {
+    border-right: 2px solid var(--ink);
+  }
+  .tk-zeile {
+    border-bottom: 1px solid var(--line);
+  }
+  .tk-zeile span:first-child {
+    color: var(--ink-muted);
+  }
+  .tk-zeile span:last-child {
+    font-weight: 600;
+  }
+  .pa {
+    display: grid;
+    gap: 2.5rem var(--gutter);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .pa li {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+  }
+  .pa-icon {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 0.25rem;
+    border-radius: var(--r-md);
+    background: var(--brand-soft);
+    color: var(--brand-ink);
+  }
+  @media (min-width: 48rem) {
+    .pa {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 64rem) {
+    .pr {
+      grid-template-columns: 7fr 5fr;
+    }
+    .pa {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

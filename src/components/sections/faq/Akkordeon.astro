@@ -1,0 +1,60 @@
+---
+import type { AktiveSektion } from '../../../lib/config';
+import { config, t, titelOder } from '../../../lib/config';
+import { telHref } from '../../../lib/format';
+import Akkordeon from '../../ui/Akkordeon.astro';
+import Button from '../../ui/Button.astro';
+
+interface Props {
+  s: Extract<AktiveSektion, { typ: 'faq' }>;
+}
+const { s } = Astro.props;
+const fragen = s.fragen ?? config.faq;
+if (!fragen.length) return;
+---
+
+<div class="wrap fa">
+  <div class="fa-kopf">
+    {s.kicker && <p class="kicker">{s.kicker}</p>}
+    <h2 class="h2" data-anim="zeilen">{titelOder(s.titel, 'faq.titel')}</h2>
+    {s.intro && <p class="gedaempft" data-anim="reveal-up">{s.intro}</p>}
+    <div class="fa-kontakt" data-anim="reveal-up">
+      <p class="gedaempft">{t('faq.nichtDabei')}</p>
+      <Button href={telHref(config.betrieb.telefon)} variante="sekundaer" iconLinks="phone" icon={false}>{config.betrieb.telefon}</Button>
+    </div>
+  </div>
+  <div data-anim="reveal-up"><Akkordeon eintraege={fragen} name={`faq-${s.id ?? 'start'}`} ersteOffen /></div>
+</div>
+
+<style>
+  .fa {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .fa-kopf {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+    justify-items: start;
+  }
+  .fa-kopf .kicker {
+    margin-bottom: 0;
+  }
+  .fa-kontakt {
+    display: grid;
+    gap: 0.75rem;
+    justify-items: start;
+    margin-top: 1rem;
+  }
+  @media (min-width: 64rem) {
+    .fa {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+      column-gap: calc(var(--gutter) * 3);
+    }
+    .fa-kopf {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+      align-self: start;
+    }
+  }
+</style>

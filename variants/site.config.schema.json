@@ -1,0 +1,3641 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "description": "URL-Kürzel: Kleinbuchstaben, Ziffern, Bindestriche"
+        },
+        "sprache": {
+          "default": "de",
+          "type": "string",
+          "const": "de"
+        },
+        "anrede": {
+          "default": "sie",
+          "description": "Ansprache in allen Standardtexten",
+          "type": "string",
+          "enum": [
+            "sie",
+            "du"
+          ]
+        },
+        "domain": {
+          "description": "Live- oder Demo-URL inkl. https://, für Canonical, Sitemap, OG",
+          "type": "string",
+          "format": "uri"
+        },
+        "noindex": {
+          "default": true,
+          "description": "true = Suchmaschinen ausgesperrt (Standard für Demos!)",
+          "type": "boolean"
+        },
+        "titelVorlage": {
+          "description": "Zusatz hinter Seitentiteln, z. B. \"Steuerberater Münster\"",
+          "type": "string",
+          "maxLength": 40
+        }
+      },
+      "required": [
+        "slug"
+      ]
+    },
+    "betrieb": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "Vollständiger Name inkl. Rechtsform"
+        },
+        "kurzname": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32,
+          "description": "Kurzform für Header, Wortmarke, Mobilansicht"
+        },
+        "rechtsform": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "inhaber": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "description": "Inhaber bzw. vertretungsberechtigte Personen"
+        },
+        "slogan": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "gruendungsjahr": {
+          "type": "integer",
+          "minimum": 1900,
+          "maximum": 2100
+        },
+        "adresse": {
+          "type": "object",
+          "properties": {
+            "strasse": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "plz": {
+              "type": "string",
+              "pattern": "^\\d{5}$"
+            },
+            "ort": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "bundesland": {
+              "type": "string",
+              "enum": [
+                "BW",
+                "BY",
+                "BE",
+                "BB",
+                "HB",
+                "HH",
+                "HE",
+                "MV",
+                "NI",
+                "NW",
+                "RP",
+                "SL",
+                "SN",
+                "ST",
+                "SH",
+                "TH"
+              ],
+              "description": "Kürzel des Bundeslands (für Feiertage bei Fristverschiebungen)"
+            },
+            "land": {
+              "default": "DE",
+              "type": "string"
+            }
+          },
+          "required": [
+            "strasse",
+            "plz",
+            "ort",
+            "bundesland"
+          ]
+        },
+        "geo": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "lng": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          "required": [
+            "lat",
+            "lng"
+          ]
+        },
+        "einzugsgebiet": {
+          "default": [],
+          "description": "Orte für lokales SEO, z. B. [\"Münster\", \"Greven\"]",
+          "maxItems": 10,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          }
+        },
+        "telefon": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "fax": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+        },
+        "whatsapp": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "oeffnungszeiten": {
+          "type": "object",
+          "properties": {
+            "regulaer": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "tage": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "mo",
+                        "di",
+                        "mi",
+                        "do",
+                        "fr",
+                        "sa",
+                        "so"
+                      ]
+                    }
+                  },
+                  "von": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "bis": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "tage",
+                  "von",
+                  "bis"
+                ]
+              }
+            },
+            "sonder": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "datum": {
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                    "description": "Datum im Format JJJJ-MM-TT"
+                  },
+                  "geschlossen": {
+                    "default": true,
+                    "type": "boolean"
+                  },
+                  "von": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "bis": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "hinweis": {
+                    "type": "string",
+                    "maxLength": 80
+                  }
+                },
+                "required": [
+                  "datum"
+                ]
+              }
+            },
+            "hinweis": {
+              "type": "string",
+              "maxLength": 140
+            }
+          },
+          "required": [
+            "regulaer"
+          ]
+        },
+        "socialLinks": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "netzwerk": {
+                "type": "string",
+                "enum": [
+                  "linkedin",
+                  "xing",
+                  "instagram",
+                  "facebook",
+                  "youtube",
+                  "mastodon"
+                ]
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "required": [
+              "netzwerk",
+              "url"
+            ]
+          }
+        },
+        "bewertungen": {
+          "type": "object",
+          "properties": {
+            "quelle": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40,
+              "description": "z. B. \"Google\""
+            },
+            "schnitt": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "anzahl": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "echt": {
+              "default": false,
+              "description": "Nur true, wenn es echte, überprüfbare Bewertungen sind (dann aggregateRating im Schema)",
+              "type": "boolean"
+            },
+            "echtheitsHinweis": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400,
+              "description": "Hinweis nach § 5b Abs. 3 UWG, ob und wie die Echtheit geprüft wird"
+            },
+            "eintraege": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 50
+                  },
+                  "kontext": {
+                    "description": "z. B. \"Zahnarztpraxis, Münster\"",
+                    "type": "string",
+                    "maxLength": 60
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 420
+                  },
+                  "sterne": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  },
+                  "datum": {
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                    "description": "Datum im Format JJJJ-MM-TT"
+                  },
+                  "einwilligungLiegtVor": {
+                    "type": "boolean",
+                    "description": "PFLICHT: schriftliche Einwilligung des Mandanten (Verschwiegenheitspflicht). Ohne true keine Anzeige."
+                  },
+                  "beispiel": {
+                    "default": false,
+                    "description": "true = Beispielstimme (wird als solche gekennzeichnet)",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "name",
+                  "text",
+                  "einwilligungLiegtVor"
+                ]
+              }
+            }
+          },
+          "required": [
+            "quelle",
+            "schnitt",
+            "anzahl",
+            "echtheitsHinweis"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "kurzname",
+        "rechtsform",
+        "inhaber",
+        "slogan",
+        "gruendungsjahr",
+        "adresse",
+        "geo",
+        "telefon",
+        "email",
+        "oeffnungszeiten"
+      ]
+    },
+    "branding": {
+      "type": "object",
+      "properties": {
+        "logo": {
+          "description": "Ohne Logo wird automatisch eine typografische Wortmarke erzeugt",
+          "type": "object",
+          "properties": {
+            "datei": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Logo (SVG bevorzugt) relativ zu assets/"
+            },
+            "dateiHell": {
+              "description": "Helle Logo-Version für dunkle Flächen",
+              "type": "string"
+            },
+            "alt": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "hoehe": {
+              "default": 36,
+              "description": "Darstellungshöhe im Header in px",
+              "type": "integer",
+              "minimum": 16,
+              "maximum": 80
+            }
+          },
+          "required": [
+            "datei"
+          ]
+        },
+        "wortmarke": {
+          "description": "Optionale Aufteilung der automatischen Wortmarke",
+          "type": "object",
+          "properties": {
+            "zeile1": {
+              "type": "string",
+              "maxLength": 32
+            },
+            "zeile2": {
+              "type": "string",
+              "maxLength": 40
+            }
+          }
+        },
+        "farben": {
+          "type": "object",
+          "properties": {
+            "primaer": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Markenfarbe"
+            },
+            "akzent": {
+              "description": "Zweitfarbe für Daten-Hervorhebungen",
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "neutralTon": {
+              "description": "Farbstich der Grautöne",
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            }
+          },
+          "required": [
+            "primaer"
+          ]
+        },
+        "stilPreset": {
+          "type": "string",
+          "enum": [
+            "klar",
+            "klassisch",
+            "warm"
+          ],
+          "description": "klar = Klar & Digital, klassisch = Klassisch Seriös, warm = Persönlich Warm"
+        },
+        "schriftPaar": {
+          "description": "Überschreibt die Schriften des Presets",
+          "type": "object",
+          "properties": {
+            "headline": {
+              "type": "string",
+              "enum": [
+                "schibsted-grotesk",
+                "onest",
+                "plus-jakarta-sans",
+                "newsreader",
+                "source-sans-3",
+                "fraunces"
+              ]
+            },
+            "text": {
+              "type": "string",
+              "enum": [
+                "schibsted-grotesk",
+                "onest",
+                "plus-jakarta-sans",
+                "newsreader",
+                "source-sans-3",
+                "fraunces"
+              ]
+            }
+          },
+          "required": [
+            "headline",
+            "text"
+          ]
+        },
+        "radius": {
+          "type": "string",
+          "enum": [
+            "eckig",
+            "dezent",
+            "weich",
+            "rund"
+          ]
+        },
+        "animationsIntensitaet": {
+          "type": "string",
+          "enum": [
+            "dezent",
+            "standard",
+            "ausdrucksstark"
+          ]
+        },
+        "bildstil": {
+          "type": "object",
+          "properties": {
+            "grain": {
+              "description": "Feines Korn über Fotos für einheitliche Bildwirkung",
+              "type": "boolean"
+            },
+            "tonung": {
+              "type": "string",
+              "enum": [
+                "keine",
+                "marke",
+                "warm",
+                "kuehl"
+              ]
+            }
+          }
+        }
+      },
+      "required": [
+        "farben",
+        "stilPreset"
+      ]
+    },
+    "sektionen": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "hero"
+              },
+              "layout": {
+                "description": "statement = Typo + Balkengrafik, split = Porträt, weiche = Zielgruppen-Auswahl",
+                "type": "string",
+                "enum": [
+                  "statement",
+                  "split",
+                  "weiche"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "description": "false = Sektion ausblenden, ohne sie zu löschen",
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID, z. B. \"leistungen\" für Links auf /#leistungen",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kicker": {
+                "description": "Kleine Zeile über der Überschrift (optional, sparsam einsetzen)",
+                "type": "string",
+                "maxLength": 40
+              },
+              "titel": {
+                "type": "string",
+                "maxLength": 70
+              },
+              "intro": {
+                "type": "string",
+                "maxLength": 320
+              },
+              "hintergrund": {
+                "description": "standard = Papier, flaeche = leicht getönt, invers = dunkel",
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "flaeche",
+                  "invers"
+                ]
+              },
+              "unterzeile": {
+                "type": "string",
+                "maxLength": 220
+              },
+              "bild": {
+                "description": "Für Layout \"split\": Porträt (Hochformat 4:5)",
+                "type": "object",
+                "properties": {
+                  "datei": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Pfad relativ zu variants/<slug>/assets/, z. B. \"team/anna.jpg\""
+                  },
+                  "alt": {
+                    "default": "",
+                    "description": "Bildbeschreibung für Screenreader",
+                    "type": "string",
+                    "maxLength": 180
+                  },
+                  "dekorativ": {
+                    "default": false,
+                    "description": "true = rein schmückend, alt bleibt leer",
+                    "type": "boolean"
+                  },
+                  "fokus": {
+                    "description": "Bildausschnitt als CSS object-position, z. B. \"50% 30%\"",
+                    "type": "string"
+                  },
+                  "fokusMobil": {
+                    "description": "Abweichender Bildausschnitt auf Smartphones",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "datei"
+                ]
+              },
+              "ctaPrimaer": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "description": "Beschriftung des Buttons/Links"
+                  },
+                  "href": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Ziel: interne Seite (\"/termin/\"), Anker (\"#faq\"), tel:, mailto: oder https://"
+                  }
+                },
+                "required": [
+                  "label",
+                  "href"
+                ]
+              },
+              "ctaSekundaer": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "description": "Beschriftung des Buttons/Links"
+                  },
+                  "href": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Ziel: interne Seite (\"/termin/\"), Anker (\"#faq\"), tel:, mailto: oder https://"
+                  }
+                },
+                "required": [
+                  "label",
+                  "href"
+                ]
+              },
+              "fakten": {
+                "description": "Bis zu 3 kurze Fakten unter der Headline",
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "wert": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 16
+                    },
+                    "label": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    }
+                  },
+                  "required": [
+                    "wert",
+                    "label"
+                  ]
+                }
+              },
+              "grafikWerte": {
+                "description": "12 Balkenhöhen (0–100) für die Hero-Grafik",
+                "minItems": 12,
+                "maxItems": 12,
+                "type": "array",
+                "items": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                }
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "zielgruppen"
+              },
+              "layout": {
+                "type": "string",
+                "enum": [
+                  "karten",
+                  "zeilen"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "description": "false = Sektion ausblenden, ohne sie zu löschen",
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID, z. B. \"leistungen\" für Links auf /#leistungen",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kicker": {
+                "description": "Kleine Zeile über der Überschrift (optional, sparsam einsetzen)",
+                "type": "string",
+                "maxLength": 40
+              },
+              "titel": {
+                "type": "string",
+                "maxLength": 90
+              },
+              "intro": {
+                "type": "string",
+                "maxLength": 320
+              },
+              "hintergrund": {
+                "description": "standard = Papier, flaeche = leicht getönt, invers = dunkel",
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "flaeche",
+                  "invers"
+                ]
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "leistungen"
+              },
+              "layout": {
+                "type": "string",
+                "enum": [
+                  "tabs",
+                  "liste",
+                  "bento"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "description": "false = Sektion ausblenden, ohne sie zu löschen",
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID, z. B. \"leistungen\" für Links auf /#leistungen",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kicker": {
+                "description": "Kleine Zeile über der Überschrift (optional, sparsam einsetzen)",
+                "type": "string",
+                "maxLength": 40
+              },
+              "titel": {
+                "type": "string",
+                "maxLength": 90
+              },
+              "intro": {
+                "type": "string",
+                "maxLength": 320
+              },
+              "hintergrund": {
+                "description": "standard = Papier, flaeche = leicht getönt, invers = dunkel",
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "flaeche",
+                  "invers"
+                ]
+              },
+              "auswahl": {
+                "description": "Slugs der Leistungen, die gezeigt werden (Standard: alle)",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                  "description": "URL-Kürzel: Kleinbuchstaben, Ziffern, Bindestriche"
+                }
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "ablauf"
+              },
+              "layout": {
+                "type": "string",
+                "enum": [
+                  "gepinnt",
+                  "zeitleiste"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "description": "false = Sektion ausblenden, ohne sie zu löschen",
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID, z. B. \"leistungen\" für Links auf /#leistungen",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kicker": {
+                "description": "Kleine Zeile über der Überschrift (optional, sparsam einsetzen)",
+                "type": "string",
+                "maxLength": 40
+              },
+              "titel": {
+                "type": "string",
+                "maxLength": 90
+              },
+              "intro": {
+                "type": "string",
+                "maxLength": 320
+              },
+              "hintergrund": {
+                "description": "standard = Papier, flaeche = leicht getönt, invers = dunkel",
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "flaeche",
+                  "invers"
+                ]
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "kennzahlen"
+              },
+              "layout": {
+                "type": "string",
+                "enum": [
+                  "reihe",
+                  "band"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "description": "false = Sektion ausblenden, ohne sie zu löschen",
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID, z. B. \"leistungen\" für Links auf /#leistungen",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kicker": {
+                "description": "Kleine Zeile über der Überschrift (optional, sparsam einsetzen)",
+                "type": "string",
+                "maxLength": 40
+              },
+              "titel": {
+                "type": "string",
+                "maxLength": 90
+              },
+              "intro": {
+                "type": "string",
+                "maxLength": 320
+              },
+              "hintergrund": {
+                "description": "standard = Papier, flaeche = leicht getönt, invers = dunkel",
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "flaeche",
+                  "invers"
+                ]
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "spezialisierungen"
+              },
+              "layout": {
+                "type": "string",
+                "enum": [
+                  "horizontal",
+                  "raster"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "description": "false = Sektion ausblenden, ohne sie zu löschen",
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID, z. B. \"leistungen\" für Links auf /#leistungen",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kicker": {
+                "description": "Kleine Zeile über der Überschrift (optional, sparsam einsetzen)",
+                "type": "string",
+                "maxLength": 40
+              },
+              "titel": {
+                "type": "string",
+                "maxLength": 90
+              },
+              "intro": {
+                "type": "string",
+                "maxLength": 320
+              },
+              "hintergrund": {
+                "description": "standard = Papier, flaeche = leicht getönt, invers = dunkel",
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "flaeche",
+                  "invers"
+                ]
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "team"
+              },
+              "layout": {
+                "type": "string",
+                "enum": [
+                  "karten",
+                  "portraits"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "description": "false = Sektion ausblenden, ohne sie zu löschen",
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID, z. B. \"leistungen\" für Links auf /#leistungen",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kicker": {
+                "description": "Kleine Zeile über der Überschrift (optional, sparsam einsetzen)",
+                "type": "string",
+                "maxLength": 40
+              },
+              "titel": {
+                "type": "string",
+                "maxLength": 90
+              },
+              "intro": {
+                "type": "string",
+                "maxLength": 320
+              },
+              "hintergrund": {
+                "description": "standard = Papier, flaeche = leicht getönt, invers = dunkel",
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "flaeche",
+                  "invers"
+                ]
+              },
+              "mitTeam": {
+                "default": true,
+                "description": "Auch Mitarbeitende ohne Profilseite zeigen",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "fristen"
+              },
+              "layout": {
+                "type": "string",
+                "enum": [
+                  "kalender",
+                  "kompakt"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "description": "false = Sektion ausblenden, ohne sie zu löschen",
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID, z. B. \"leistungen\" für Links auf /#leistungen",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kicker": {
+                "description": "Kleine Zeile über der Überschrift (optional, sparsam einsetzen)",
+                "type": "string",
+                "maxLength": 40
+              },
+              "titel": {
+                "type": "string",
+                "maxLength": 90
+              },
+              "intro": {
+                "type": "string",
+                "maxLength": 320
+              },
+              "hintergrund": {
+                "description": "standard = Papier, flaeche = leicht getönt, invers = dunkel",
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "flaeche",
+                  "invers"
+                ]
+              },
+              "anzahl": {
+                "default": 3,
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 6
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "stimmen"
+              },
+              "layout": {
+                "type": "string",
+                "enum": [
+                  "marquee",
+                  "zitat"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "description": "false = Sektion ausblenden, ohne sie zu löschen",
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID, z. B. \"leistungen\" für Links auf /#leistungen",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kicker": {
+                "description": "Kleine Zeile über der Überschrift (optional, sparsam einsetzen)",
+                "type": "string",
+                "maxLength": 40
+              },
+              "titel": {
+                "type": "string",
+                "maxLength": 90
+              },
+              "intro": {
+                "type": "string",
+                "maxLength": 320
+              },
+              "hintergrund": {
+                "description": "standard = Papier, flaeche = leicht getönt, invers = dunkel",
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "flaeche",
+                  "invers"
+                ]
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "karriere"
+              },
+              "layout": {
+                "type": "string",
+                "enum": [
+                  "split",
+                  "band"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "description": "false = Sektion ausblenden, ohne sie zu löschen",
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID, z. B. \"leistungen\" für Links auf /#leistungen",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kicker": {
+                "description": "Kleine Zeile über der Überschrift (optional, sparsam einsetzen)",
+                "type": "string",
+                "maxLength": 40
+              },
+              "titel": {
+                "type": "string",
+                "maxLength": 90
+              },
+              "intro": {
+                "type": "string",
+                "maxLength": 320
+              },
+              "hintergrund": {
+                "description": "standard = Papier, flaeche = leicht getönt, invers = dunkel",
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "flaeche",
+                  "invers"
+                ]
+              },
+              "bild": {
+                "type": "object",
+                "properties": {
+                  "datei": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Pfad relativ zu variants/<slug>/assets/, z. B. \"team/anna.jpg\""
+                  },
+                  "alt": {
+                    "default": "",
+                    "description": "Bildbeschreibung für Screenreader",
+                    "type": "string",
+                    "maxLength": 180
+                  },
+                  "dekorativ": {
+                    "default": false,
+                    "description": "true = rein schmückend, alt bleibt leer",
+                    "type": "boolean"
+                  },
+                  "fokus": {
+                    "description": "Bildausschnitt als CSS object-position, z. B. \"50% 30%\"",
+                    "type": "string"
+                  },
+                  "fokusMobil": {
+                    "description": "Abweichender Bildausschnitt auf Smartphones",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "datei"
+                ]
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "wissen"
+              },
+              "layout": {
+                "type": "string",
+                "enum": [
+                  "liste",
+                  "karten"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "description": "false = Sektion ausblenden, ohne sie zu löschen",
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID, z. B. \"leistungen\" für Links auf /#leistungen",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kicker": {
+                "description": "Kleine Zeile über der Überschrift (optional, sparsam einsetzen)",
+                "type": "string",
+                "maxLength": 40
+              },
+              "titel": {
+                "type": "string",
+                "maxLength": 90
+              },
+              "intro": {
+                "type": "string",
+                "maxLength": 320
+              },
+              "hintergrund": {
+                "description": "standard = Papier, flaeche = leicht getönt, invers = dunkel",
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "flaeche",
+                  "invers"
+                ]
+              },
+              "anzahl": {
+                "default": 3,
+                "type": "integer",
+                "minimum": 2,
+                "maximum": 6
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "faq"
+              },
+              "layout": {
+                "type": "string",
+                "enum": [
+                  "akkordeon",
+                  "zweispaltig"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "description": "false = Sektion ausblenden, ohne sie zu löschen",
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID, z. B. \"leistungen\" für Links auf /#leistungen",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kicker": {
+                "description": "Kleine Zeile über der Überschrift (optional, sparsam einsetzen)",
+                "type": "string",
+                "maxLength": 40
+              },
+              "titel": {
+                "type": "string",
+                "maxLength": 90
+              },
+              "intro": {
+                "type": "string",
+                "maxLength": 320
+              },
+              "hintergrund": {
+                "description": "standard = Papier, flaeche = leicht getönt, invers = dunkel",
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "flaeche",
+                  "invers"
+                ]
+              },
+              "fragen": {
+                "description": "Eigene Fragen für diese Sektion (Standard: faq[] der Config)",
+                "maxItems": 12,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "frage": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 140
+                    },
+                    "antwort": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 900
+                    }
+                  },
+                  "required": [
+                    "frage",
+                    "antwort"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "cta"
+              },
+              "layout": {
+                "type": "string",
+                "enum": [
+                  "band",
+                  "karte"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "description": "false = Sektion ausblenden, ohne sie zu löschen",
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID, z. B. \"leistungen\" für Links auf /#leistungen",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kicker": {
+                "description": "Kleine Zeile über der Überschrift (optional, sparsam einsetzen)",
+                "type": "string",
+                "maxLength": 40
+              },
+              "titel": {
+                "type": "string",
+                "maxLength": 90
+              },
+              "intro": {
+                "type": "string",
+                "maxLength": 320
+              },
+              "hintergrund": {
+                "description": "standard = Papier, flaeche = leicht getönt, invers = dunkel",
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "flaeche",
+                  "invers"
+                ]
+              },
+              "button": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "description": "Beschriftung des Buttons/Links"
+                  },
+                  "href": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Ziel: interne Seite (\"/termin/\"), Anker (\"#faq\"), tel:, mailto: oder https://"
+                  }
+                },
+                "required": [
+                  "label",
+                  "href"
+                ]
+              },
+              "bild": {
+                "type": "object",
+                "properties": {
+                  "datei": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Pfad relativ zu variants/<slug>/assets/, z. B. \"team/anna.jpg\""
+                  },
+                  "alt": {
+                    "default": "",
+                    "description": "Bildbeschreibung für Screenreader",
+                    "type": "string",
+                    "maxLength": 180
+                  },
+                  "dekorativ": {
+                    "default": false,
+                    "description": "true = rein schmückend, alt bleibt leer",
+                    "type": "boolean"
+                  },
+                  "fokus": {
+                    "description": "Bildausschnitt als CSS object-position, z. B. \"50% 30%\"",
+                    "type": "string"
+                  },
+                  "fokusMobil": {
+                    "description": "Abweichender Bildausschnitt auf Smartphones",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "datei"
+                ]
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "check"
+              },
+              "layout": {
+                "type": "string",
+                "enum": [
+                  "banner",
+                  "karte"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "description": "false = Sektion ausblenden, ohne sie zu löschen",
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID, z. B. \"leistungen\" für Links auf /#leistungen",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kicker": {
+                "description": "Kleine Zeile über der Überschrift (optional, sparsam einsetzen)",
+                "type": "string",
+                "maxLength": 40
+              },
+              "titel": {
+                "type": "string",
+                "maxLength": 90
+              },
+              "intro": {
+                "type": "string",
+                "maxLength": 320
+              },
+              "hintergrund": {
+                "description": "standard = Papier, flaeche = leicht getönt, invers = dunkel",
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "flaeche",
+                  "invers"
+                ]
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "kanzlei"
+              },
+              "layout": {
+                "type": "string",
+                "enum": [
+                  "editorial",
+                  "bild"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "description": "false = Sektion ausblenden, ohne sie zu löschen",
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID, z. B. \"leistungen\" für Links auf /#leistungen",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kicker": {
+                "description": "Kleine Zeile über der Überschrift (optional, sparsam einsetzen)",
+                "type": "string",
+                "maxLength": 40
+              },
+              "titel": {
+                "type": "string",
+                "maxLength": 90
+              },
+              "intro": {
+                "type": "string",
+                "maxLength": 320
+              },
+              "hintergrund": {
+                "description": "standard = Papier, flaeche = leicht getönt, invers = dunkel",
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "flaeche",
+                  "invers"
+                ]
+              },
+              "text": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 700
+                }
+              },
+              "bild": {
+                "type": "object",
+                "properties": {
+                  "datei": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Pfad relativ zu variants/<slug>/assets/, z. B. \"team/anna.jpg\""
+                  },
+                  "alt": {
+                    "default": "",
+                    "description": "Bildbeschreibung für Screenreader",
+                    "type": "string",
+                    "maxLength": 180
+                  },
+                  "dekorativ": {
+                    "default": false,
+                    "description": "true = rein schmückend, alt bleibt leer",
+                    "type": "boolean"
+                  },
+                  "fokus": {
+                    "description": "Bildausschnitt als CSS object-position, z. B. \"50% 30%\"",
+                    "type": "string"
+                  },
+                  "fokusMobil": {
+                    "description": "Abweichender Bildausschnitt auf Smartphones",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "datei"
+                ]
+              },
+              "zitat": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 240
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  }
+                },
+                "required": [
+                  "text",
+                  "name"
+                ]
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "vertrauen"
+              },
+              "layout": {
+                "type": "string",
+                "enum": [
+                  "laufband",
+                  "reihe"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "description": "false = Sektion ausblenden, ohne sie zu löschen",
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID, z. B. \"leistungen\" für Links auf /#leistungen",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kicker": {
+                "description": "Kleine Zeile über der Überschrift (optional, sparsam einsetzen)",
+                "type": "string",
+                "maxLength": 40
+              },
+              "titel": {
+                "type": "string",
+                "maxLength": 90
+              },
+              "intro": {
+                "type": "string",
+                "maxLength": 320
+              },
+              "hintergrund": {
+                "description": "standard = Papier, flaeche = leicht getönt, invers = dunkel",
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "flaeche",
+                  "invers"
+                ]
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          }
+        ]
+      },
+      "description": "Startseite: Reihenfolge, Auswahl und Layout der Sektionen"
+    },
+    "seiten": {
+      "description": "Welche Unterseiten gebaut werden. Abgeschaltete Seiten verschwinden auch aus Navigation und Sitemap.",
+      "default": {},
+      "type": "object",
+      "properties": {
+        "leistungen": {
+          "default": true,
+          "type": "boolean"
+        },
+        "spezialisierungen": {
+          "default": true,
+          "type": "boolean"
+        },
+        "digitaleKanzlei": {
+          "default": true,
+          "type": "boolean"
+        },
+        "team": {
+          "default": true,
+          "type": "boolean"
+        },
+        "karriere": {
+          "default": true,
+          "type": "boolean"
+        },
+        "wissen": {
+          "default": true,
+          "type": "boolean"
+        },
+        "steuertermine": {
+          "default": true,
+          "type": "boolean"
+        },
+        "mandantenCheck": {
+          "default": true,
+          "type": "boolean"
+        },
+        "termin": {
+          "default": true,
+          "type": "boolean"
+        },
+        "kontakt": {
+          "default": true,
+          "type": "boolean"
+        },
+        "rechner": {
+          "default": true,
+          "type": "boolean"
+        },
+        "unterlagen": {
+          "default": true,
+          "type": "boolean"
+        }
+      }
+    },
+    "seo": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "seiten": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "enum": [
+              "start",
+              "leistungen",
+              "spezialisierungen",
+              "digitaleKanzlei",
+              "team",
+              "karriere",
+              "wissen",
+              "steuertermine",
+              "mandantenCheck",
+              "termin",
+              "kontakt",
+              "rechner",
+              "unterlagen",
+              "impressum",
+              "datenschutz"
+            ]
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "titel": {
+                "type": "string",
+                "maxLength": 60
+              },
+              "beschreibung": {
+                "type": "string",
+                "maxLength": 160
+              }
+            }
+          }
+        }
+      }
+    },
+    "rechtliches": {
+      "type": "object",
+      "properties": {
+        "vertretungsberechtigt": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          }
+        },
+        "register": {
+          "type": "object",
+          "properties": {
+            "art": {
+              "type": "string",
+              "enum": [
+                "Partnerschaftsregister",
+                "Handelsregister"
+              ]
+            },
+            "gericht": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "nummer": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 30
+            }
+          },
+          "required": [
+            "art",
+            "gericht",
+            "nummer"
+          ]
+        },
+        "ustId": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "wirtschaftsId": {
+          "type": "string",
+          "maxLength": 24
+        },
+        "inhaltlichVerantwortlich": {
+          "description": "Verantwortlich nach § 18 Abs. 2 MStV",
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "adresse": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 140
+            }
+          },
+          "required": [
+            "name",
+            "adresse"
+          ]
+        },
+        "verbraucherstreitbeilegung": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "datenschutzbeauftragter": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "kontakt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 140
+            }
+          },
+          "required": [
+            "name",
+            "kontakt"
+          ]
+        },
+        "hosting": {
+          "type": "object",
+          "properties": {
+            "anbieter": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "adresse": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "datenschutzUrl": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "anbieter",
+            "adresse"
+          ]
+        },
+        "agbUrl": {
+          "type": "string"
+        },
+        "zusatz": {
+          "default": [],
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 600
+          }
+        },
+        "bildnachweise": {
+          "default": [],
+          "description": "Bildquellen für das Impressum, z. B. \"Team: eigene Fotos\", \"Büro: Unsplash/…\"",
+          "maxItems": 40,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          }
+        }
+      }
+    },
+    "integrationen": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "formularEndpoint": {
+          "default": "",
+          "description": "leer = Demo-Modus; sonst z. B. https://formspree.io/f/xxxx",
+          "type": "string"
+        },
+        "formularAnbieter": {
+          "description": "Name für die Datenschutzerklärung, z. B. \"Formspree\"",
+          "type": "string",
+          "maxLength": 40
+        },
+        "karte": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "aktiv": {
+              "default": true,
+              "type": "boolean"
+            },
+            "anbieter": {
+              "default": "osm",
+              "type": "string",
+              "enum": [
+                "osm",
+                "google"
+              ]
+            }
+          }
+        },
+        "analytics": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "aktiv": {
+              "default": false,
+              "type": "boolean"
+            },
+            "anbieter": {
+              "type": "string",
+              "enum": [
+                "plausible",
+                "matomo",
+                "umami"
+              ]
+            },
+            "skriptUrl": {
+              "type": "string",
+              "format": "uri"
+            },
+            "domain": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "demo": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "banner": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "aktiv": {
+              "default": true,
+              "type": "boolean"
+            },
+            "text": {
+              "type": "string",
+              "maxLength": 120
+            }
+          }
+        },
+        "agentur": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "telefon": {
+              "type": "string",
+              "maxLength": 30
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+            },
+            "website": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "name"
+          ]
+        },
+        "pitchSeite": {
+          "default": true,
+          "type": "boolean"
+        }
+      }
+    },
+    "kanzleiForm": {
+      "type": "string",
+      "enum": [
+        "Einzelkanzlei",
+        "Partnerschaft",
+        "PartG mbB",
+        "GmbH"
+      ]
+    },
+    "berufstraeger": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "description": "URL-Kürzel: Kleinbuchstaben, Ziffern, Bindestriche"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "titel": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 90
+            },
+            "description": "Erster Eintrag = Berufsbezeichnung (z. B. \"Steuerberaterin\"), danach Grade und Fachberater-Titel. Nur eintragen, was tatsächlich verliehen wurde."
+          },
+          "rolle": {
+            "description": "z. B. \"Partner\", \"Inhaberin\", \"Geschäftsführer\"",
+            "type": "string",
+            "maxLength": 40
+          },
+          "bestelltSeit": {
+            "type": "integer",
+            "minimum": 1950,
+            "maximum": 2100,
+            "description": "Jahr der Bestellung"
+          },
+          "schwerpunkte": {
+            "default": [],
+            "maxItems": 6,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            }
+          },
+          "sprachen": {
+            "default": [
+              "Deutsch"
+            ],
+            "maxItems": 6,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 30
+            }
+          },
+          "foto": {
+            "type": "object",
+            "properties": {
+              "datei": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Pfad relativ zu variants/<slug>/assets/, z. B. \"team/anna.jpg\""
+              },
+              "alt": {
+                "default": "",
+                "description": "Bildbeschreibung für Screenreader",
+                "type": "string",
+                "maxLength": 180
+              },
+              "dekorativ": {
+                "default": false,
+                "description": "true = rein schmückend, alt bleibt leer",
+                "type": "boolean"
+              },
+              "fokus": {
+                "description": "Bildausschnitt als CSS object-position, z. B. \"50% 30%\"",
+                "type": "string"
+              },
+              "fokusMobil": {
+                "description": "Abweichender Bildausschnitt auf Smartphones",
+                "type": "string"
+              }
+            },
+            "required": [
+              "datei"
+            ]
+          },
+          "vita": {
+            "default": [],
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "jahr": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 12
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
+                }
+              },
+              "required": [
+                "jahr",
+                "text"
+              ]
+            }
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "telefon": {
+            "type": "string"
+          },
+          "zitat": {
+            "description": "Persönlicher Satz für die Profilseite",
+            "type": "string",
+            "maxLength": 240
+          },
+          "kurzbio": {
+            "type": "string",
+            "maxLength": 700
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "titel",
+          "bestelltSeit",
+          "foto",
+          "email"
+        ]
+      }
+    },
+    "team": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "rolle": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "foto": {
+            "type": "object",
+            "properties": {
+              "datei": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Pfad relativ zu variants/<slug>/assets/, z. B. \"team/anna.jpg\""
+              },
+              "alt": {
+                "default": "",
+                "description": "Bildbeschreibung für Screenreader",
+                "type": "string",
+                "maxLength": 180
+              },
+              "dekorativ": {
+                "default": false,
+                "description": "true = rein schmückend, alt bleibt leer",
+                "type": "boolean"
+              },
+              "fokus": {
+                "description": "Bildausschnitt als CSS object-position, z. B. \"50% 30%\"",
+                "type": "string"
+              },
+              "fokusMobil": {
+                "description": "Abweichender Bildausschnitt auf Smartphones",
+                "type": "string"
+              }
+            },
+            "required": [
+              "datei"
+            ]
+          },
+          "seit": {
+            "type": "integer",
+            "minimum": 1950,
+            "maximum": 2100
+          },
+          "schwerpunkte": {
+            "default": [],
+            "maxItems": 4,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            }
+          }
+        },
+        "required": [
+          "name",
+          "rolle"
+        ]
+      }
+    },
+    "zielgruppen": {
+      "minItems": 1,
+      "maxItems": 6,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "description": "URL-Kürzel: Kleinbuchstaben, Ziffern, Bindestriche"
+          },
+          "titel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "z. B. \"Unternehmen\""
+          },
+          "ichBin": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Formulierung für die Weiche, z. B. \"Ich führe ein Unternehmen\""
+          },
+          "kurztext": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "text": {
+            "default": [],
+            "maxItems": 4,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 700
+            }
+          },
+          "icon": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "description": "Lucide-Icon-Name (https://lucide.dev/icons)"
+          },
+          "bild": {
+            "type": "object",
+            "properties": {
+              "datei": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Pfad relativ zu variants/<slug>/assets/, z. B. \"team/anna.jpg\""
+              },
+              "alt": {
+                "default": "",
+                "description": "Bildbeschreibung für Screenreader",
+                "type": "string",
+                "maxLength": 180
+              },
+              "dekorativ": {
+                "default": false,
+                "description": "true = rein schmückend, alt bleibt leer",
+                "type": "boolean"
+              },
+              "fokus": {
+                "description": "Bildausschnitt als CSS object-position, z. B. \"50% 30%\"",
+                "type": "string"
+              },
+              "fokusMobil": {
+                "description": "Abweichender Bildausschnitt auf Smartphones",
+                "type": "string"
+              }
+            },
+            "required": [
+              "datei"
+            ]
+          }
+        },
+        "required": [
+          "slug",
+          "titel",
+          "ichBin",
+          "kurztext",
+          "icon"
+        ]
+      }
+    },
+    "leistungen": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "description": "URL-Kürzel: Kleinbuchstaben, Ziffern, Bindestriche"
+          },
+          "zielgruppe": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+              "description": "URL-Kürzel: Kleinbuchstaben, Ziffern, Bindestriche"
+            },
+            "description": "Slugs der Zielgruppen; die erste bestimmt die URL"
+          },
+          "titel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "kurztext": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 170
+          },
+          "text": {
+            "minItems": 1,
+            "maxItems": 6,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 900
+            }
+          },
+          "punkte": {
+            "default": [],
+            "description": "„Was dazugehört“, als Liste",
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            }
+          },
+          "icon": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "description": "Lucide-Icon-Name (https://lucide.dev/icons)"
+          },
+          "bild": {
+            "type": "object",
+            "properties": {
+              "datei": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Pfad relativ zu variants/<slug>/assets/, z. B. \"team/anna.jpg\""
+              },
+              "alt": {
+                "default": "",
+                "description": "Bildbeschreibung für Screenreader",
+                "type": "string",
+                "maxLength": 180
+              },
+              "dekorativ": {
+                "default": false,
+                "description": "true = rein schmückend, alt bleibt leer",
+                "type": "boolean"
+              },
+              "fokus": {
+                "description": "Bildausschnitt als CSS object-position, z. B. \"50% 30%\"",
+                "type": "string"
+              },
+              "fokusMobil": {
+                "description": "Abweichender Bildausschnitt auf Smartphones",
+                "type": "string"
+              }
+            },
+            "required": [
+              "datei"
+            ]
+          },
+          "faq": {
+            "default": [],
+            "maxItems": 6,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "frage": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 140
+                },
+                "antwort": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 900
+                }
+              },
+              "required": [
+                "frage",
+                "antwort"
+              ]
+            }
+          },
+          "seo": {
+            "type": "object",
+            "properties": {
+              "titel": {
+                "type": "string",
+                "maxLength": 60
+              },
+              "beschreibung": {
+                "type": "string",
+                "maxLength": 160
+              }
+            }
+          }
+        },
+        "required": [
+          "slug",
+          "zielgruppe",
+          "titel",
+          "kurztext",
+          "text",
+          "icon"
+        ]
+      }
+    },
+    "spezialisierungen": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "description": "URL-Kürzel: Kleinbuchstaben, Ziffern, Bindestriche"
+          },
+          "titel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "kurztext": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 170
+          },
+          "text": {
+            "minItems": 1,
+            "maxItems": 6,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 900
+            }
+          },
+          "punkte": {
+            "default": [],
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            }
+          },
+          "icon": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "description": "Lucide-Icon-Name (https://lucide.dev/icons)"
+          },
+          "bild": {
+            "type": "object",
+            "properties": {
+              "datei": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Pfad relativ zu variants/<slug>/assets/, z. B. \"team/anna.jpg\""
+              },
+              "alt": {
+                "default": "",
+                "description": "Bildbeschreibung für Screenreader",
+                "type": "string",
+                "maxLength": 180
+              },
+              "dekorativ": {
+                "default": false,
+                "description": "true = rein schmückend, alt bleibt leer",
+                "type": "boolean"
+              },
+              "fokus": {
+                "description": "Bildausschnitt als CSS object-position, z. B. \"50% 30%\"",
+                "type": "string"
+              },
+              "fokusMobil": {
+                "description": "Abweichender Bildausschnitt auf Smartphones",
+                "type": "string"
+              }
+            },
+            "required": [
+              "datei"
+            ]
+          },
+          "faq": {
+            "default": [],
+            "maxItems": 6,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "frage": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 140
+                },
+                "antwort": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 900
+                }
+              },
+              "required": [
+                "frage",
+                "antwort"
+              ]
+            }
+          },
+          "seo": {
+            "type": "object",
+            "properties": {
+              "titel": {
+                "type": "string",
+                "maxLength": 60
+              },
+              "beschreibung": {
+                "type": "string",
+                "maxLength": 160
+              }
+            }
+          }
+        },
+        "required": [
+          "slug",
+          "titel",
+          "kurztext",
+          "text",
+          "icon"
+        ]
+      }
+    },
+    "mitgliedschaften": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    },
+    "software": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "beschreibung": {
+            "type": "string",
+            "maxLength": 120
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    },
+    "portalLink": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "label": {
+          "default": "Mandantenportal",
+          "type": "string",
+          "maxLength": 30
+        },
+        "anbieter": {
+          "description": "z. B. \"DATEV Unternehmen online\"",
+          "type": "string",
+          "maxLength": 60
+        }
+      },
+      "required": [
+        "url"
+      ]
+    },
+    "mandantenCheck": {
+      "type": "object",
+      "properties": {
+        "titel": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "intro": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "fragen": {
+          "minItems": 3,
+          "maxItems": 6,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                "description": "URL-Kürzel: Kleinbuchstaben, Ziffern, Bindestriche"
+              },
+              "frage": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "hilfe": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "optionen": {
+                "minItems": 2,
+                "maxItems": 6,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                      "description": "URL-Kürzel: Kleinbuchstaben, Ziffern, Bindestriche"
+                    },
+                    "label": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    },
+                    "beschreibung": {
+                      "type": "string",
+                      "maxLength": 120
+                    },
+                    "icon": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9-]+$",
+                      "description": "Lucide-Icon-Name (https://lucide.dev/icons)"
+                    },
+                    "gewichte": {
+                      "default": {},
+                      "description": "Punkte je Ergebnis-ID, z. B. { \"unternehmen\": 3 }",
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "number"
+                      }
+                    },
+                    "anliegen": {
+                      "description": "Textbaustein für das vorausgefüllte Anliegen",
+                      "type": "string",
+                      "maxLength": 80
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "label"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "frage",
+              "optionen"
+            ]
+          }
+        },
+        "ergebnisse": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                "description": "URL-Kürzel: Kleinbuchstaben, Ziffern, Bindestriche"
+              },
+              "typ": {
+                "default": "passend",
+                "description": "hinweis = ehrliche Empfehlung, wenn die Kanzlei nicht die beste Wahl ist",
+                "type": "string",
+                "enum": [
+                  "passend",
+                  "hinweis"
+                ]
+              },
+              "titel": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "leistungen": {
+                "default": [],
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                  "description": "URL-Kürzel: Kleinbuchstaben, Ziffern, Bindestriche"
+                }
+              },
+              "ansprechpartner": {
+                "description": "Slug eines Berufsträgers",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "required": [
+              "id",
+              "titel",
+              "text"
+            ]
+          }
+        }
+      },
+      "required": [
+        "fragen",
+        "ergebnisse"
+      ]
+    },
+    "buchung": {
+      "type": "object",
+      "properties": {
+        "modus": {
+          "default": "demo",
+          "description": "demo = simulierter Slot-Picker, extern = Buchungsdienst",
+          "type": "string",
+          "enum": [
+            "demo",
+            "extern"
+          ]
+        },
+        "url": {
+          "description": "URL des externen Buchungsdienstes",
+          "type": "string",
+          "format": "uri"
+        },
+        "einbettung": {
+          "default": false,
+          "description": "true = Klick-zum-Laden-Einbettung statt Link",
+          "type": "boolean"
+        },
+        "anbieterName": {
+          "description": "z. B. \"Calendly\", \"Microsoft Bookings\"",
+          "type": "string",
+          "maxLength": 40
+        },
+        "beratungsarten": {
+          "minItems": 1,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                "description": "URL-Kürzel: Kleinbuchstaben, Ziffern, Bindestriche"
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 30
+              },
+              "beschreibung": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "icon": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+$",
+                "description": "Lucide-Icon-Name (https://lucide.dev/icons)"
+              },
+              "dauer": {
+                "type": "integer",
+                "minimum": 10,
+                "maximum": 180
+              }
+            },
+            "required": [
+              "id",
+              "label",
+              "beschreibung",
+              "icon",
+              "dauer"
+            ]
+          }
+        },
+        "arbeitszeiten": {
+          "description": "Standard: reguläre Öffnungszeiten",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "tage": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "mo",
+                    "di",
+                    "mi",
+                    "do",
+                    "fr",
+                    "sa",
+                    "so"
+                  ]
+                }
+              },
+              "von": {
+                "type": "string",
+                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+              },
+              "bis": {
+                "type": "string",
+                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+              }
+            },
+            "required": [
+              "tage",
+              "von",
+              "bis"
+            ]
+          }
+        },
+        "slotDauer": {
+          "default": 30,
+          "description": "Minuten je Zeitfenster",
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 120
+        },
+        "vorlaufTage": {
+          "default": 1,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 14
+        },
+        "horizontTage": {
+          "default": 28,
+          "type": "integer",
+          "minimum": 7,
+          "maximum": 90
+        }
+      },
+      "required": [
+        "beratungsarten"
+      ]
+    },
+    "fristen": {
+      "default": [],
+      "description": "Zusätzliche Fristen (z. B. Abgabefristen der Steuererklärungen)",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "datum": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "Datum im Format JJJJ-MM-TT"
+          },
+          "titel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 90
+          },
+          "zielgruppe": {
+            "default": "alle",
+            "type": "string",
+            "enum": [
+              "unternehmen",
+              "privat",
+              "alle"
+            ]
+          },
+          "hinweis": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "verschieben": {
+            "default": true,
+            "description": "Fällt der Tag auf Wochenende/Feiertag, auf den nächsten Werktag verschieben (§ 108 Abs. 3 AO)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "datum",
+          "titel"
+        ]
+      }
+    },
+    "fristenRegeln": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "umsatzsteuerVoranmeldung": {
+          "default": true,
+          "type": "boolean"
+        },
+        "lohnsteuerAnmeldung": {
+          "default": true,
+          "type": "boolean"
+        },
+        "vorauszahlungen": {
+          "default": true,
+          "description": "ESt/KSt-Vorauszahlungen 10.3./10.6./10.9./10.12.",
+          "type": "boolean"
+        },
+        "gewerbesteuer": {
+          "default": true,
+          "description": "GewSt/GrSt 15.2./15.5./15.8./15.11.",
+          "type": "boolean"
+        },
+        "sozialversicherung": {
+          "default": true,
+          "description": "Beitragsfälligkeit am drittletzten Bankarbeitstag",
+          "type": "boolean"
+        }
+      }
+    },
+    "stellen": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "description": "URL-Kürzel: Kleinbuchstaben, Ziffern, Bindestriche"
+          },
+          "titel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "art": {
+            "type": "string",
+            "enum": [
+              "Vollzeit",
+              "Teilzeit",
+              "Vollzeit oder Teilzeit",
+              "Ausbildung",
+              "Werkstudium",
+              "Minijob"
+            ]
+          },
+          "arbeitsort": {
+            "default": "hybrid",
+            "type": "string",
+            "enum": [
+              "vor Ort",
+              "hybrid",
+              "remote möglich"
+            ]
+          },
+          "beginn": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "stunden": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "kurztext": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 220
+          },
+          "aufgaben": {
+            "minItems": 2,
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            }
+          },
+          "profil": {
+            "minItems": 2,
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            }
+          },
+          "wirBieten": {
+            "default": [],
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            }
+          },
+          "gehalt": {
+            "description": "Gehaltsspanne in Euro (brutto); erscheint auch im JobPosting-Schema",
+            "type": "object",
+            "properties": {
+              "min": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "max": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "einheit": {
+                "default": "YEAR",
+                "type": "string",
+                "enum": [
+                  "MONTH",
+                  "YEAR"
+                ]
+              }
+            },
+            "required": [
+              "min",
+              "max"
+            ]
+          },
+          "veroeffentlicht": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "Datum im Format JJJJ-MM-TT"
+          },
+          "gueltigBis": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "Datum im Format JJJJ-MM-TT"
+          },
+          "ansprechpartner": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "description": "URL-Kürzel: Kleinbuchstaben, Ziffern, Bindestriche"
+          }
+        },
+        "required": [
+          "slug",
+          "titel",
+          "art",
+          "beginn",
+          "kurztext",
+          "aufgaben",
+          "profil",
+          "veroeffentlicht"
+        ]
+      }
+    },
+    "benefits": {
+      "default": [],
+      "maxItems": 9,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "titel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "icon": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "description": "Lucide-Icon-Name (https://lucide.dev/icons)"
+          }
+        },
+        "required": [
+          "titel",
+          "text",
+          "icon"
+        ]
+      }
+    },
+    "karriere": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "titel": {
+          "type": "string",
+          "maxLength": 90
+        },
+        "intro": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "kultur": {
+          "default": [],
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        },
+        "bewerbungsSchritte": {
+          "default": [],
+          "maxItems": 5,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "titel": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "required": [
+              "titel",
+              "text"
+            ]
+          }
+        },
+        "bild": {
+          "type": "object",
+          "properties": {
+            "datei": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Pfad relativ zu variants/<slug>/assets/, z. B. \"team/anna.jpg\""
+            },
+            "alt": {
+              "default": "",
+              "description": "Bildbeschreibung für Screenreader",
+              "type": "string",
+              "maxLength": 180
+            },
+            "dekorativ": {
+              "default": false,
+              "description": "true = rein schmückend, alt bleibt leer",
+              "type": "boolean"
+            },
+            "fokus": {
+              "description": "Bildausschnitt als CSS object-position, z. B. \"50% 30%\"",
+              "type": "string"
+            },
+            "fokusMobil": {
+              "description": "Abweichender Bildausschnitt auf Smartphones",
+              "type": "string"
+            }
+          },
+          "required": [
+            "datei"
+          ]
+        },
+        "zitat": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 260
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "rolle": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            }
+          },
+          "required": [
+            "text",
+            "name",
+            "rolle"
+          ]
+        }
+      }
+    },
+    "digitaleKanzlei": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "titel": {
+          "type": "string",
+          "maxLength": 90
+        },
+        "intro": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "bausteine": {
+          "default": [],
+          "maxItems": 8,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "titel": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 50
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "icon": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+$",
+                "description": "Lucide-Icon-Name (https://lucide.dev/icons)"
+              }
+            },
+            "required": [
+              "titel",
+              "text",
+              "icon"
+            ]
+          }
+        },
+        "sicherheit": {
+          "default": [],
+          "maxItems": 6,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "titel": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 50
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 260
+              }
+            },
+            "required": [
+              "titel",
+              "text"
+            ]
+          }
+        },
+        "bild": {
+          "type": "object",
+          "properties": {
+            "datei": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Pfad relativ zu variants/<slug>/assets/, z. B. \"team/anna.jpg\""
+            },
+            "alt": {
+              "default": "",
+              "description": "Bildbeschreibung für Screenreader",
+              "type": "string",
+              "maxLength": 180
+            },
+            "dekorativ": {
+              "default": false,
+              "description": "true = rein schmückend, alt bleibt leer",
+              "type": "boolean"
+            },
+            "fokus": {
+              "description": "Bildausschnitt als CSS object-position, z. B. \"50% 30%\"",
+              "type": "string"
+            },
+            "fokusMobil": {
+              "description": "Abweichender Bildausschnitt auf Smartphones",
+              "type": "string"
+            }
+          },
+          "required": [
+            "datei"
+          ]
+        }
+      }
+    },
+    "unterlagen": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "intro": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "checklisten": {
+          "description": "Standard: Checklisten aus src/data/checklisten.ts",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                "description": "URL-Kürzel: Kleinbuchstaben, Ziffern, Bindestriche"
+              },
+              "titel": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 70
+              },
+              "zielgruppe": {
+                "default": "alle",
+                "type": "string",
+                "enum": [
+                  "unternehmen",
+                  "privat",
+                  "alle"
+                ]
+              },
+              "punkte": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 140
+                    },
+                    "hinweis": {
+                      "type": "string",
+                      "maxLength": 160
+                    }
+                  },
+                  "required": [
+                    "text"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "titel",
+              "punkte"
+            ]
+          }
+        }
+      }
+    },
+    "kennzahlen": {
+      "default": [],
+      "maxItems": 4,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "wert": {
+            "type": "number"
+          },
+          "nachkommastellen": {
+            "default": 0,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2
+          },
+          "praefix": {
+            "type": "string",
+            "maxLength": 4
+          },
+          "suffix": {
+            "type": "string",
+            "maxLength": 6
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          }
+        },
+        "required": [
+          "wert",
+          "label"
+        ]
+      }
+    },
+    "ablauf": {
+      "type": "object",
+      "properties": {
+        "titel": {
+          "type": "string",
+          "maxLength": 90
+        },
+        "intro": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "schritte": {
+          "minItems": 3,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "titel": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 220
+              },
+              "motiv": {
+                "type": "string",
+                "enum": [
+                  "foto",
+                  "upload",
+                  "buchen",
+                  "auswertung",
+                  "gespraech",
+                  "portal"
+                ]
+              }
+            },
+            "required": [
+              "titel",
+              "text",
+              "motiv"
+            ]
+          }
+        }
+      },
+      "required": [
+        "schritte"
+      ]
+    },
+    "faq": {
+      "default": [],
+      "maxItems": 16,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "frage": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 140
+          },
+          "antwort": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 900
+          }
+        },
+        "required": [
+          "frage",
+          "antwort"
+        ]
+      }
+    },
+    "kammer": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "adresse": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "website": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "name",
+        "adresse",
+        "website"
+      ]
+    },
+    "berufshaftpflicht": {
+      "type": "object",
+      "properties": {
+        "versicherer": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "adresse": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "geltungsbereich": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "required": [
+        "versicherer",
+        "adresse",
+        "geltungsbereich"
+      ]
+    },
+    "texte": {
+      "default": {},
+      "description": "Überschreibt einzelne Standardtexte aus src/data/texte.ts",
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "meta",
+    "betrieb",
+    "branding",
+    "sektionen",
+    "rechtliches",
+    "kanzleiForm",
+    "berufstraeger",
+    "zielgruppen",
+    "leistungen",
+    "buchung",
+    "kammer",
+    "berufshaftpflicht"
+  ]
+}

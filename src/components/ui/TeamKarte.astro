@@ -1,0 +1,158 @@
+---
+/**
+ * Karte für Berufsträger: Porträt mit Shared-Element-Transition zur Profilseite,
+ * Detail-Ebene (Schwerpunkte, Sprachen) per Hover (Maus) oder Tipp (Touch, Button).
+ */
+import type { Berufstraeger } from '../../../variants/_schema';
+import { t } from '../../lib/config';
+import { aktiv } from '../../lib/routes';
+import Foto from './Foto.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  p: Berufstraeger;
+  ratio?: string;
+  sizes?: string;
+  /** Shared-Element-Transition (pro Seite nur einmal je Person erlaubt) */
+  vt?: boolean;
+}
+const { p, ratio = '4 / 5', sizes = '(min-width: 64rem) 34vw, 90vw', vt = true } = Astro.props;
+const profil = aktiv('team') ? `/team/${p.slug}/` : undefined;
+const id = `tk-${p.slug}`;
+---
+
+<article class="tk" data-teamkarte>
+  <div class="tk-bildbox">
+    <Foto bild={p.foto} ratio={ratio} sizes={sizes} vtName={vt ? `portrait-${p.slug}` : undefined} class="tk-bild" />
+    <div class="tk-detail" id={id}>
+      <p class="tk-label">{t('seite.team.schwerpunkte')}</p>
+      <ul role="list">{p.schwerpunkte.map((x) => <li>{x}</li>)}</ul>
+      <p class="tk-label">{t('seite.team.sprachen')}</p>
+      <p>{p.sprachen.join(', ')}</p>
+    </div>
+    <button type="button" class="tk-knopf" aria-expanded="false" aria-controls={id}>
+      <span class="sr-only">{t('team.details', { name: p.name })}</span>
+      <Icon name="plus" size={20} strich={2} />
+    </button>
+  </div>
+  <div class="tk-text">
+    <h3 class="tk-name">
+      {profil ? <a href={profil} class="tk-link">{p.name}</a> : p.name}
+    </h3>
+    <p class="tk-titel">{p.titel.join(', ')}</p>
+    {p.rolle && <p class="tk-rolle">{p.rolle}</p>}
+  </div>
+</article>
+
+<style>
+  .tk {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+  }
+  .tk-bildbox {
+    position: relative;
+    border-radius: var(--r-xl);
+    overflow: hidden;
+  }
+  .tk-bildbox :global(.tk-bild img) {
+    transition: transform 900ms var(--ease-out);
+  }
+  .tk:hover .tk-bildbox :global(.tk-bild img) {
+    transform: scale(1.04);
+  }
+  .tk-detail {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 2;
+    display: grid;
+    gap: 0.35rem;
+    padding: 1.25rem 1.25rem 4.25rem;
+    background: color-mix(in oklab, var(--inverse) 92%, transparent);
+    color: var(--on-inverse);
+    font-size: 0.92rem;
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 400ms var(--ease-out),
+      transform 500ms var(--ease-out);
+    pointer-events: none;
+  }
+  .tk-detail ul {
+    margin: 0 0 0.5rem;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .tk-detail li {
+    padding: 0.15rem 0.6rem;
+    border: 1px solid var(--inverse-line);
+    border-radius: 999px;
+  }
+  .tk-label {
+    font-size: 0.78rem;
+    font-weight: 650;
+    color: var(--on-inverse-muted);
+  }
+  .tk[data-offen] .tk-detail,
+  .tk:focus-within .tk-detail {
+    opacity: 1;
+    transform: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .tk:hover .tk-detail {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .tk-knopf {
+    position: absolute;
+    right: 0.9rem;
+    bottom: 0.9rem;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    border-radius: 50%;
+    background: var(--bg);
+    color: var(--ink);
+    box-shadow: 0 6px 18px -8px rgb(0 0 0 / 0.4);
+    transition: transform 400ms var(--ease-out);
+  }
+  .tk[data-offen] .tk-knopf {
+    transform: rotate(45deg);
+  }
+  .tk-text {
+    display: grid;
+    gap: 0.2rem;
+  }
+  .tk-name {
+    font-size: var(--step-2);
+  }
+  .tk-link {
+    text-decoration: none;
+  }
+  .tk-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .tk-link:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+  }
+  .tk-titel {
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+  }
+  .tk-rolle {
+    font-size: 0.85rem;
+    font-weight: 650;
+    color: var(--brand-ink);
+  }
+</style>

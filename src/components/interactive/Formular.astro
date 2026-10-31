@@ -1,0 +1,97 @@
+---
+/**
+ * Formular-Hülle: Endpoint/Demo-Modus, Fehlertexte, Honeypot, Datenschutzhinweis,
+ * Absende-Button und Erfolgsmeldung. Felder kommen über den Slot.
+ */
+import { config, t } from '../../lib/config';
+import Button from '../ui/Button.astro';
+import Erfolg from '../ui/Erfolg.astro';
+
+interface Props {
+  name: string;
+  knopf: string;
+  erfolgTitel?: string;
+  erfolgText?: string;
+}
+const { name, knopf, erfolgTitel, erfolgText } = Astro.props;
+const endpoint = config.integrationen.formularEndpoint;
+const ds = t('form.datenschutz', { link: '%LINK%' }).split('%LINK%');
+---
+
+<div class="formular">
+  <form
+    data-formular
+    name={name}
+    method="post"
+    action={endpoint || undefined}
+    data-endpoint={endpoint}
+    data-fehler-pflicht={t('form.fehler.pflicht')}
+    data-fehler-email={t('form.fehler.email')}
+    data-fehler-telefon={t('form.fehler.telefon')}
+    data-fehler-zusammenfassung={t('form.fehler.zusammenfassung')}
+    data-fehler-senden={t('form.fehler.senden')}
+  >
+    <input type="hidden" name="formular" value={name} />
+    <div class="formular-felder">
+      <slot />
+    </div>
+    <div class="honigtopf" aria-hidden="true">
+      <label for={`${name}-website`}>{t('form.honigtopf')}</label>
+      <input id={`${name}-website`} name="website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+    <p class="formular-ds">
+      {ds[0]}<a href="/datenschutz/">{t('form.datenschutzLink')}</a>{ds[1]}
+    </p>
+    <p class="formular-pflicht"><span aria-hidden="true">*</span> {t('form.pflicht')}</p>
+    <p class="formular-zusammenfassung feld-fehler" data-zusammenfassung role="alert"></p>
+    <Button type="submit" icon="send">{knopf}</Button>
+  </form>
+  <Erfolg titel={erfolgTitel} text={erfolgText} />
+</div>
+
+<style>
+  form {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+  .formular-felder {
+    display: grid;
+    gap: 1.25rem;
+    width: 100%;
+  }
+  @media (min-width: 48rem) {
+    .formular-felder {
+      grid-template-columns: 1fr 1fr;
+    }
+    .formular-felder > :global(.voll) {
+      grid-column: 1 / -1;
+    }
+  }
+  .formular-ds,
+  .formular-pflicht {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    max-width: 60ch;
+  }
+  .formular-pflicht span {
+    color: var(--danger);
+  }
+  form :global(.btn[data-zustand='laedt'])::after {
+    content: '';
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: drehen 700ms linear infinite;
+  }
+  form :global(.btn[data-zustand='laedt'] .btn-icon) {
+    display: none;
+  }
+  @keyframes drehen {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

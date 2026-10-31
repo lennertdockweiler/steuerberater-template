@@ -1,0 +1,22 @@
+---
+import Base from '../../layouts/Base.astro';
+import SeitenKopf from '../../components/ui/SeitenKopf.astro';
+import AbschlussCta from '../../components/ui/AbschlussCta.astro';
+import SpezRaster from '../../components/sections/spezialisierungen/Raster.astro';
+import { config, t } from '../../lib/config';
+import { seitenTitel, seitenBeschreibung, breadcrumbSchema } from '../../lib/seo';
+
+const titel = t('seite.spezialisierungen.titel');
+const pfad = [{ label: titel, href: '/spezialisierungen/' }];
+const s = { typ: 'spezialisierungen' as const, layout: 'raster', aktiv: true, titel: t('spezialisierungen.titel') };
+---
+
+<Base
+  titel={seitenTitel('spezialisierungen', `${titel}: ${config.spezialisierungen.map((x) => x.titel).join(', ')}`)}
+  beschreibung={seitenBeschreibung('spezialisierungen', `${t('spezialisierungen.intro')} ${config.spezialisierungen.map((x) => x.titel).join(', ')}.`)}
+  jsonLd={[breadcrumbSchema([{ label: t('nav.start'), href: '/' }, ...pfad], Astro.site)]}
+>
+  <SeitenKopf titel={titel} intro={t('spezialisierungen.intro')} pfad={pfad} />
+  <section class="sektion"><SpezRaster s={s as any} ohneKopf /></section>
+  <AbschlussCta />
+</Base>
